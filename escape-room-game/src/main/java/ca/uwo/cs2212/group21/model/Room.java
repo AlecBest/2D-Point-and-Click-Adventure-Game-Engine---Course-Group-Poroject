@@ -14,18 +14,20 @@ public class Room {
     private List<Item> items;
     private List<NPC> npcs;
     private HashMap<String, Room> exits;
+    private boolean isLocked;
 
     /**
      * Initializes a new room with the given parameters.
      * @param name        The name of the room.
      * @param description A brief description of the room.
      */
-    public Room(String name, String description) {
+    public Room(String name, String description, boolean isLocked) {
         this.name = name;
         this.description = description;
         this.items = new ArrayList<>();
         this.npcs = new ArrayList<>();
         this.exits = new HashMap<>();
+        this.isLocked = isLocked;
     }
 
     //Getters and Setters
@@ -36,6 +38,14 @@ public class Room {
 
     public void addItem (Item item) {
         items.add(item);
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    public void removeNPC(NPC npc) {
+        npcs.remove(npc);
     }
 
     public void setNPC(NPC npc) {
@@ -66,4 +76,11 @@ public class Room {
         return exits.get(direction);
     }
 
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean isLocked) {
+        this.isLocked = isLocked;
+    }
 }
