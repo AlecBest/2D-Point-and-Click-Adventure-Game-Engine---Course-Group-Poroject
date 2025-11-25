@@ -1,5 +1,8 @@
 package ca.uwo.cs2212.group21.model;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 /**
  * Represents a non-player character (NPC) in the escape room game.
  * This class will store information about the NPC, such as its name, dialogue, and interactions
@@ -12,6 +15,8 @@ public class NPC {
     private Item requiredItem;
     private boolean isTradeable;
     private String hint;
+    private static ImageView view;
+    
 
     /**
      * Initializes a new NPC with the given parameters.
@@ -19,11 +24,13 @@ public class NPC {
      * @param dialogue The dialogue associated with the NPC.
      * @param isTradeable Indicates if the NPC is willing to trade items.
      */
-    public NPC(String name, String dialogue, boolean isTradeable) {
+    public NPC(String name, String dialogue, boolean isTradeable, String imagePath) {
         this.name = name;
         this.dialogue = dialogue;
         this.isTradeable = isTradeable;
         this.hasInteracted = false;
+        this.view = new ImageView();
+        setNPCImage(imagePath);
     }
 
        /**
@@ -84,5 +91,24 @@ public class NPC {
     public boolean hasInteracted() {
         return hasInteracted;
     }
+
+    public void setNPCImage(String imagePath) {
+        try {
+            Image image = new Image(getClass().getResourceAsStream(imagePath));
+
+            this.view.setImage(image);
+
+            this.view.setFitWidth(100);
+            this.view.setFitHeight(100);
+            this.view.setPreserveRatio(true);
+            
+        } catch (Exception e) {
+            System.out.println("Error loading NPC image: " + this.name);
+        }
+    }
+
+      public static ImageView getView() {
+        return view;
+    }   
 
 }
