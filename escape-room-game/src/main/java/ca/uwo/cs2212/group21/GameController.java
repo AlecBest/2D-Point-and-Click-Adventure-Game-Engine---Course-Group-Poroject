@@ -24,6 +24,12 @@ public class GameController {
     @FXML
     private AnchorPane gamePane;
     private NPC myGuard;
+    @FXML
+    private AnchorPane mainScreen;
+    @FXML
+    private AnchorPane gameScreen;
+    @FXML
+    private AnchorPane inventory;
 
     public void spawnNPC(Event event){
         RadioButton btn = (RadioButton) event.getSource();
@@ -51,11 +57,8 @@ public class GameController {
     }
 
     public void switchToStartScene(Event event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/StartScene.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        mainScreen.setVisible(false);
+        gameScreen.setVisible(true);
     }
 
     public void switchToLoadGameScene(Event event) throws IOException {
