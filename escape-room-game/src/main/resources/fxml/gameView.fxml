@@ -14,8 +14,13 @@
       <AnchorPane fx:id="mainScreen" prefHeight="200.0" prefWidth="200.0">
          <children>
             <Button layoutX="262.0" layoutY="147.0" mnemonicParsing="false" onAction="#switchToStartScene" text="Start Game" />
-            <Button layoutX="262.0" layoutY="209.0" mnemonicParsing="false" text="Load Game" />
+            <Button layoutX="262.0" layoutY="209.0" mnemonicParsing="false" onAction="#switchToLoadGameScene" text="Load Game" />
             <Button layoutX="280.0" layoutY="267.0" mnemonicParsing="false" onAction="#quitGame" text="Quit" />
+            <Label layoutX="108.0" layoutY="62.0" text="The Escape Room Game">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="gameScreen" prefHeight="200.0" prefWidth="200.0" visible="false">

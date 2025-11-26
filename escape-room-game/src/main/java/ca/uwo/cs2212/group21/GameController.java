@@ -49,7 +49,7 @@ public class GameController {
     }
 
     public void switchToMainScene(Event event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainScene.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/gameView.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -62,7 +62,7 @@ public class GameController {
     }
 
     public void switchToLoadGameScene(Event event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoadGameScene.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/loadGame.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
