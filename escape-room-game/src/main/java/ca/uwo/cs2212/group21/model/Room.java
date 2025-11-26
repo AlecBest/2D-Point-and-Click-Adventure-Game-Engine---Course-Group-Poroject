@@ -64,7 +64,7 @@ public class Room {
         return items;
     }
 
-    public List<NPC> getNpcs() {
+    public List<NPC> getNPCS() {
         return npcs;
     }
 

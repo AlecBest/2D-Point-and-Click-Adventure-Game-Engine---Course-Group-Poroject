@@ -150,4 +150,12 @@ public class GameEngine {
         }
     }
 
+    public HashMap<String, Room> getRooms() {
+    return rooms;
+    }
+
+    public GameState getPlayer() {
+    return player;
+    }
+
 }

@@ -14,7 +14,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class SceneController {
+public class GameController {
 
     
     private Stage stage;

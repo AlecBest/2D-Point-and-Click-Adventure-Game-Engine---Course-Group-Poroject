@@ -1,0 +1,58 @@
+{
+  "rooms": [
+    {
+      "name": "Starting Room",
+      "description": "A dinky apartment sure",
+      "isLocked": false,
+      "items": [
+        {
+          "item": "Key",
+          "itemDescription": "A small key",
+          "isItemUsable": true
+        },
+        {
+          "item": "Flashlight",
+          "itemDescription": "A battery powered flashlight",
+          "isItemUsable": true
+        }
+      ],
+      "npcs": [
+        {
+          "npc": "Guard",
+          "npcDialogue": "Who goes there?",
+          "isNPCTradeable": true,
+          "npcImagePath": "/images/guard.png"
+        }
+      ],
+      "exits": [
+        {
+          "exit": "Hallway",
+          "exitDirection": "NORTH"
+        }
+      ]
+    },
+    {
+      "name": "Hallway",
+      "description": "A long hallway with doors on either side.",
+      "isLocked": false,
+      "items": [
+        {
+          "item": "Map",
+          "itemDescription": "A map of the building",
+          "isItemUsable": false
+        }
+      ],
+      "npcs": [],
+      "exits": [
+        {
+          "exit": "Starting Room",
+          "exitDirection": "SOUTH"
+        },
+        {
+          "exit": "Library",
+          "exitDirection": "EAST"
+        }
+      ]
+    }
+  ]
+}
