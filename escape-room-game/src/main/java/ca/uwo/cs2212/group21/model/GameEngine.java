@@ -23,7 +23,6 @@ public class GameEngine {
     private boolean isGameOver;
     private String fileSavePath;
     private HashMap<String, Room> rooms;
-    private HashMap<String, NPC> npcs;
     private HashMap<String, Item> items;
     private List<Item> inventory;
 
@@ -32,7 +31,6 @@ public class GameEngine {
      */
     public GameEngine(String jsonPath) {
         this.rooms = new HashMap<>();
-        this.npcs = new HashMap<>();
         this.items = new HashMap<>();
         this.inventory = new ArrayList<>();
         loadWorldData(jsonPath);
@@ -72,16 +70,16 @@ public class GameEngine {
 
         int timeRemaining = saveData.getInt("timeRemaining");
 
-        this.player = new GameState(loadedRoom, timeRemaining);
+        this.player = new GameState(loadedRoom, timeRemaining); //this would put the player in wherever they were and with whatever time they had left 
 
-        for (Item itemInList : tempInventory) {
+        for (Item itemInList : tempInventory) { //this would add all the items in the save essentially to the players inventory
             this.player.addItemToInventory(itemInList);
              
             for (Room room : rooms.values()) {
-                if (room.getItems().contains(itemInList)) {
+                if (room.getItems().contains(itemInList)) { //this is because if the player has the item in their inventory it should be removed from the room so we dont duplicate stuff 
                     room.removeItem(itemInList);
                     break;
-                }
+                } //im not sure if we would be saving anything else about the player like their position when they saved but if we do could just add that  here 
             }
             
         }
@@ -107,31 +105,40 @@ public class GameEngine {
             String roomName = roomObject.getString("name");
             String roomDescription = roomObject.getString("description");
             boolean isLocked = roomObject.getBoolean("isLocked");
-            Room room = new Room(roomName, roomDescription, isLocked);
+            Room room = new Room(roomName, roomDescription, isLocked, roomObject.getString("roomImagePath"));
             rooms.put(roomName, room);
 
             JSONArray itemArray = roomObject.getJSONArray("items"); //this is to go through each item in the room and add them to the specific room
             for (int j = 0; j < itemArray.length(); j++) {
                 JSONObject itemObj = itemArray.getJSONObject(j);
                 String itemName = itemObj.getString("item");
+                boolean isUsable = itemObj.getBoolean("isItemUsable");
+                String itemImagePath = itemObj.getString("itemImagePath");
+                String itemDescription = itemObj.getString("itemDescription");
+                double xPos = itemObj.getDouble("xPosition");
+                double yPos = itemObj.getDouble("yPosition");
+                double width = itemObj.getDouble("width");
+                double height = itemObj.getDouble("height");
+
+
                 if (itemName != null) {
-                    Item item = new Item(itemName, itemObj.getString("itemDescription"), itemObj.getBoolean("isItemUsable"));
+                    Item item = new Item(itemName, itemDescription, isUsable, itemImagePath, xPos, yPos, width, height);
                     room.addItem(item);
                     items.put(itemName, item);
                 }
             }
 
-            JSONArray npcArray = roomObject.getJSONArray("npcs"); //this is to go through each npc in the room and add them to the specific room
-            for (int j = 0; j < npcArray.length(); j++) {
-                JSONObject npcObj = npcArray.getJSONObject(j);
-                String npcName = npcObj.getString("npc");
-                if (npcName != null) {
-                    NPC npc = new NPC (npcName, npcObj.getString("npcDialogue"), npcObj.getBoolean("isNPCTradeable"), npcObj.getString("npcImagePath"));
-                    room.setNPC(npc);
-                    npcs.put(npcName, npc);
-                }
+            JSONObject npcObj = roomObject.getJSONObject("npc"); //since we only have one npc it just gets all the stuff from the json file and makes the npc object so we can set it to the particular coords in each room 
+            String npcName = npcObj.getString("npc");
+            String npcDialogue = npcObj.getString("npcDialogue");
+            boolean isNPCTradeable = npcObj.getBoolean("isNPCTradeable");
+            double xPos = npcObj.getDouble("xPosition");
+            double yPos = npcObj.getDouble("yPosition");
+            if (npcName != null) {
+                String npcImage = "/images/whateverItIs.png/";
+                NPC npc = new NPC (npcName, npcDialogue, isNPCTradeable, npcImage, xPos, yPos);
+                room.setNPC(npc);
             }
-            
         }
 
         for (int i = 0; i < roomsArray.length(); i++) {

@@ -12,22 +12,26 @@ public class Room {
     private String name;
     private String description;
     private List<Item> items;
-    private List<NPC> npcs;
     private HashMap<String, Room> exits;
     private boolean isLocked;
+    private String imagePath;
+    private NPC npc;
 
     /**
      * Initializes a new room with the given parameters.
      * @param name        The name of the room.
      * @param description A brief description of the room.
+     * @param isLocked    Indicates if the room is locked.
+     * @param imagePath   The path to the room's image.
      */
-    public Room(String name, String description, boolean isLocked) {
+    public Room(String name, String description, boolean isLocked, String imagePath) {
         this.name = name;
         this.description = description;
         this.items = new ArrayList<>();
-        this.npcs = new ArrayList<>();
         this.exits = new HashMap<>();
         this.isLocked = isLocked;
+        this.imagePath = imagePath;
+        this.npc = null;
     }
 
     //Getters and Setters
@@ -36,20 +40,24 @@ public class Room {
         exits.put(direction, neighbRoom);
     }
 
+    public void setNPC(NPC npc) {
+        this.npc = npc;
+    }
+
+    public NPC getNPC() {
+        return npc;
+    }
+
+    public boolean hasNPC() {
+        return this.npc != null;
+    }
+
     public void addItem (Item item) {
         items.add(item);
     }
 
     public void removeItem(Item item) {
         items.remove(item);
-    }
-
-    public void removeNPC(NPC npc) {
-        npcs.remove(npc);
-    }
-
-    public void setNPC(NPC npc) {
-        npcs.add(npc);
     }
 
     public String getName() {
@@ -62,10 +70,6 @@ public class Room {
 
     public List<Item> getItems() {
         return items;
-    }
-
-    public List<NPC> getNPCS() {
-        return npcs;
     }
 
     public HashMap<String, Room> getExits() {
@@ -82,5 +86,9 @@ public class Room {
 
     public void setLocked(boolean isLocked) {
         this.isLocked = isLocked;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 }

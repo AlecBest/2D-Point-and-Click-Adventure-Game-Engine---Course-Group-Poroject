@@ -14,8 +14,10 @@ public class NPC {
     private Item itemToGive;
     private Item requiredItem;
     private boolean isTradeable;
+    private String imagePath;
     private String hint;
-    private static ImageView view;
+    private double x;
+    private double y;
     
 
     /**
@@ -24,13 +26,14 @@ public class NPC {
      * @param dialogue The dialogue associated with the NPC.
      * @param isTradeable Indicates if the NPC is willing to trade items.
      */
-    public NPC(String name, String dialogue, boolean isTradeable, String imagePath) {
+    public NPC(String name, String dialogue, boolean isTradeable, String imagePath, double x, double y) {
         this.name = name;
         this.dialogue = dialogue;
         this.isTradeable = isTradeable;
         this.hasInteracted = false;
-        this.view = new ImageView();
-        setNPCImage(imagePath);
+        this.imagePath = imagePath;
+        this.x = x;
+        this.y = y;
     }
 
        /**
@@ -92,23 +95,16 @@ public class NPC {
         return hasInteracted;
     }
 
-    public void setNPCImage(String imagePath) {
-        try {
-            Image image = new Image(getClass().getResourceAsStream(imagePath));
-
-            this.view.setImage(image);
-
-            this.view.setFitWidth(100);
-            this.view.setFitHeight(100);
-            this.view.setPreserveRatio(true);
-            
-        } catch (Exception e) {
-            System.out.println("Error loading NPC image: " + this.name);
-        }
+    public double getX() {
+        return x;
     }
 
-      public static ImageView getView() {
-        return view;
-    }   
+    public double getY() {
+        return y;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
 
 }
