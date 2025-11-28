@@ -74,6 +74,19 @@ public class Room {
         items.remove(item);
     }
 
+    //helper method to find an item in this room by name
+    // returns the item if found. otherwise returns null
+    public Item findItem(String itemName){
+        for (Item item : items) { //loop through every item currently in the room
+            if (item.getName().equalsIgnoreCase(itemName)) { // compares items name to name being searched for, not case sensitive
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+
     public String getName() {
         return name;
     }

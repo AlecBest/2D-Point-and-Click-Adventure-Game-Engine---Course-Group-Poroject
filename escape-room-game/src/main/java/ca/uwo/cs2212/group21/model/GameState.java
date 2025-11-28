@@ -43,6 +43,11 @@ public class GameState {
         return null; //item not found
     }
 
+    // helper so commands can call this directly for inventory lookup
+    public Item findItemInventory(String itemName) {
+        return getItemFromInventory(itemName);
+    }
+
     public Room getCurrentRoom() {
         return currentRoom;
     }
@@ -67,6 +72,16 @@ public class GameState {
 
     public int getTimeRemaining() {
         return timeRemaining;
+    }
+
+    // this method dcreases the time the player has by a certain amount
+    //if the time reaches zero or below, then the game will end
+    public void decreaseTime(int amount){
+        this.timeRemaining -= amount;
+        if (this.timeRemaining <= 0){
+            this.timeRemaining = 0;
+            this.isGameOver = true;
+        }
     }
 
     public void setGameOver(boolean isGameOver) {
