@@ -14,11 +14,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -44,7 +47,11 @@ public class GameController {
     @FXML private ImageView star2;
     @FXML private ImageView star3;
 
-    @FXML private AnchorPane dialogureOverlay;
+    @FXML private AnchorPane dialogueOverlay;
+    @FXML private Label dialogueNameLabel;  
+    @FXML private TextArea dialogueBox;     
+    @FXML private Button nextButton;        
+    @FXML private VBox optionsBox;
     
 
     private GameEngine gameEngine;
@@ -58,6 +65,30 @@ public class GameController {
         gameScreen.setVisible(false);
         inventory.setVisible(false);
         mainScreen.setVisible(true);
+        dialogueOverlay.setVisible(false);
+
+        gameScreen.visibleProperty().addListener((obs,wasVisible,isVisible) -> {
+            if (isVisible) {
+                gameScreen.requestFocus();
+            }
+        });
+
+        gameScreen.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case I:
+                    toggleInventory();
+                    break;
+                case ESCAPE:
+                    if (inventory.isVisible()) {
+                        toggleInventory();
+                    }
+
+                    if (dialogueOverlay != null) {
+                        dialogueOverlay.setVisible(false);
+                        break;
+                    }
+            }
+        });
     }
 
     public void startGame(ActionEvent event) throws IOException {
@@ -160,6 +191,17 @@ public class GameController {
                 col = 0;
                 row++;
             }
+        }
+    }
+
+    public void toggleInventory() {
+        if (inventory.isVisible()) {
+            inventory.setVisible(false);
+            gameScreen.requestFocus(); //this is to put the focus back to the game screen so can click again 
+        } else {
+            updateInventoryUI(); //refresh the grid before it opens
+            inventory.setVisible(true);
+            inventory.requestFocus(); //this is to put the focus on the inventory so can click items in it
         }
     }
 
