@@ -34,6 +34,7 @@ public class Room {
         this.description = description;
         this.items = new ArrayList<>();
         this.exits = new HashMap<>();
+        this.exitList = new ArrayList<>();
         this.isLocked = isLocked;
         this.imagePath = imagePath;
         this.npc = null;

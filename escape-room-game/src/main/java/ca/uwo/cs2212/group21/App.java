@@ -21,6 +21,7 @@ public class App extends Application {
         scene = new Scene(root);
         stage.setTitle("Escape Room Game");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 

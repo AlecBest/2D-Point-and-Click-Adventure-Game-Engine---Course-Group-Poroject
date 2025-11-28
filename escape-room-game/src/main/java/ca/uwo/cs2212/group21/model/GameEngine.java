@@ -140,7 +140,7 @@ public class GameEngine {
             double xPos = npcObj.getDouble("xPosition");
             double yPos = npcObj.getDouble("yPosition");
             if (npcName != null) {
-                String npcImage = "/images/whateverItIs.png/";
+                String npcImage = "/images/defaultNPC.png";
                 NPC npc = new NPC (npcName, npcDialogue, isNPCTradeable, npcImage, xPos, yPos);
                 room.setNPC(npc);
             }
@@ -191,6 +191,14 @@ public class GameEngine {
     public String useItem(String itemName, String secondItemName) {
         UseCommand cmd = new UseCommand();
         return cmd.execute(player, itemName, secondItemName);
+    }
+
+    public void moveToRoom(String direction) {
+        Room nextRoom = this.player.getCurrentRoom().getExit(direction);
+        if (nextRoom != null && !nextRoom.isLocked()) {
+            currentRoom = nextRoom;
+            player.setCurrentRoom(nextRoom);
+        }
     }
 
 }

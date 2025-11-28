@@ -34,6 +34,8 @@ public class Item {
         this.imagePath = imagePath;
         this.x = x; 
         this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
     //Getters and Setters

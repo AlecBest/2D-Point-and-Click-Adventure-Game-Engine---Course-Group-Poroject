@@ -18,29 +18,25 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.GameController">
    <children>
-      <AnchorPane fx:id="mainScreen" prefHeight="720.0" prefWidth="1080.0">
+      <AnchorPane fx:id="mainScreen" prefHeight="720.0" prefWidth="1080.0" visible="false">
          <children>
             <ImageView fx:id="mainMenuBackground" fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true">
                <image>
                   <Image url="@../images/Main_menu_Background.png" />
                </image></ImageView>
-            <Button layoutX="502.0" layoutY="332.0" mnemonicParsing="false" onAction="#switchToStartScene" text="Start Game" />
+            <Button layoutX="502.0" layoutY="332.0" mnemonicParsing="false" onAction="#startGame" text="Start Game" />
             <Button layoutX="501.0" layoutY="438.0" mnemonicParsing="false" onAction="#switchToLoadGameScene" text="Load Game" />
             <Button layoutX="519.0" layoutY="534.0" mnemonicParsing="false" onAction="#quitGame" text="Quit" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="gameScreen" prefHeight="720.0" prefWidth="1080.0" visible="false">
          <children>
-            <ImageView fx:id="backgroundImage" fitHeight="720.0" fitWidth="1080.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="backgroundImageView" fitHeight="720.0" fitWidth="1080.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/page_1_background_of_NPC_talking.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="npcImage" fitHeight="200.0" fitWidth="150.0" layoutX="603.0" layoutY="329.0">
-               <image>
-                  <Image url="@../images/NPC___STanding_in_corner_waiting.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="npcImage" fitHeight="200.0" fitWidth="150.0" layoutX="603.0" layoutY="329.0" />
             <AnchorPane fx:id="interactiveLayer" prefHeight="720.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label alignment="CENTER" layoutX="-3.0" layoutY="658.0" prefHeight="17.0" prefWidth="1079.0" text="The door is locked." textAlignment="CENTER" textFill="WHITE" visible="false">
@@ -49,11 +45,6 @@
                      </font>
                   </Label>
                </children></AnchorPane>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="208.0" layoutY="382.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/guard.png" />
-               </image>
-            </ImageView>
             <HBox fx:id="scoreboardHUD" layoutX="15.0" mouseTransparent="true" pickOnBounds="false" prefHeight="53.0" prefWidth="362.0" spacing="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0">
                <padding>
                   <Insets top="10.0" />
@@ -86,32 +77,32 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="inventory" prefHeight="200.0" prefWidth="200.0" visible="false">
+      <AnchorPane fx:id="inventory" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Pane fx:id="inventoryUIBackground" layoutX="267.0" prefHeight="401.0" prefWidth="335.0" />
-            <GridPane gridLinesVisible="true" layoutX="293.0" layoutY="72.0" prefHeight="249.0" prefWidth="297.0">
+            <Pane fx:id="inventoryUIBackground" layoutX="626.0" opacity="0.6" prefHeight="720.0" prefWidth="454.0" />
+            <GridPane fx:id="inventoryGrid" gridLinesVisible="true" layoutX="712.0" layoutY="86.0" prefHeight="539.0" prefWidth="313.0">
               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints maxHeight="86.6666259765625" minHeight="10.0" prefHeight="55.666646321614586" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="97.66663360595703" minHeight="10.0" prefHeight="65.00002034505206" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="85.6666259765625" minHeight="10.0" prefHeight="65.33333333333333" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="70.0000254313151" minHeight="10.0" prefHeight="64.66666666666666" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="86.6666259765625" minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="97.66663360595703" minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="85.6666259765625" minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="70.0000254313151" minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <Label layoutX="367.0" layoutY="14.0" text="Inventory">
+            <Label layoutX="802.0" layoutY="24.0" text="Inventory">
                <font>
                   <Font size="36.0" />
                </font>
             </Label>
-            <Button fx:id="useButton" layoutX="293.0" layoutY="342.0" mnemonicParsing="false" text="USE" />
-            <Button fx:id="dropButton" layoutX="355.0" layoutY="342.0" mnemonicParsing="false" text="DROP" />
-            <Button fx:id="combineButton" layoutX="435.0" layoutY="342.0" mnemonicParsing="false" text="COMBINE" />
-            <Button fx:id="examineButton" layoutX="524.0" layoutY="342.0" mnemonicParsing="false" text="EXAMINE" />
+            <Button fx:id="useButton" layoutX="712.0" layoutY="637.0" mnemonicParsing="false" text="USE" />
+            <Button fx:id="dropButton" layoutX="793.0" layoutY="637.0" mnemonicParsing="false" onAction="#dropItemFromInventory" text="DROP" />
+            <Button fx:id="combineButton" layoutX="869.0" layoutY="637.0" mnemonicParsing="false" text="COMBINE" />
+            <Button fx:id="examineButton" layoutX="959.0" layoutY="637.0" mnemonicParsing="false" text="EXAMINE" />
          </children>
       </AnchorPane>
    </children>

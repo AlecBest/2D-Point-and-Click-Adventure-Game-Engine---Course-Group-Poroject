@@ -1,7 +1,9 @@
 package ca.uwo.cs2212.group21;
 
 import java.io.IOException;
+import java.util.List;
 
+import ca.uwo.cs2212.group21.commands.PickUpCommand;
 import ca.uwo.cs2212.group21.model.GameEngine;
 import ca.uwo.cs2212.group21.model.NPC;
 import ca.uwo.cs2212.group21.model.Item;
@@ -61,36 +63,40 @@ public class GameController {
     //private final Image STAR_FULL = new Image(getClass().getResourceAsStream("/images/star_full.png")); //whenever we get a star image we put it here
     //private final Image STAR_EMPTY = new Image(getClass().getResourceAsStream("/images/star_empty.png")); //whenever we get an empty star image we put it here
 
+    private Item selected; //to keep track of selected item in inventory
+
     public void initialize() {
         gameScreen.setVisible(false);
         inventory.setVisible(false);
         mainScreen.setVisible(true);
         dialogueOverlay.setVisible(false);
 
-        gameScreen.visibleProperty().addListener((obs,wasVisible,isVisible) -> {
-            if (isVisible) {
-                gameScreen.requestFocus();
-            }
-        });
-
-        gameScreen.setOnKeyPressed(event -> {
-            switch (event.getCode()) {
-                case I:
-                    toggleInventory();
-                    break;
-                case ESCAPE:
-                    if (inventory.isVisible()) {
+        mainScreen.sceneProperty().addListener((obs,oldScene,newScene) -> { //this is to add a key listener to the scene whenever it gets set so it can track key inputs
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if(gameEngine != null) {
+                        switch (event.getCode()) {
+                    case I: //if I gets pressed it toggles inventory (opens or closes)
                         toggleInventory();
-                    }
-
-                    if (dialogueOverlay != null) {
-                        dialogueOverlay.setVisible(false);
                         break;
+                    case ESCAPE: //if escape is pressed it toggles inventory off if its on 
+                        if (inventory.isVisible()) {
+                            toggleInventory();
+                        }
+
+                        if (dialogueOverlay != null && dialogueOverlay.isVisible()) { //this is to make sure the dialogue overlay is invisible if it has no dialogue
+                            dialogueOverlay.setVisible(false);
+                            break;
+                        
+                    }   
                     }
+                }
+            });
             }
         });
     }
 
+            
     public void startGame(ActionEvent event) throws IOException {
         gameEngine = new GameEngine("/worldMap.json"); //this is to start up a new game since doing the anchor pane method so would just set visible or not 
         gameEngine.startNewGame();
@@ -109,13 +115,17 @@ public class GameController {
         Room currentRoom = gameEngine.getPlayer().getCurrentRoom(); //this is to get the current room the player is in from the engine 
 
         backgroundImageView.setImage(new Image(getClass().getResourceAsStream(currentRoom.getImagePath()))); //this is to set the background image to the current room image
+        backgroundImageView.setFitWidth(1080); //this is to make sure the background image fits the screen size
+        backgroundImageView.setFitHeight(720);
+        backgroundImageView.setPreserveRatio(false); //this is to make sure the image fills the whole screen
 
         for (Item item : currentRoom.getItems()) { //this is to go through each item in the room and make and place the image view for the item in the right coordinates, we would put the coordinates in the json file so just make sure
 
             ImageView itemView = new ImageView(new Image(getClass().getResourceAsStream(item.getImagePath()))); //this creates the image of the item
 
+            itemView.setStyle("-fx-effect: dropshadow(three-pass-box, yellow, 10, 0, 0, 0);"); //WAS TESTING THIS WOULD CHANGE IT LATER SO WE CAN HOVER
 
-            itemView.setX(item.getX()); //would set the x and y for it to show up in the right spot, we can fiddle around and find where to put it then mark those coords in the json probs
+            itemView.setX(item.getX()); 
             itemView.setY(item.getY());
 
             itemView.setFitWidth(item.getWidth()); //this is to set the width and height of the item so we could get it to be a specific size wherever we want it 
@@ -124,9 +134,11 @@ public class GameController {
 
             itemView.setOnMouseClicked(e -> {
                 System.out.println("Clicked on item: " + item.getName()); //just to test
-
+                System.out.println("Inventory before adding: " + gameEngine.getPlayer().getInventory().size());
+                
                 interactiveLayer.getChildren().remove(itemView); //this is to remove the item from the screen to see if it works
-                //space here for when we have the logic to pick up items and whatnot 
+
+                gameEngine.pickUpItem(item.getName()); //this is to call the pick up command to add the item to the inventory 
             });
 
             interactiveLayer.getChildren().add(itemView); //this is to add the item image to the game screen so it shows up
@@ -137,8 +149,8 @@ public class GameController {
             ImageView npcImage = new ImageView(new Image(getClass().getResourceAsStream(npc.getImagePath()))); 
             npcImage.setX(npc.getX());
             npcImage.setY(npc.getY());
-            npcImage.setFitWidth(1);
-            npcImage.setFitHeight(1); //we can change this would be a fixed thing anyways unless npc changes sizes for some reason idk
+            npcImage.setFitWidth(150);
+            npcImage.setFitHeight(200); //we can change this would be a fixed thing anyways unless npc changes sizes for some reason idk
             npcImage.setPreserveRatio(true);
 
             //space for when we get dialogue and interaction logic so can trigger on mouse click to start convo or give item 
@@ -153,13 +165,14 @@ public class GameController {
         for (String exitDirection : currentRoom.getExitList()) {
 
             Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection), currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection), currentRoom.getExitHeight(exitDirection));
-            exitHitBox.setFill(Color.TRANSPARENT); //this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
+            exitHitBox.setFill(Color.WHITE); //this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
 
             exitHitBox.setStroke(Color.RED); //this is just for testing purposes we would remove after we see that the hitbox works fine
 
             exitHitBox.setOnMouseClicked (e -> {
                 System.out.println("Exit clicked: " + currentRoom.getExit(exitDirection).getName()); //this is just for testing to see if the exit was clicked
-                //rest of code would go here for the actual calling of the move logic whenever we have that
+                //gameEngine.moveToRoom(exitDirection); //this is to move to the room in that direction when clicked
+                //updateScreen();
             });
 
             interactiveLayer.getChildren().add(exitHitBox);
@@ -169,28 +182,41 @@ public class GameController {
     private void updateInventoryUI() {
         inventoryGrid.getChildren().clear(); //this is to clear the grid so we dont have duplicates when updating 
 
-        int col = 0;
-        int row = 0;
+        List<Item> items = gameEngine.getPlayer().getInventory();
 
-        for (Item item : gameEngine.getPlayer().getInventory()) { //this is to go through each item in the player's inventory and add it to the grid 
+        int maxSlots = 16;
 
-            ImageView itemView = new ImageView(new Image(getClass().getResourceAsStream(item.getImagePath()))); 
+        for (int i = 0; i < maxSlots; i++) { //this is to add empty slots to the inventory grid so it looks like an inventory even if there are no items 
+            int col = i % 4;
+            int row = i / 4;
 
-            itemView.setFitWidth(50); //this is to set a fixed size for the inventory items so they fit in the grid size
-            itemView.setFitHeight(50);
-            itemView.setPreserveRatio(true);
+            javafx.scene.layout.StackPane slot = new javafx.scene.layout.StackPane();
+            slot.setPrefSize(50, 50);
 
-            itemView.setOnMouseClicked(e -> {
-                //space for when we have item details or use item logic to trigger on click of the item in inventory 
+            slot.setStyle("-fx-border-color: #555555; -fx-border-width: 1px; -fx-background-color: #dddddd;");
+
+            if (i < items.size()) {
+                Item item = items.get(i);
+
+                ImageView icon = new ImageView(new Image(getClass().getResourceAsStream(item.getImagePath())));
+                icon.setFitWidth(40);
+                icon.setFitHeight(40);
+                icon.setPreserveRatio(true);
+                slot.setOnMouseClicked(e -> {
+                System.out.println("Selected: " + item.getName());
+                inventoryGrid.getChildren().forEach(n -> n.setStyle("-fx-border-color: #555555; -fx-border-width: 1px; -fx-background-color: #dddddd;"));
+                slot.setStyle("-fx-border-color: #FFD700; -fx-border-width: 2px; -fx-background-color: #ffffaa;"); //this is to highlight the selected item in gold could change if we want 
+                System.out.println("Slot clicked: col " + col + ", row " + row); 
+                selected = item;
+
             });
-
-            inventoryGrid.add(itemView, col, row); //this is to add the item image to the grid at the current column and row 
-
-            col++;
-            if (col > 3) { //this is to move to the next row after 3 items in a row 
-                col = 0;
-                row++;
+            slot.getChildren().add(icon);
+        }
+        else {
+            slot.setStyle("-fx-border-color: #aaaaaa; -fx-border-width: 1px; -fx-background-color: #eeeeee;"); //this is to make empty slots look different so theyre more greyed out
             }
+            inventoryGrid.add(slot, col, row); 
+           
         }
     }
 
@@ -203,6 +229,13 @@ public class GameController {
             inventory.setVisible(true);
             inventory.requestFocus(); //this is to put the focus on the inventory so can click items in it
         }
+    }
+    
+    public void dropItemFromInventory(Event event) {
+        gameEngine.dropItem(selected.getName());
+        updateInventoryUI();
+        updateScreen();
+        System.out.println("Inventory after dropping: " + gameEngine.getPlayer().getInventory());
     }
 
     public void switchToMainScene(Event event) throws IOException {
