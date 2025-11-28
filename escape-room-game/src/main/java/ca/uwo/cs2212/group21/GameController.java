@@ -6,6 +6,7 @@ import ca.uwo.cs2212.group21.model.GameEngine;
 import ca.uwo.cs2212.group21.model.NPC;
 import ca.uwo.cs2212.group21.model.Item;
 import ca.uwo.cs2212.group21.model.Room;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -13,11 +14,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class GameController {
@@ -32,9 +35,24 @@ public class GameController {
     @FXML private AnchorPane gameScreen; //this is the actual game overlay
     @FXML private AnchorPane inventory; //this is for the inventory overlay
     @FXML private GridPane inventoryGrid; //this is the grid inside the inventory where items would go
+    @FXML private AnchorPane interactiveLayer; //this is the layer on top of the background where we would put items, npcs, exits, etc
+
+    @FXML private Label currentRoomLabel;
+    @FXML private Label timeLabel;
+    @FXML private Label scoreLabel;
+    @FXML private ImageView star1;
+    @FXML private ImageView star2;
+    @FXML private ImageView star3;
+
+    @FXML private AnchorPane dialogureOverlay;
+    
 
     private GameEngine gameEngine;
     private ImageView currentNPCImageView;
+
+    private Timeline gameTimer;    
+    //private final Image STAR_FULL = new Image(getClass().getResourceAsStream("/images/star_full.png")); //whenever we get a star image we put it here
+    //private final Image STAR_EMPTY = new Image(getClass().getResourceAsStream("/images/star_empty.png")); //whenever we get an empty star image we put it here
 
     public void initialize() {
         gameScreen.setVisible(false);
@@ -50,11 +68,12 @@ public class GameController {
         gameScreen.setVisible(true);
 
         updateScreen();
+        updateInventoryUI();
     }
 
     private void updateScreen() {
         
-        gameScreen.getChildren().clear();
+        interactiveLayer.getChildren().clear();
 
         Room currentRoom = gameEngine.getPlayer().getCurrentRoom(); //this is to get the current room the player is in from the engine 
 
@@ -72,9 +91,14 @@ public class GameController {
             itemView.setFitHeight(item.getHeight());
             itemView.setPreserveRatio(true); //this is to make sure the image doesnt get like warped kinda
 
-            //space here for when we have the logic to pick up items and whatnot 
+            itemView.setOnMouseClicked(e -> {
+                System.out.println("Clicked on item: " + item.getName()); //just to test
 
-            gameScreen.getChildren().add(itemView); //this is to add the item image to the game screen so it shows up
+                interactiveLayer.getChildren().remove(itemView); //this is to remove the item from the screen to see if it works
+                //space here for when we have the logic to pick up items and whatnot 
+            });
+
+            interactiveLayer.getChildren().add(itemView); //this is to add the item image to the game screen so it shows up
         }
         if (currentRoom.hasNPC()) {//this is to get the npc image and set it as a view then add it to the screen wherever they should go 
             NPC npc = currentRoom.getNPC();
@@ -88,11 +112,26 @@ public class GameController {
 
             //space for when we get dialogue and interaction logic so can trigger on mouse click to start convo or give item 
 
-            gameScreen.getChildren().add(npcImage);
+            interactiveLayer.getChildren().add(npcImage);
             this.currentNPCImageView = npcImage;
         }
         else {
             this.currentNPCImageView = null; //if we decide to have a room with no npc just to make sure its null 
+        }
+
+        for (String exitDirection : currentRoom.getExitList()) {
+
+            Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection), currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection), currentRoom.getExitHeight(exitDirection));
+            exitHitBox.setFill(Color.TRANSPARENT); //this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
+
+            exitHitBox.setStroke(Color.RED); //this is just for testing purposes we would remove after we see that the hitbox works fine
+
+            exitHitBox.setOnMouseClicked (e -> {
+                System.out.println("Exit clicked: " + currentRoom.getExit(exitDirection).getName()); //this is just for testing to see if the exit was clicked
+                //rest of code would go here for the actual calling of the move logic whenever we have that
+            });
+
+            interactiveLayer.getChildren().add(exitHitBox);
         }
     }
 
@@ -117,7 +156,7 @@ public class GameController {
             inventoryGrid.add(itemView, col, row); //this is to add the item image to the grid at the current column and row 
 
             col++;
-            if (col >= 3) { //this is to move to the next row after 3 items in a row 
+            if (col > 3) { //this is to move to the next row after 3 items in a row 
                 col = 0;
                 row++;
             }
@@ -132,6 +171,7 @@ public class GameController {
         stage.show();
     }
 
+    
     public void switchToStartScene(Event event) throws IOException {
         mainScreen.setVisible(false);
         gameScreen.setVisible(true);
@@ -150,5 +190,6 @@ public class GameController {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         stage.close();
     }
+
 
 }

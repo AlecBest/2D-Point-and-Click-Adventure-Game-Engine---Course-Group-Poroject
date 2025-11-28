@@ -150,8 +150,12 @@ public class GameEngine {
                 JSONObject exitObj = exitArray.getJSONObject(j);
                 String exitName = exitObj.getString("exit");
                 String exitDirection = exitObj.getString("exitDirection");
+                double xPos = exitObj.getDouble("xPosition");
+                double yPos = exitObj.getDouble("yPosition");
+                double width = exitObj.getDouble("width");
+                double height = exitObj.getDouble("height");
                 if (exitName != null) {
-                    currentRoom.setExit(exitDirection, rooms.get(exitName));
+                    currentRoom.setExit(exitDirection, rooms.get(exitName), xPos, yPos, width, height);
                 }
             }
         }

@@ -13,9 +13,14 @@ public class Room {
     private String description;
     private List<Item> items;
     private HashMap<String, Room> exits;
+    private List<String> exitList;
     private boolean isLocked;
     private String imagePath;
     private NPC npc;
+    private double exitX;;
+    private double exitY;  
+    private double exitWidth;
+    private double exitHeight;
 
     /**
      * Initializes a new room with the given parameters.
@@ -32,12 +37,21 @@ public class Room {
         this.isLocked = isLocked;
         this.imagePath = imagePath;
         this.npc = null;
+        this.exitX = 0;
+        this.exitY = 0;
+        this.exitWidth = 0;
+        this.exitHeight = 0;
     }
 
     //Getters and Setters
 
-    public void setExit(String direction, Room neighbRoom) {
+    public void setExit(String direction, Room neighbRoom, double x, double y, double width, double height) {
         exits.put(direction, neighbRoom);
+        exitList.add(direction);
+        this.exitX = x;
+        this.exitY = y;
+        this.exitWidth = width;
+        this.exitHeight = height;
     }
 
     public void setNPC(NPC npc) {
@@ -75,9 +89,29 @@ public class Room {
     public HashMap<String, Room> getExits() {
         return exits;
     }
+
+    public List<String> getExitList() {
+        return exitList;
+    }
     
     public Room getExit(String direction) {
         return exits.get(direction);
+    }
+    
+    public double getExitX(String direction) {
+        return this.exitX;
+    }
+
+    public double getExitY(String direction) {
+        return this.exitY;
+    }
+    
+    public double getExitWidth(String direction) {
+        return this.exitWidth;
+    }
+    
+    public double getExitHeight(String direction) {
+        return this.exitHeight; 
     }
 
     public boolean isLocked() {
