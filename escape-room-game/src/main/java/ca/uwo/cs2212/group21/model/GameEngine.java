@@ -13,6 +13,7 @@ import java.util.List;
 
 import ca.uwo.cs2212.group21.commands.PickUpCommand;
 import ca.uwo.cs2212.group21.commands.DropCommand;
+import ca.uwo.cs2212.group21.commands.UseCommand;
 
 
 /**
@@ -173,20 +174,23 @@ public class GameEngine {
     return player;
     }
 
-    //command wrapper methods
-    /**
-     * runs PickUpCommand on current game state
-     * lets other parts of program call pick up item through GameEngine
-     */
+    // -- command wrapper methods --
+    // runs PickUpCommand on current game state
     public String pickUpItem(String itemName){
         PickUpCommand cmd = new PickUpCommand();
         return cmd.execute(player, itemName);
     }
 
-    // same thing for DropCommand
+    // DropCommand wrapper method
     public String dropItem(String itemName) {
         DropCommand cmd = new DropCommand();
         return cmd.execute(player, itemName);
+    }
+
+    // UseCommand wrapper method
+    public String useItem(String itemName, String secondItemName) {
+        UseCommand cmd = new UseCommand();
+        return cmd.execute(player, itemName, secondItemName);
     }
 
 }
