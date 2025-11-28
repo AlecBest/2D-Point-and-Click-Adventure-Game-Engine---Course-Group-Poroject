@@ -74,16 +74,90 @@ public class UseCommand {
             return "you coat the candle with holy oil. it hardens into a purified candle...";
         }
 
-        // other combinations can be filled in here later
-        // room 2 - book
-        //room 3 - mystic meal
-        // room 4 - key fragments -> key
+        // room 2: torn book + missing pages = restored book
+        if (isPair(a, b, "torn book", "missing pages")){
 
-        // wrong combo
-        // any pair of items that isn't the proper "recipe" -> NPC doesn't like, time penalty
-        // *** make sure time decrease is in seconds *****
+            // remove items from inventory
+            state.removeItemFromInventory(first);
+            state.removeItemFromInventory(second);
+
+            //combine items
+            Item restoredBook = new Item(
+                "Restored Book",
+                "an old book with all its' pages back in place.",
+                true,
+                "/images/restored_book.png",
+                0,0,0,0
+            );
+
+            state.addItemToInventory(restoredBook);
+            return "you've matched the loose pages with the torn book. the book looks whole again...";
+        }
+
+        // room 3: bread + cheese = mystic meal
+        if (isPair(a,b, "bread", "cheese")){
+
+            //remove items from inventory
+            state.removeItemFromInventory(first);
+            state.removeItemFromInventory(second);
+
+            //combine items
+            Item mysticMeal = new Item(
+                "Mystic Meal",
+                "a meal charged with energy",
+                true,
+                "/images/mystic_meal.png",
+                0,0,0,0
+            );
+
+            state.addItemToInventory(mysticMeal);
+            return "bread and cheese. simple yet comforting...";
+        }
+
+        // room 4: add two key fragments to create partial key 
+        // -> player has three key fragments, but combines two first, then the combines that with the final fragment (two-step approach to making final key)
+        if (isPair(a,b,"key fragment a", "key fragment b") || isPair(a, b, "key fragment a", "key fragment c") || isPair(a,b, "key fragment b", "key fragment c")){
+
+            // remove key fragments from inventory
+            state.removeItemFromInventory(first);
+            state.removeItemFromInventory(second);
+
+            Item partialKey = new Item(
+                "Partial Key",
+                "two fragments joined together... one more needed.",
+                true,
+                "/images/partial_key.png",
+                0,0,0,0
+            );
+
+            // add partial key to inventory
+            state.addItemToInventory(partialKey);
+            return "the two fragments snap together, forming part of a key...";
+        }
+
+        // room 4: partial key + remaining key fragment = liberation key
+        if (isPair(a, b, "partial key", "key fragment a") || isPair(a,b, "partial key", "key fragment b") || isPair(a, b, "partial key", "key fragment c")) {
+
+            // remove partial key and remaining fragment from inventory
+            state.removeItemFromInventory(first);
+            state.removeItemFromInventory(second);
+
+            Item liberationKey = new Item(
+                "Liberation Key",
+                "the final key that unlocks your escape...",
+                true,
+                "/images/liberation_key.png",
+                0,0,0,0
+            );
+
+            // add final key to inventory
+            state.addItemToInventory(liberationKey);
+            return "the final key fragment clicks into place. the liberation key is now complete. your freedom awaits...";
+        }
+
+        // not a valid combination (ex. if player combines correct item a with trick item c)
         state.decreaseTime(30);
-        return "these items don't react well together. you've lost 30 seconds!";
+        return "oof...these items don't react well together. you've lost 30 seconds.";
     }
 
     // helper to check if two item names match the correct recipe pair (order doesnt matter)
