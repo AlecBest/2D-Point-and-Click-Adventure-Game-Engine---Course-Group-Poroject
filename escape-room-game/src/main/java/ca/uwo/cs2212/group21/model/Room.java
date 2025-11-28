@@ -62,6 +62,16 @@ public class Room {
         return npc;
     }
 
+    //talkcommand issues when compiling...this keeps it compiling for now so i can test some commands
+    //can be removed once TalkCommand is updated to use getNPC()
+    public java.util.List<NPC> getNPCS(){
+        java.util.List<NPC> list = new java.util.ArrayList<>();
+        if (npc != null) {
+            list.add(npc);
+        }
+        return list;
+    }
+
     public boolean hasNPC() {
         return this.npc != null;
     }

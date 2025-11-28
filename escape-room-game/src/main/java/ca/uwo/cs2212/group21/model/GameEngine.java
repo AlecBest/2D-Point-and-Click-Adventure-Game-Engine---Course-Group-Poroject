@@ -11,6 +11,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.uwo.cs2212.group21.commands.PickUpCommand;
+import ca.uwo.cs2212.group21.commands.DropCommand;
+
+
 /**
  * The GameEngine class is responsible for managing the core mechanics and flow of the escape room game.
  * It will handle player actions, game state updates, and interactions between different game components.
@@ -167,6 +171,22 @@ public class GameEngine {
 
     public GameState getPlayer() {
     return player;
+    }
+
+    //command wrapper methods
+    /**
+     * runs PickUpCommand on current game state
+     * lets other parts of program call pick up item through GameEngine
+     */
+    public String pickUpItem(String itemName){
+        PickUpCommand cmd = new PickUpCommand();
+        return cmd.execute(player, itemName);
+    }
+
+    // same thing for DropCommand
+    public String dropItem(String itemName) {
+        DropCommand cmd = new DropCommand();
+        return cmd.execute(player, itemName);
     }
 
 }
