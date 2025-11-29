@@ -12,8 +12,11 @@ public class GameState {
  
     private Room currentRoom;
     private List<Item> inventory;
+    private String imagePath;
     private boolean isGameOver;
     private int timeRemaining;
+    private double playerX;
+    private double playerY;
     
     /**
      * Initializes a new game state.
@@ -26,6 +29,11 @@ public class GameState {
         this.inventory = new ArrayList<>();
         this.isGameOver = false;
         this.timeRemaining = initialTime;
+
+        this.imagePath = "/images/guard.png"; //just test
+
+        this.playerX = 600.0; //default starting x position we can change this later
+        this.playerY = 360.0; //default starting y position
     }
 
     /**
@@ -56,6 +64,27 @@ public class GameState {
     
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
+    }
+
+    public void setPosition(double x, double y) {
+        this.playerX = x;
+        this.playerY = y;
+    }
+
+    public double getPlayerX() {
+        return playerX;
+    }
+
+    public double getPlayerY() {
+        return playerY;
+    }
+
+    public void setPlayerImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getImagePath() {
+        return this.imagePath;
     }
 
     public List<Item> getInventory() {

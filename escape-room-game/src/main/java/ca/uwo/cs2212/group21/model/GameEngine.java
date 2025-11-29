@@ -42,7 +42,7 @@ public class GameEngine {
     }
 
     public void startNewGame() {
-             int initialTime = 60; 
+            int initialTime = 60; 
             Room startingRoom = rooms.get("Main Room"); //we can change this to whatever we end up calling the starting room
             this.player = new GameState(startingRoom, initialTime);
     }
@@ -191,6 +191,10 @@ public class GameEngine {
     public String useItem(Item itemName, Item secondItemName) {
         UseCommand cmd = new UseCommand();
         return cmd.execute(player, itemName, secondItemName);
+    }
+
+    public void playerMove(double newX, double newY) {
+        player.setPosition(newX, newY);
     }
 
     

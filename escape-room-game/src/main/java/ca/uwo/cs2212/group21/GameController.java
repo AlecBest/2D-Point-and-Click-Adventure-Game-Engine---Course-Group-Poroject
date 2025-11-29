@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group21;
 
 import java.io.IOException;
+import java.nio.file.Watchable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import ca.uwo.cs2212.group21.model.NPC;
 import ca.uwo.cs2212.group21.model.Item;
 import ca.uwo.cs2212.group21.model.Room;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -29,6 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class GameController {
 
@@ -66,7 +69,10 @@ public class GameController {
     
 
     private GameEngine gameEngine;
-    private ImageView currentNPCImageView;
+    @FXML private ImageView currentNPCImageView;
+    @FXML private ImageView playerImageView; 
+
+    private TranslateTransition currentAnimation;
 
     private Timeline gameTimer;    
     //private final Image STAR_FULL = new Image(getClass().getResourceAsStream("/images/star_full.png")); //whenever we get a star image we put it here
@@ -105,6 +111,19 @@ public class GameController {
                 }
             });
             }
+        });
+
+        interactiveLayer.setOnMouseClicked(event -> {
+            double targetX = event.getX();
+            double targetY = event.getY(); //to get the coordinates to move to
+    
+            double centeredX = targetX - (200/2); //assuming player image is 200x100  so centering it on click we can change if size diff
+            double centeredY = targetY - (100);
+
+            
+            movePlayerVisuals(centeredX, centeredY);
+            gameEngine.playerMove(centeredX, centeredY); //update in game state
+            
         });
     }
 
@@ -145,6 +164,8 @@ public class GameController {
             itemView.setPreserveRatio(true); //this is to make sure the image doesnt get like warped kinda
 
             itemView.setOnMouseClicked(e -> {
+                e.consume(); //this is to stop the event from propagating to the layer below so the player doesnt move when clicking an item
+                
                 System.out.println("Clicked on item: " + item.getName()); //just to test
                 System.out.println("Inventory before adding: " + gameEngine.getPlayer().getInventory().size());
                 
@@ -158,17 +179,19 @@ public class GameController {
         if (currentRoom.hasNPC()) {//this is to get the npc image and set it as a view then add it to the screen wherever they should go 
             NPC npc = currentRoom.getNPC();
 
-            ImageView npcImage = new ImageView(new Image(getClass().getResourceAsStream(npc.getImagePath()))); 
-            npcImage.setX(npc.getX());
-            npcImage.setY(npc.getY());
-            npcImage.setFitWidth(150);
-            npcImage.setFitHeight(200); //we can change this would be a fixed thing anyways unless npc changes sizes for some reason idk
-            npcImage.setPreserveRatio(true);
+            currentNPCImageView = new ImageView(new Image(getClass().getResourceAsStream(npc.getImagePath()))); 
+            currentNPCImageView.setX(npc.getX());
+            currentNPCImageView.setY(npc.getY());
+            currentNPCImageView.setFitWidth(150);
+            currentNPCImageView.setFitHeight(200); //we can change this would be a fixed thing anyways unless npc changes sizes for some reason idk
+            currentNPCImageView.setPreserveRatio(true);
 
-            //space for when we get dialogue and interaction logic so can trigger on mouse click to start convo or give item 
+            currentNPCImageView.setOnMouseClicked(e -> {
+                System.out.println("Clicked on NPC: " + npc.getName());
+                //would open dialogue box and start npc interaction here
+            });
 
-            interactiveLayer.getChildren().add(npcImage);
-            this.currentNPCImageView = npcImage;
+            interactiveLayer.getChildren().add(currentNPCImageView);
         }
         else {
             this.currentNPCImageView = null; //if we decide to have a room with no npc just to make sure its null 
@@ -183,12 +206,23 @@ public class GameController {
 
             exitHitBox.setOnMouseClicked (e -> {
                 System.out.println("Exit clicked: " + currentRoom.getExit(exitDirection).getName()); //this is just for testing to see if the exit was clicked
+                System.out.println("Player image path: " + gameEngine.getPlayer().getImagePath());
+
                 //gameEngine.moveToRoom(exitDirection); //this is to move to the room in that direction when clicked
                 //updateScreen();
             });
 
             interactiveLayer.getChildren().add(exitHitBox);
         }
+
+        playerImageView = new ImageView(new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
+        playerImageView.setLayoutX(400);
+        playerImageView.setLayoutY(300);
+        playerImageView.setFitWidth(200);
+        playerImageView.setFitHeight(150);
+        playerImageView.setPreserveRatio(true);
+        interactiveLayer.getChildren().add(playerImageView);
+
     }
 
     private void updateInventoryUI() {
@@ -320,7 +354,6 @@ public class GameController {
             combineItems.clear();
             updateCombineSlots();
             updateInventoryUI();
-            updateScreen();
         }
     }
 
@@ -355,6 +388,42 @@ public class GameController {
         updateCombineSlots();
         updateInventoryUI();
     }
+
+    public void movePlayerVisuals(double x, double y) {
+
+        if (currentAnimation != null) { //this is so if you click queue a bunch of times it just stops the current anim to start another one
+        currentAnimation.stop();
+        }
+
+    
+        double currentVisualX = playerImageView.getLayoutX() + playerImageView.getTranslateX(); //this is to get the current position since the translate wouldnt store like intermediate positions
+        double currentVisualY = playerImageView.getLayoutY() + playerImageView.getTranslateY();
+
+    
+        playerImageView.setLayoutX(currentVisualX); //reset layout to current position
+        playerImageView.setLayoutY(currentVisualY);
+        playerImageView.setTranslateX(0); //reset translate to 0
+        playerImageView.setTranslateY(0);
+        playerImageView.setX(0);
+        playerImageView.setY(0);
+
+        double difX = x - currentVisualX; //this is to get the difference between current position and target so it can animate to that position
+        double difY = y - currentVisualY;
+
+        currentAnimation = new TranslateTransition(Duration.seconds(1), playerImageView);
+        currentAnimation.setToX(difX); 
+        currentAnimation.setToY(difY);
+
+        currentAnimation.setOnFinished(e -> { //this is to set the final position properly and then reset translate so no weird stuff happens
+        playerImageView.setLayoutX(x);
+        playerImageView.setLayoutY(y);
+        playerImageView.setTranslateX(0);
+        playerImageView.setTranslateY(0);
+        });
+
+        currentAnimation.play();        
+    }
+
 
     public void switchToMainScene(Event event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/gameView.fxml")); 

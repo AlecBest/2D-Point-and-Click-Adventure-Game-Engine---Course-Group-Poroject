@@ -29,14 +29,15 @@
             <Button layoutX="519.0" layoutY="534.0" mnemonicParsing="false" onAction="#quitGame" text="Quit" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="gameScreen" prefHeight="720.0" prefWidth="1080.0" visible="false">
+      <AnchorPane fx:id="gameScreen" prefHeight="720.0" prefWidth="1080.0">
          <children>
             <ImageView fx:id="backgroundImageView" fitHeight="720.0" fitWidth="1080.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/page_1_background_of_NPC_talking.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="npcImage" fitHeight="200.0" fitWidth="150.0" layoutX="603.0" layoutY="329.0" />
+            <ImageView fx:id="playerImageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="currentNPCImageView" fitHeight="200.0" fitWidth="150.0" layoutX="603.0" layoutY="329.0" />
             <AnchorPane fx:id="interactiveLayer" prefHeight="720.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label alignment="CENTER" layoutX="-3.0" layoutY="658.0" prefHeight="17.0" prefWidth="1079.0" text="The door is locked." textAlignment="CENTER" textFill="WHITE" visible="false">
@@ -77,7 +78,7 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="inventory" prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="inventory" prefHeight="200.0" prefWidth="200.0" visible="false">
          <children>
             <Pane fx:id="inventoryUIBackground" layoutX="626.0" opacity="0.6" prefHeight="720.0" prefWidth="454.0" />
             <GridPane fx:id="inventoryGrid" gridLinesVisible="true" layoutX="712.0" layoutY="86.0" prefHeight="539.0" prefWidth="313.0">
