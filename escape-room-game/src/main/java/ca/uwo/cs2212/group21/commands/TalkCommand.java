@@ -21,7 +21,7 @@ public class TalkCommand {
             return "You are not in a room.";
         }
 
-        // 2: get the NPC in this room (you only have one)
+        // 2: get the NPC in this room 
         if (!currentRoom.hasNPC()) {
             return "There is no one here to talk to.";
         }
@@ -58,7 +58,7 @@ public class TalkCommand {
         return line;
     }
 
-    // These two are placeholders until DialogueNode implemented sooo reminder to me to put this once done
+    // These two are placeholders until aiden finishes DialogueNode sooo reminder to me to put this once done
 
     private String getCurrentDialogueLine(NPC npc) {
         // TODO: replace with real DialogueNode logic later

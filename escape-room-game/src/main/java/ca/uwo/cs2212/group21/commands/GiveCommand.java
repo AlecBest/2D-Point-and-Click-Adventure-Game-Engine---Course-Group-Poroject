@@ -9,8 +9,8 @@ import ca.uwo.cs2212.group21.model.Room;
 import ca.uwo.cs2212.group21.model.NPC;
 
 /**
- * Handles the GIVE command.
- * Player gives an item (or all items) from their inventory to an NPC in the current room.
+ * 
+ * Player gives an item from their inventory to an NPC in the current room.
  */
 public class GiveCommand {
 
