@@ -212,9 +212,6 @@ public class GameController {
             });
             slot.getChildren().add(icon);
         }
-        else {
-            slot.setStyle("-fx-border-color: #aaaaaa; -fx-border-width: 1px; -fx-background-color: #eeeeee;"); //this is to make empty slots look different so theyre more greyed out
-            }
             inventoryGrid.add(slot, col, row); 
            
         }

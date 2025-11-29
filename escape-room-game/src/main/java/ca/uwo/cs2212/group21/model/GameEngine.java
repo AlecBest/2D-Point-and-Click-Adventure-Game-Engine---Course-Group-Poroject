@@ -193,12 +193,6 @@ public class GameEngine {
         return cmd.execute(player, itemName, secondItemName);
     }
 
-    public void moveToRoom(String direction) {
-        Room nextRoom = this.player.getCurrentRoom().getExit(direction);
-        if (nextRoom != null && !nextRoom.isLocked()) {
-            currentRoom = nextRoom;
-            player.setCurrentRoom(nextRoom);
-        }
-    }
+    
 
 }
