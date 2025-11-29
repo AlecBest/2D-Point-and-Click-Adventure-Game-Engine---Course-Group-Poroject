@@ -18,13 +18,13 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.GameController">
    <children>
-      <AnchorPane fx:id="mainScreen" prefHeight="720.0" prefWidth="1080.0">
+      <AnchorPane fx:id="mainScreen" prefHeight="720.0" prefWidth="1080.0" visible="false">
          <children>
             <ImageView fx:id="mainMenuBackground" fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true">
                <image>
                   <Image url="@../images/Main_menu_Background.png" />
                </image></ImageView>
-            <Button layoutX="502.0" layoutY="332.0" mnemonicParsing="false" onAction="#startGame" text="Start Game" />
+            <Button layoutX="501.0" layoutY="347.0" mnemonicParsing="false" onAction="#startGame" text="Start Game" />
             <Button layoutX="501.0" layoutY="438.0" mnemonicParsing="false" onAction="#switchToLoadGameScene" text="Load Game" />
             <Button layoutX="519.0" layoutY="534.0" mnemonicParsing="false" onAction="#quitGame" text="Quit" />
          </children>
@@ -77,7 +77,7 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="inventory" prefHeight="200.0" prefWidth="200.0" visible="false">
+      <AnchorPane fx:id="inventory" prefHeight="200.0" prefWidth="200.0">
          <children>
             <Pane fx:id="inventoryUIBackground" layoutX="626.0" opacity="0.6" prefHeight="720.0" prefWidth="454.0" />
             <GridPane fx:id="inventoryGrid" gridLinesVisible="true" layoutX="712.0" layoutY="86.0" prefHeight="539.0" prefWidth="313.0">
@@ -99,10 +99,21 @@
                   <Font size="36.0" />
                </font>
             </Label>
-            <Button fx:id="useButton" layoutX="712.0" layoutY="637.0" mnemonicParsing="false" text="USE" />
-            <Button fx:id="dropButton" layoutX="793.0" layoutY="637.0" mnemonicParsing="false" onAction="#dropItemFromInventory" text="DROP" />
-            <Button fx:id="combineButton" layoutX="869.0" layoutY="637.0" mnemonicParsing="false" text="COMBINE" />
-            <Button fx:id="examineButton" layoutX="959.0" layoutY="637.0" mnemonicParsing="false" text="EXAMINE" />
+            <Button fx:id="dropButton" layoutX="725.0" layoutY="630.0" mnemonicParsing="false" onAction="#dropItemFromInventory" text="DROP" />
+            <Button fx:id="combineButton" layoutX="830.0" layoutY="630.0" mnemonicParsing="false" onAction="#onCombineModeClick" text="COMBINE" />
+            <Button fx:id="examineButton" layoutX="950.0" layoutY="630.0" mnemonicParsing="false" text="EXAMINE" />
+            <AnchorPane fx:id="combinePanel" layoutX="713.0" layoutY="425.0" prefHeight="174.0" prefWidth="313.0" visible="false">
+               <children>
+                  <HBox layoutX="107.0" layoutY="43.0" prefHeight="50.0" prefWidth="100.0">
+                     <children>
+                        <StackPane fx:id="combineSlot1" prefHeight="150.0" prefWidth="200.0" />
+                        <StackPane fx:id="combineSlot2" prefHeight="150.0" prefWidth="200.0" />
+                     </children>
+                  </HBox>
+                  <Button fx:id="mergeButton" layoutX="196.0" layoutY="134.0" mnemonicParsing="false" onAction="#onMergeButtonClick" text="Merge" />
+                  <Button fx:id="clearButton" layoutX="67.0" layoutY="134.0" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear" />
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>

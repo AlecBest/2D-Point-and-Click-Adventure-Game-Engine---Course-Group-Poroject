@@ -17,7 +17,7 @@
           "height": 50.0
         },
         {
-          "item": "Old Parchment",
+          "item": "candle",
           "itemDescription": "A brittle piece of paper with faded latin text.",
           "isItemUsable": true,
           "itemImagePath": "/images/scroll.png",
@@ -27,7 +27,7 @@
           "height": 50.0
         },
         {
-          "item": "Quill",
+          "item": "holy oil",
           "itemDescription": "A feather quill. The tip is stained with dry ink.",
           "isItemUsable": true,
           "itemImagePath": "/images/quillExample.png",

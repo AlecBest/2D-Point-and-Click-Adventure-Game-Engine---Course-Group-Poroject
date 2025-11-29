@@ -11,9 +11,9 @@ public class UseCommand {
     // runs Use command
     // if secondItemName is null or blank, this treats it as "use item alone" (ex. key)
     // if secondItemName is given, then this treats it as "use item with another item" (ex. combine)
-    public String execute (GameState state, String itemName, String secondItemName) {
+    public String execute (GameState state, Item itemName, Item secondItemName) {
 
-        if (secondItemName == null || secondItemName.trim().isEmpty()){
+        if (secondItemName == null){
 
             //use single item
             return useSingle(state, itemName);
@@ -23,22 +23,22 @@ public class UseCommand {
     }
 
     //use one item by itself
-    private String useSingle(GameState state, String itemName){
+    private String useSingle(GameState state, Item itemName){
 
-        Item item = state.findItemInventory(itemName);
-        if (item==null){
+        if (itemName==null){
 
             //player tries to use something they're not holding
             return "you are not carrying " + itemName + ".";
         }
 
         //placeholder to plug more logic in later after testing, ex. key on final door
-        return "nothing happens if you use " + item.getName() + " by itself.";
+        return "nothing happens if you use " + itemName.getName() + " by itself.";
     }
 
     //for using an inventory item with another (combining items)
-    private String useWithItem(GameState state, String itemNameA, String itemNameB){
+    private String useWithItem(GameState state, Item first, Item second){
 
+        /* 
         //find both items in players inventory
         Item first = state.findItemInventory(itemNameA);
         Item second = state.findItemInventory(itemNameB);
@@ -48,6 +48,10 @@ public class UseCommand {
             //checks that both items are in inventory in order to combine them
             return "both items must be in inventory to combine.";
         }
+
+        Since we call this from GameController which already checks inventory we can probably skip this
+
+        */
 
         // so names aren't case sensitive
         String a = first.getName().toLowerCase();
@@ -65,7 +69,7 @@ public class UseCommand {
                 "Purified Candle",
                 "a candle coated in holy oil.",
                 true,
-                "/images/purified_candle.png",
+                "/images/guard.png",
                 0,0,0,0 
             );
 
@@ -156,7 +160,10 @@ public class UseCommand {
         }
 
         // not a valid combination (ex. if player combines correct item a with trick item c)
+        
         state.decreaseTime(30);
+        state.addItemToInventory(first);
+        state.addItemToInventory(second);
         return "oof...these items don't react well together. you've lost 30 seconds.";
     }
 

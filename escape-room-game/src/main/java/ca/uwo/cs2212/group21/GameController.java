@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group21;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.uwo.cs2212.group21.commands.PickUpCommand;
@@ -23,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -54,6 +56,13 @@ public class GameController {
     @FXML private TextArea dialogueBox;     
     @FXML private Button nextButton;        
     @FXML private VBox optionsBox;
+
+    @FXML private AnchorPane combinePanel;
+    @FXML private StackPane combineSlot1;
+    @FXML private StackPane combineSlot2;
+    @FXML private Button mergeButton;
+    @FXML private Button clearButton;
+
     
 
     private GameEngine gameEngine;
@@ -64,6 +73,9 @@ public class GameController {
     //private final Image STAR_EMPTY = new Image(getClass().getResourceAsStream("/images/star_empty.png")); //whenever we get an empty star image we put it here
 
     private Item selected; //to keep track of selected item in inventory
+
+    private boolean isCombineMode = false; 
+    private List<Item> combineItems = new ArrayList<>(); 
 
     public void initialize() {
         gameScreen.setVisible(false);
@@ -209,6 +221,10 @@ public class GameController {
                 System.out.println("Slot clicked: col " + col + ", row " + row); 
                 selected = item;
 
+                if (isCombineMode) {
+                    handleCombineSelecting(selected);
+                }
+
             });
             slot.getChildren().add(icon);
         }
@@ -233,6 +249,111 @@ public class GameController {
         updateInventoryUI();
         updateScreen();
         System.out.println("Inventory after dropping: " + gameEngine.getPlayer().getInventory());
+    }
+
+    public void onCombineModeClick(Event event) {
+        if (isCombineMode) { //if already in combine mode then exit it
+            exitCombineMode();
+        } else {
+            isCombineMode = true; //otherwise would turn it on then show the combine panel and update the slots
+            combinePanel.setVisible(true);
+            combineItems.clear();
+            updateCombineSlots();
+            System.out.println("Combine Mode Activated");
+        }
+    }
+
+    private void exitCombineMode() { //this is to exit and reset combine mode stuff
+        isCombineMode = false;
+        combinePanel.setVisible(false);
+        combineItems.clear();
+        updateCombineSlots();
+        updateInventoryUI();
+    }
+
+    public void handleCombineSelecting(Item item) { //if the item is already in the combine list then remove it otherwise would add if there is space 
+        if (combineItems.contains(item)) {
+            combineItems.remove(item);
+            gameEngine.getPlayer().addItemToInventory(item); //add back to inventory when removed from combine list
+            updateInventoryUI();
+        } else if (combineItems.size() < 2) {
+            combineItems.add(item);
+            gameEngine.getPlayer().removeItemFromInventory(item); //remove from inventory when added to combine list
+            updateInventoryUI();
+        }
+        updateCombineSlots(); 
+    } 
+
+    public void updateCombineSlots() {
+        combineSlot1.getChildren().clear();
+        combineSlot2.getChildren().clear();
+
+        if (combineItems.size() > 0) {
+            Item item1 = combineItems.get(0);
+            ImageView icon1 = new ImageView(new Image(getClass().getResourceAsStream(item1.getImagePath())));
+            icon1.setFitWidth(50);
+            icon1.setFitHeight(50);
+            icon1.setPreserveRatio(true);
+            combineSlot1.getChildren().add(icon1);
+            combineSlot1.setOnMouseClicked(e -> handleCombineSelecting(item1)
+        );
+        }
+
+        if (combineItems.size() > 1) {
+            Item item2 = combineItems.get(1);
+            ImageView icon2 = new ImageView(new Image(getClass().getResourceAsStream(item2.getImagePath())));
+            icon2.setFitWidth(50);
+            icon2.setFitHeight(50);
+            icon2.setPreserveRatio(true);
+            combineSlot2.getChildren().add(icon2);
+            combineSlot2.setOnMouseClicked(e -> handleCombineSelecting(item2));
+        }
+
+        mergeButton.setDisable(combineItems.size() < 2); //only can merge if there are 2 items 
+    }
+
+    public void onMergeButtonClick(Event event) {
+        if (combineItems.size() == 2) {
+            String result = gameEngine.useItem(combineItems.get(0), combineItems.get(1));
+            System.out.println(result); //this is to show the result of the combination attempt 
+            //exitCombineMode();
+            combineItems.clear();
+            updateCombineSlots();
+            updateInventoryUI();
+            updateScreen();
+        }
+    }
+
+    public void onClearButtonClick(Event event) {
+        if (combineItems.isEmpty()) {
+            return; //nothing to clear
+        } else {
+            if (combineItems.size() == 1) {
+                if (gameEngine.getPlayer().getInventory().contains(combineItems.get(0))) { //If item already in inventory, just remove from combine list
+                    combineItems.remove(0);
+                } else {
+                    gameEngine.getPlayer().addItemToInventory(combineItems.get(0)); //otherwise add it back to inventory so they dont just go poof to the void
+                    combineItems.remove(0);
+                }
+            } else if (combineItems.size() == 2) {
+                if (gameEngine.getPlayer().getInventory().contains(combineItems.get(0))) {
+                    combineItems.remove(0);
+                } else {
+                    gameEngine.getPlayer().addItemToInventory(combineItems.get(0));
+                    combineItems.remove(0);
+                }
+
+                if (gameEngine.getPlayer().getInventory().contains(combineItems.get(0))) {
+                    combineItems.remove(0);
+                } else {
+                    gameEngine.getPlayer().addItemToInventory(combineItems.get(0));
+                    combineItems.remove(0);
+                }
+            }
+        }
+        combineItems.clear();
+        updateCombineSlots();
+        updateInventoryUI();
     }
 
     public void switchToMainScene(Event event) throws IOException {
