@@ -421,7 +421,7 @@ public class GameController {
 
     public void onMergeButtonClick(Event event) {
         if (combineItems.size() == 2) {
-            String result = gameEngine.useItem(combineItems.get(0), combineItems.get(1));
+            String result = gameEngine.useItem(combineItems.get(0).getName(), combineItems.get(1).getName());
             System.out.println(result); //this is to show the result of the combination attempt 
             //exitCombineMode();
             combineItems.clear();

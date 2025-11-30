@@ -205,9 +205,9 @@ public class GameEngine {
     }
 
     // UseCommand wrapper method
-    public String useItem(Item itemName, Item secondItemName) {
+    public String useItem(String itemName, String... secondItemName) {
         UseCommand cmd = new UseCommand();
-        return cmd.execute(player, itemName, secondItemName);
+        return cmd.execute(player, itemName, secondItemName, this.items);
     }
 
     // GoCommand wrapper method

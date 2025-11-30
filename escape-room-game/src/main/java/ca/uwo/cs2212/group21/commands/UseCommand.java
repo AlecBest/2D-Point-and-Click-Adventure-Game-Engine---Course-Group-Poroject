@@ -1,4 +1,6 @@
 package ca.uwo.cs2212.group21.commands;
+import java.util.HashMap;
+
 import ca.uwo.cs2212.group21.model.GameState;
 import ca.uwo.cs2212.group21.model.Item;
 
@@ -11,14 +13,14 @@ public class UseCommand {
     // runs Use command
     // if secondItemName is null or blank, this treats it as "use item alone" (ex. key)
     // if secondItemName is given, then this treats it as "use item with another item" (ex. combine)
-    public String execute (GameState state, Item itemName, Item secondItemName) {
+    public String execute (GameState state, Item itemName, Item secondItemName, HashMap<String, Item> masterList){
 
         if (secondItemName == null){
 
             //use single item
             return useSingle(state, itemName);
         } else {
-            return useWithItem(state, itemName,secondItemName);
+            return useWithItem(state, itemName,secondItemName, masterList);
         }
     }
 
@@ -36,7 +38,7 @@ public class UseCommand {
     }
 
     //for using an inventory item with another (combining items)
-    private String useWithItem(GameState state, Item first, Item second){
+    private String useWithItem(GameState state, Item first, Item second, HashMap<String, Item> masterList){
 
         /* 
         //find both items in players inventory
@@ -64,18 +66,10 @@ public class UseCommand {
             state.removeItemFromInventory(first);
             state.removeItemFromInventory(second);
 
-            //combine items to create new item -> add it to inventory
-            Item purifiedCandle = new Item(
-                "Purified Candle",
-                "a candle coated in holy oil.",
-                true,
-                "/images/guard.png",
-                0,0,0,0 
-            );
-
-            state.addItemToInventory(purifiedCandle);
-
-            return "you coat the candle with holy oil. it hardens into a purified candle...";
+            Item result = masterList.get("Purified Candle");
+            if (result != null) {
+                state.addItemToInventory(result);
+            }
         }
 
         // room 2: torn book + missing pages = restored book
