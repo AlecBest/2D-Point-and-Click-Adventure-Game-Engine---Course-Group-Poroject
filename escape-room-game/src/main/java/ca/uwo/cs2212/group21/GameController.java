@@ -10,6 +10,7 @@ import ca.uwo.cs2212.group21.model.GameEngine;
 import ca.uwo.cs2212.group21.model.NPC;
 import ca.uwo.cs2212.group21.model.Item;
 import ca.uwo.cs2212.group21.model.Room;
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -84,6 +85,7 @@ public class GameController {
     private Timeline gameTimer;    
     //private final Image STAR_FULL = new Image(getClass().getResourceAsStream("/images/star_full.png")); //whenever we get a star image we put it here
     //private final Image STAR_EMPTY = new Image(getClass().getResourceAsStream("/images/star_empty.png")); //whenever we get an empty star image we put it here
+    private final int TIME_LIMIT = 600; //10 minutes but in seconds we can change later if too long
 
     private Item selected; //to keep track of selected item in inventory
 
@@ -159,6 +161,44 @@ public class GameController {
         playerImageView.setPreserveRatio(true);
         updateScreen();
         updateInventoryUI();
+        startTimer();
+    }
+
+    public void startTimer() {
+        gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);
+
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+
+        gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            int timeLeft = gameEngine.getPlayer().getTimeRemaining();
+            int timeInMinutes = gameEngine.getPlayer().getTimeRemaining() / 60;
+            int seconds = timeLeft % 60;
+            if (timeLeft > 0) {
+                gameEngine.getPlayer().setTimeRemaining(timeLeft - 1);
+                timeLabel.setText("Time left: " + timeInMinutes + ":" + seconds + " sec");
+            } else {
+                gameTimer.stop();
+                gameEngine.getPlayer().setGameOver(true);
+            }
+
+            if (timeLabel != null) {
+                timeLabel.setText ("Time: " + timeInMinutes + ":" + seconds + " sec");
+            }
+        }));
+
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+        gameTimer.play();
+
+    }
+
+    public void handleGameOver() {
+        //would handle game over screen stuff here 
+    }
+
+    public void stopTimer() {
+        if (gameTimer != null) gameTimer.stop();
     }
 
     /*

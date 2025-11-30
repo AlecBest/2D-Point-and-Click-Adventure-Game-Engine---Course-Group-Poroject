@@ -103,6 +103,10 @@ public class GameState {
         return timeRemaining;
     }
 
+    public void setTimeRemaining(int timeRemaining) {
+        this.timeRemaining = timeRemaining;
+    }
+
     // this method dcreases the time the player has by a certain amount
     //if the time reaches zero or below, then the game will end
     public void decreaseTime(int amount){
