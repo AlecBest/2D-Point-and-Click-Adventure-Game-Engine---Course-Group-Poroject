@@ -162,7 +162,10 @@ public class GameController {
         updateScreen();
         updateInventoryUI();
         startTimer();
+
+       // showIntroDialogue();    // trying to show what NPC intro will say 
     }
+    
 
     public void startTimer() {
         gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);

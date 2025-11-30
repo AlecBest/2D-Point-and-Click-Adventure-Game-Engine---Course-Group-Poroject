@@ -131,13 +131,14 @@ public class GameEngine {
 
                 if (itemName != null) {
                     Item item = new Item(itemName, itemDescription, isPuzzleItem, itemImagePath, xPos, yPos, width, height);
-                    if (!item.isPuzzleItem()) {    
-                        room.addItem(item);
-                        items.put(itemName, item);
-                } else {
+                
+                    // ALWAYS add the item to the room so it appears on screen
+                    room.addItem(item);
+                
+                    // Also store it in the global items map
                     items.put(itemName, item);
-                    }
                 }
+                
             }
 
             JSONObject npcObj = roomObject.getJSONObject("npc"); //since we only have one npc it just gets all the stuff from the json file and makes the npc object so we can set it to the particular coords in each room 
