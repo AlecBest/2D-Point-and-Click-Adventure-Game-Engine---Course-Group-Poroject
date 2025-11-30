@@ -21,6 +21,7 @@ public class Room {
     private double exitY;  
     private double exitWidth;
     private double exitHeight;
+    private Item puzzleItem; //item required to unlock the room
 
     /**
      * Initializes a new room with the given parameters.
@@ -42,6 +43,7 @@ public class Room {
         this.exitY = 0;
         this.exitWidth = 0;
         this.exitHeight = 0;
+        this.puzzleItem = null; //default to no puzzle item required
     }
 
     //Getters and Setters
@@ -97,6 +99,17 @@ public class Room {
         return null;
     }
 
+    public Boolean requiresPuzzleItem() {
+        return puzzleItem != null;
+    }
+
+    public Item getPuzzleItem() {
+        return puzzleItem;
+    }
+
+    public void setPuzzleItem(Item puzzleItem) {
+        this.puzzleItem = puzzleItem;
+    }
 
     public String getName() {
         return name;

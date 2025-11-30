@@ -42,7 +42,7 @@ public class GoCommand {
         }
 
         // if the current room is locked, do not allow them to leave yet
-        if (currentRoom.isLocked()) {
+        if (nextRoom.isLocked()) {
             return "The door is locked. You cannot leave this room yet.";
         }
 

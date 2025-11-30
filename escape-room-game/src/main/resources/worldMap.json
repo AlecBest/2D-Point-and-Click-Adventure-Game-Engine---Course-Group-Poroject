@@ -9,7 +9,7 @@
         {
           "item": "Jar of Coagulated Blood",
           "itemDescription": "A sealed glass jar containing thick, dark red liquid.",
-          "isItemUsable": true,
+          "isPuzzleItem": false,
           "itemImagePath": "/images/jarExample.png",
           "xPosition": 200.0,
           "yPosition": 450.0,
@@ -19,7 +19,7 @@
         {
           "item": "candle",
           "itemDescription": "A brittle piece of paper with faded latin text.",
-          "isItemUsable": true,
+          "isPuzzleItem": false,
           "itemImagePath": "/images/scroll.png",
           "xPosition": 350.0,
           "yPosition": 450.0,
@@ -29,7 +29,7 @@
         {
           "item": "holy oil",
           "itemDescription": "A feather quill. The tip is stained with dry ink.",
-          "isItemUsable": true,
+          "isPuzzleItem": true,
           "itemImagePath": "/images/quillExample.png",
           "xPosition": 500.0,
           "yPosition": 450.0,
@@ -64,7 +64,7 @@
         {
           "item": "Silver Fork",
           "itemDescription": "Tarnished, but heavy.",
-          "isItemUsable": true,
+          "isPuzzleItem": false,
           "itemImagePath": "/images/quillExample.png",
           "xPosition": 400.0,
           "yPosition": 450.0,

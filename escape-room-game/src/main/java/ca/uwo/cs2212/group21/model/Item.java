@@ -9,7 +9,7 @@ public class Item {
 
     private String name; 
     private String description;
-    private boolean isUsable;
+    private boolean isPuzzleItem;
     private String imagePath;
     private double x;
     private double y;
@@ -27,10 +27,10 @@ public class Item {
      * @param width       The width of the item's image.
      * @param height      The height of the item's image.
      */
-    public Item(String name, String description, boolean isUsable, String imagePath, double x, double y, double width, double height) {
+    public Item(String name, String description, boolean isPuzzleItem, String imagePath, double x, double y, double width, double height) {
         this.name = name;
         this.description = description;
-        this.isUsable = isUsable;
+        this.isPuzzleItem = isPuzzleItem;
         this.imagePath = imagePath;
         this.x = x; 
         this.y = y;
@@ -44,12 +44,16 @@ public class Item {
         return name;
     }
 
+    public Item getItem(String itemName) {
+        return this;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public boolean isUsable() {
-        return isUsable;
+    public boolean isPuzzleItem() {
+        return this.isPuzzleItem;
     }
 
     public String getImagePath() {

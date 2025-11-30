@@ -30,6 +30,7 @@ public class GameEngine {
     private String fileSavePath;
     private HashMap<String, Room> rooms;
     private HashMap<String, Item> items;
+    private HashMap<Room, Item> roomPuzzleItems;
     private List<Item> inventory;
 
     /**
@@ -39,6 +40,7 @@ public class GameEngine {
         this.rooms = new HashMap<>();
         this.items = new HashMap<>();
         this.inventory = new ArrayList<>();
+        this.roomPuzzleItems = new HashMap<>();
         loadWorldData(jsonPath);
     }
 
@@ -110,7 +112,7 @@ public class GameEngine {
             JSONObject roomObject = roomsArray.getJSONObject(i);
             String roomName = roomObject.getString("name");
             String roomDescription = roomObject.getString("description");
-            boolean isLocked = roomObject.getBoolean("isLocked");
+            boolean isLocked = roomObject.getBoolean("isLocked"); 
             Room room = new Room(roomName, roomDescription, isLocked, roomObject.getString("roomImagePath"));
             rooms.put(roomName, room);
 
@@ -118,7 +120,7 @@ public class GameEngine {
             for (int j = 0; j < itemArray.length(); j++) {
                 JSONObject itemObj = itemArray.getJSONObject(j);
                 String itemName = itemObj.getString("item");
-                boolean isUsable = itemObj.getBoolean("isItemUsable");
+                boolean isPuzzleItem = itemObj.getBoolean("isPuzzleItem");
                 String itemImagePath = itemObj.getString("itemImagePath");
                 String itemDescription = itemObj.getString("itemDescription");
                 double xPos = itemObj.getDouble("xPosition");
@@ -128,9 +130,13 @@ public class GameEngine {
 
 
                 if (itemName != null) {
-                    Item item = new Item(itemName, itemDescription, isUsable, itemImagePath, xPos, yPos, width, height);
-                    room.addItem(item);
+                    Item item = new Item(itemName, itemDescription, isPuzzleItem, itemImagePath, xPos, yPos, width, height);
+                    if (!item.isPuzzleItem()) {    
+                        room.addItem(item);
+                        items.put(itemName, item);
+                } else {
                     items.put(itemName, item);
+                    }
                 }
             }
 
@@ -162,6 +168,15 @@ public class GameEngine {
                 double height = exitObj.getDouble("height");
                 if (exitName != null) {
                     currentRoom.setExit(exitDirection, rooms.get(exitName), xPos, yPos, width, height);
+                }
+            }
+
+            String puzzleItemName = roomObject.optString("puzzleItem", null);
+            if (puzzleItemName != null) {
+                Item puzzleItem = items.get(puzzleItemName);
+                if (puzzleItem != null) {
+                    roomPuzzleItems.put(currentRoom, puzzleItem);
+                    currentRoom.setPuzzleItem(puzzleItem);
                 }
             }
         }
