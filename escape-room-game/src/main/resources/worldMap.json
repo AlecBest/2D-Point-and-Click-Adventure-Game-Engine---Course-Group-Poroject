@@ -1,0 +1,94 @@
+{
+  "rooms": [
+    {
+      "name": "Main Room",
+      "description": "A dark, cold room with a flickering light.",
+      "isLocked": false,
+      "roomImagePath": "/images/page_1_background_of_NPC_talking.png",
+      "items": [
+        {
+          "item": "Jar of Coagulated Blood",
+          "itemDescription": "A sealed glass jar containing thick, dark red liquid.",
+          "isPuzzleItem": false,
+          "itemImagePath": "/images/jarExample.png",
+          "xPosition": 200.0,
+          "yPosition": 450.0,
+          "width": 40.0,
+          "height": 50.0
+        },
+        {
+          "item": "candle",
+          "itemDescription": "A brittle piece of paper with faded latin text.",
+          "isPuzzleItem": false,
+          "itemImagePath": "/images/scroll.png",
+          "xPosition": 350.0,
+          "yPosition": 450.0,
+          "width": 50.0,
+          "height": 50.0
+        },
+        {
+          "item": "holy oil",
+          "itemDescription": "A feather quill. The tip is stained with dry ink.",
+          "isPuzzleItem": true,
+          "itemImagePath": "/images/quillExample.png",
+          "xPosition": 500.0,
+          "yPosition": 450.0,
+          "width": 30.0,
+          "height": 30.0
+        }
+      ],
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "Welcome, traveler. Find the key to escape.",
+        "isNPCTradeable": false,
+        "xPosition": 350.0,
+        "yPosition": 250.0
+      },
+      "exits": [
+        {
+          "exit": "Dining Room",
+          "exitDirection": "NORTH",
+          "xPosition": 350.0,
+          "yPosition": 50.0,
+          "width": 100.0,
+          "height": 150.0
+        }
+      ]
+    },
+    {
+      "name": "Dining Room",
+      "description": "A long table is set for a meal that was never eaten.",
+      "isLocked": true,
+      "roomImagePath": "/images/diningRoomExample.png",
+      "items": [
+        {
+          "item": "Silver Fork",
+          "itemDescription": "Tarnished, but heavy.",
+          "isPuzzleItem": false,
+          "itemImagePath": "/images/quillExample.png",
+          "xPosition": 400.0,
+          "yPosition": 450.0,
+          "width": 30.0,
+          "height": 30.0
+        }
+      ],
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "People used to eat here. Now only dust remains.",
+        "isNPCTradeable": false,
+        "xPosition": 200.0,
+        "yPosition": 300.0
+      },
+      "exits": [
+        {
+          "exit": "Main Room",
+          "exitDirection": "SOUTH",
+          "xPosition": 350.0,
+          "yPosition": 600.0,
+          "width": 100.0,
+          "height": 100.0
+        }
+      ]
+    }
+  ]
+}
