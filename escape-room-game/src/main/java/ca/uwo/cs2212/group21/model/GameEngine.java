@@ -14,6 +14,7 @@ import java.util.List;
 import ca.uwo.cs2212.group21.commands.PickUpCommand;
 import ca.uwo.cs2212.group21.commands.DropCommand;
 import ca.uwo.cs2212.group21.commands.UseCommand;
+import ca.uwo.cs2212.group21.commands.GoCommand; 
 
 
 /**
@@ -192,6 +193,13 @@ public class GameEngine {
         UseCommand cmd = new UseCommand();
         return cmd.execute(player, itemName, secondItemName);
     }
+
+    // GoCommand wrapper method
+    public String go(String direction) {
+        GoCommand cmd = new GoCommand();
+        return cmd.execute(player, direction);
+    }
+    
 
     public void playerMove(double newX, double newY) {
         player.setPosition(newX, newY);
