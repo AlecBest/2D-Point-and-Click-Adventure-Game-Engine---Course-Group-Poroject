@@ -204,13 +204,18 @@ public class GameController {
 
             exitHitBox.setStroke(Color.RED); //this is just for testing purposes we would remove after we see that the hitbox works fine
 
-            exitHitBox.setOnMouseClicked (e -> {
-                System.out.println("Exit clicked: " + currentRoom.getExit(exitDirection).getName()); //this is just for testing to see if the exit was clicked
-                System.out.println("Player image path: " + gameEngine.getPlayer().getImagePath());
-
-                //gameEngine.moveToRoom(exitDirection); //this is to move to the room in that direction when clicked
-                //updateScreen();
+            exitHitBox.setOnMouseClicked(e -> {
+                // call the go command through the game engine
+                String result = gameEngine.go(exitDirection);
+            
+                // print the message for now
+                System.out.println(result);
+            
+                // refresh the screen if the room changed
+                updateScreen();
+                updateInventoryUI();
             });
+            
 
             interactiveLayer.getChildren().add(exitHitBox);
         }

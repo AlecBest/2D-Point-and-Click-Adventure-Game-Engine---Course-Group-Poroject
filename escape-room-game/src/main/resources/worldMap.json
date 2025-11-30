@@ -58,7 +58,7 @@
     {
       "name": "Dining Room",
       "description": "A long table is set for a meal that was never eaten.",
-      "isLocked": false,
+      "isLocked": true,
       "roomImagePath": "/images/diningRoomExample.png",
       "items": [
         {
