@@ -65,12 +65,19 @@ public class GameController {
     @FXML private StackPane combineSlot2;
     @FXML private Button mergeButton;
     @FXML private Button clearButton;
+    @FXML private Button combineButton;
 
     
 
     private GameEngine gameEngine;
     @FXML private ImageView currentNPCImageView;
     @FXML private ImageView playerImageView; 
+
+    @FXML private AnchorPane examinePanel;
+    @FXML private StackPane examineSlot;
+    @FXML private TextArea itemDescriptionBox;
+    @FXML private Button examineButton;
+    @FXML private Button closeExamineButton;
 
     private TranslateTransition currentAnimation;
 
@@ -81,13 +88,19 @@ public class GameController {
     private Item selected; //to keep track of selected item in inventory
 
     private boolean isCombineMode = false; 
+    private boolean isExamineMode = false;
     private List<Item> combineItems = new ArrayList<>(); 
 
+    /*
+        * Initializes the game controller.
+    */
     public void initialize() {
         gameScreen.setVisible(false);
         inventory.setVisible(false);
         mainScreen.setVisible(true);
         dialogueOverlay.setVisible(false);
+        examinePanel.setVisible(false);
+        
 
         mainScreen.sceneProperty().addListener((obs,oldScene,newScene) -> { //this is to add a key listener to the scene whenever it gets set so it can track key inputs
             if (newScene != null) {
@@ -127,7 +140,10 @@ public class GameController {
         });
     }
 
-            
+    /*
+        * Starts a new game when the "Start Game" button is clicked.
+        @param event
+    */        
     public void startGame(ActionEvent event) throws IOException {
         gameEngine = new GameEngine("/worldMap.json"); //this is to start up a new game since doing the anchor pane method so would just set visible or not 
         gameEngine.startNewGame();
@@ -135,10 +151,19 @@ public class GameController {
         mainScreen.setVisible(false);
         gameScreen.setVisible(true);
 
+        playerImageView = new ImageView(new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
+        playerImageView.setLayoutX(400);
+        playerImageView.setLayoutY(300);
+        playerImageView.setFitWidth(200);
+        playerImageView.setFitHeight(150);
+        playerImageView.setPreserveRatio(true);
         updateScreen();
         updateInventoryUI();
     }
 
+    /*
+        * Updates the game screen to reflect the current game state.
+    */
     private void updateScreen() {
         
         interactiveLayer.getChildren().clear();
@@ -214,14 +239,8 @@ public class GameController {
 
             interactiveLayer.getChildren().add(exitHitBox);
         }
-
-        playerImageView = new ImageView(new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
-        playerImageView.setLayoutX(400);
-        playerImageView.setLayoutY(300);
-        playerImageView.setFitWidth(200);
-        playerImageView.setFitHeight(150);
-        playerImageView.setPreserveRatio(true);
         interactiveLayer.getChildren().add(playerImageView);
+     
 
     }
 
@@ -259,6 +278,9 @@ public class GameController {
                     handleCombineSelecting(selected);
                 }
 
+                if (isExamineMode) {
+                    refreshExaminePanel();
+                }
             });
             slot.getChildren().add(icon);
         }
@@ -288,13 +310,16 @@ public class GameController {
     public void onCombineModeClick(Event event) {
         if (isCombineMode) { //if already in combine mode then exit it
             exitCombineMode();
+            examineButton.setDisable(false); //reenable examine button when exiting combine mode
         } else {
             isCombineMode = true; //otherwise would turn it on then show the combine panel and update the slots
             combinePanel.setVisible(true);
             combineItems.clear();
             updateCombineSlots();
             System.out.println("Combine Mode Activated");
+            examineButton.setDisable(true); //disable examine button while in combine mode
         }
+
     }
 
     private void exitCombineMode() { //this is to exit and reset combine mode stuff
@@ -422,6 +447,48 @@ public class GameController {
         });
 
         currentAnimation.play();        
+    }
+
+    public void onExamineClick(Event event) {
+        examineSlot.getChildren().clear();
+
+        if (isExamineMode) { //if already in examine mode then exit it
+            exitExamineMode();
+        } else {
+            enterExamineMode();
+        }
+    }
+
+    public void enterExamineMode() {
+        isExamineMode = true;
+        examinePanel.setVisible(true);
+        refreshExaminePanel();
+        combineButton.setDisable(true);
+    }
+
+    public void exitExamineMode() {
+        isExamineMode = false;
+        examinePanel.setVisible(false);
+        combineButton.setDisable(false);
+    }
+
+    public void refreshExaminePanel() {
+        examineSlot.getChildren().clear();
+
+        if (selected != null) {
+            ImageView examineIcon = new ImageView(new Image(getClass().getResourceAsStream(selected.getImagePath())));
+            examineIcon.setFitWidth(50);
+            examineIcon.setFitHeight(50);
+            examineIcon.setPreserveRatio(true);
+            examineSlot.getChildren().add(examineIcon);
+
+            itemDescriptionBox.setText(selected.getDescription());
+            itemDescriptionBox.setWrapText(true);
+        }
+    }
+
+    public void onCloseExamineClick(Event event) {
+        exitExamineMode();
     }
 
 
