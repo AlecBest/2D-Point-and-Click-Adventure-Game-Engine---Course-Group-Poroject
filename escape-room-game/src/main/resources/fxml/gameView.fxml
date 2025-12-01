@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.GameController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.GameController">
    <children>
 
       <AnchorPane fx:id="mainScreen" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: black;" visible="false">
@@ -30,9 +30,9 @@
             <VBox alignment="CENTER" layoutX="440.0" layoutY="300.0" spacing="20.0">
                <children>
 
-                  <Button fx:id="startGameButton" mnemonicParsing="false" onAction="#startGame" prefWidth="200.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
+                  <Button fx:id="startGameButton" mnemonicParsing="false" onAction="#startGame" prefHeight="70.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
                      <graphic>
-                        <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="false">
+                        <ImageView fitHeight="90.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/startButton.png" />
                            </image>
@@ -41,9 +41,9 @@
                   </Button>
                   
 
-                  <Button fx:id="loadGameButtonMenu" mnemonicParsing="false" onAction="#switchToLoadGameScene" prefWidth="200.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
+                  <Button fx:id="loadGameButtonMenu" mnemonicParsing="false" onAction="#switchToLoadGameScene" prefHeight="70.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
                      <graphic>
-                        <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="false">
+                        <ImageView fitHeight="90.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/continueButton.png" />
                            </image>
@@ -52,9 +52,9 @@
                   </Button>
                   
 
-                  <Button fx:id="quitButton" mnemonicParsing="false" onAction="#quitGame" prefWidth="200.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
+                  <Button fx:id="quitButton" mnemonicParsing="false" onAction="#quitGame" prefHeight="70.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
                      <graphic>
-                        <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="false">
+                        <ImageView fitHeight="90.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/quitButton.png" />
                            </image>
@@ -85,13 +85,13 @@
 
             <HBox fx:id="scoreboardHUD" layoutX="15.0" mouseTransparent="true" spacing="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
                <children>
-                  <Label fx:id="currentRoomLabel" text="Current Room" textFill="WHITE">
+                  <Label fx:id="currentRoomLabel" styleClass="header-label" text="Current Room" textFill="WHITE">
                      <font><Font name="System Bold" size="18.0" /></font>
                   </Label>
-                  <Label fx:id="timeLabel" text="Time remaining: " textFill="WHITE">
+                  <Label fx:id="timeLabel" styleClass="header-label" text="Time remaining: " textFill="WHITE">
                      <font><Font name="System Bold" size="18.0" /></font>
                   </Label>
-                  <Label fx:id="scoreLabel" text="Score:" textFill="WHITE">
+                  <Label fx:id="scoreLabel" styleClass="header-label" text="Score:" textFill="WHITE">
                      <font><Font name="System Bold" size="18.0" /></font>
                   </Label>
                   <HBox spacing="5.0">
@@ -104,7 +104,7 @@
                </children>
             </HBox>
 
-            <AnchorPane fx:id="dialogueOverlay" layoutX="140.0" layoutY="500.0" prefHeight="160.0" prefWidth="800.0" visible="false">
+            <AnchorPane fx:id="dialogueOverlay" layoutX="140.0" layoutY="500.0" prefHeight="160.0" prefWidth="800.0" styleClass="dialogue-box" visible="false">
                <children>
                   <ImageView fx:id="dialogueBoxBg" fitHeight="160.0" fitWidth="800.0" pickOnBounds="true" />
 
@@ -122,21 +122,27 @@
                   <VBox fx:id="optionsBox" layoutX="600.0" layoutY="20.0" prefHeight="120.0" prefWidth="180.0" spacing="10.0" />
                </children>
             </AnchorPane>
+            
+            <Label fx:id="pickupPopup" alignment="CENTER" layoutX="340.0" layoutY="100.0" mouseTransparent="true" prefHeight="40.0" prefWidth="400.0" style="-fx-background-color: #000000aa; -fx-text-fill: white; -fx-background-radius: 10;" text="Picked up item" visible="false">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
 
       <AnchorPane fx:id="inventory" visible="false">
          <children>
-            <Pane fx:id="inventoryUIBackground" opacity="0.6" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: black;" />
+            <Pane fx:id="inventoryUIBackground" mouseTransparent="true" opacity="0.0" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: black;" />
             
-            <AnchorPane layoutX="240.0" layoutY="110.0" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 3;">
+            <AnchorPane layoutX="760.0" layoutY="110.0" prefHeight="500.0" prefWidth="300.0" styleClass="panel-background">
                <children>
-                  <Label layoutX="200.0" layoutY="20.0" text="INVENTORY">
-                     <font><Font name="System Bold" size="36.0" /></font>
+                  <Label layoutX="50.0" layoutY="20.0" text="INVENTORY">
+                     <font><Font name="System Bold" size="24.0" /></font>
                   </Label>
                   
 
-                  <GridPane fx:id="inventoryGrid" hgap="10.0" layoutX="50.0" layoutY="80.0" prefHeight="250.0" prefWidth="300.0" vgap="10.0">
+                  <GridPane fx:id="inventoryGrid" hgap="10.0" layoutX="25.0" layoutY="80.0" prefHeight="250.0" prefWidth="250.0" vgap="10.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
@@ -152,16 +158,16 @@
                   </GridPane>
                   
 
-                  <HBox alignment="CENTER" layoutX="50.0" layoutY="425.0" prefWidth="300.0" spacing="15.0">
+                  <VBox alignment="CENTER" layoutX="50.0" layoutY="350.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button fx:id="combineButton" mnemonicParsing="false" onAction="#onCombineModeClick" prefHeight="40.0" prefWidth="120.0" text="COMBINE" />
-                        <Button fx:id="examineButton" mnemonicParsing="false" onAction="#onExamineClick" prefHeight="40.0" prefWidth="120.0" text="EXAMINE" />
-                        <Button fx:id="dropButton" mnemonicParsing="false" onAction="#dropItemFromInventory" prefHeight="40.0" prefWidth="120.0" text="DROP" />
+                        <Button fx:id="combineButton" mnemonicParsing="false" onAction="#onCombineModeClick" prefHeight="30.0" prefWidth="120.0" text="COMBINE" />
+                        <Button fx:id="examineButton" mnemonicParsing="false" onAction="#onExamineClick" prefHeight="30.0" prefWidth="120.0" text="EXAMINE" />
+                        <Button fx:id="dropButton" mnemonicParsing="false" onAction="#dropItemFromInventory" prefHeight="30.0" prefWidth="120.0" text="DROP" />
                      </children>
-                  </HBox>
+                  </VBox>
 
 
-                  <AnchorPane fx:id="combinePanel" layoutX="380.0" layoutY="280.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #ddd; -fx-border-color: grey;" visible="false">
+                  <AnchorPane fx:id="combinePanel" layoutX="-300.0" layoutY="280.0" prefHeight="150.0" prefWidth="200.0" styleClass="panel-background" visible="false">
                      <children>
                         <Label layoutX="14.0" layoutY="14.0" text="Combine Items:">
                            <font><Font name="System Bold" size="14.0" /></font>
@@ -177,7 +183,7 @@
                      </children>
                   </AnchorPane>
 
-                  <AnchorPane fx:id="examinePanel" layoutX="380.0" layoutY="80.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #eee; -fx-border-color: grey;" visible="false">
+                  <AnchorPane fx:id="examinePanel" layoutX="-300.0" layoutY="80.0" prefHeight="180.0" prefWidth="200.0" styleClass="panel-background" visible="false">
                      <children>
                         <StackPane fx:id="examineSlot" layoutX="70.0" layoutY="14.0" prefHeight="60.0" prefWidth="60.0" style="-fx-border-color: black; -fx-background-color: white;" />
                         <TextArea fx:id="itemDescriptionBox" editable="false" layoutX="10.0" layoutY="80.0" prefHeight="60.0" prefWidth="180.0" wrapText="true" />

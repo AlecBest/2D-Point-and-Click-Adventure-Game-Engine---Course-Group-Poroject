@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.LoadGameController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: black;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.LoadGameController">
    <children>
-      <Label id="saveDataLabel" fx:id="saveDataLabel" layoutX="480.0" layoutY="93.0" text="Saved Data">
+      <Label id="saveDataLabel" fx:id="saveDataLabel" layoutX="480.0" layoutY="93.0" styleClass="header-label" text="Saved Data">
          <font>
             <Font size="24.0" />
          </font>
