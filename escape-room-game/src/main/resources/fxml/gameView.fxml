@@ -201,10 +201,10 @@
                   </Label>
                   <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#onResumeClick" prefWidth="200.0" text="Resume" />
                   
-                  <!-- Updated: Opens Save Slots -->
+
                   <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveGameClick" prefWidth="200.0" text="Save Game" />
                   
-                  <!-- Updated: Returns to Main Menu -->
+
                   <Button fx:id="quitToMainButton" mnemonicParsing="false" onAction="#switchToMainScene" prefWidth="200.0" text="Quit to Main Menu" />
                </children>
             </VBox>
