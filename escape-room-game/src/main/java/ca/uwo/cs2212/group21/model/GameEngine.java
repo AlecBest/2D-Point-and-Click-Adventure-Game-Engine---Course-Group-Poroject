@@ -15,7 +15,8 @@ import java.util.List;
 import ca.uwo.cs2212.group21.commands.PickUpCommand;
 import ca.uwo.cs2212.group21.commands.DropCommand;
 import ca.uwo.cs2212.group21.commands.UseCommand;
-import ca.uwo.cs2212.group21.commands.GoCommand; 
+import ca.uwo.cs2212.group21.commands.GoCommand;
+import ca.uwo.cs2212.group21.commands.TalkCommand;
 
 
 /**
@@ -237,6 +238,11 @@ public class GameEngine {
         return cmd.execute(player, direction);
     }
     
+        // TalkCommand wrapper method
+    public String talkToNpc() {
+        TalkCommand cmd = new TalkCommand();
+        return cmd.execute(player);
+    }
 
     public void playerMove(double newX, double newY) {
         player.setPosition(newX, newY);

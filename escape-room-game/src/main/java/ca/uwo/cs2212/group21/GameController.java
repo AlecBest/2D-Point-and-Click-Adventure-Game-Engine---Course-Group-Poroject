@@ -319,6 +319,7 @@ public class GameController {
                 //handleNPCClick(npc);
                 //would open dialogue box and start npc interaction here
 
+                handleNPCClick(npc);
             });
 
             interactiveLayer.getChildren().add(currentNPCImageView);
@@ -354,24 +355,23 @@ public class GameController {
 
     }
 
-    private void handleNPCClick(NPC npc) {
-        //would handle npc interaction here like opening dialogue box and stuff 
-        // todo: Please add the talk logic here and how to progress dialogue
-        // 
-        // 
-        dialogueOverlay.setVisible(true);
-        dialogueNameLabel.setText(npc.getName());
+private void handleNPCClick(NPC npc) {
+    //get dialogue text from the TalkCommand through GameEngine
+    String dialogueText = gameEngine.talkToNpc();
 
-        dialogueBox.setText("Hello, I am " + npc.getName() + ". [dialogue system not implemented yet.]");
+    //show the dialogue overlay
+    dialogueOverlay.setVisible(true);
 
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
+    //this is where the NPC name in the name label
+    dialogueNameLabel.setText(npc.getName());
 
-        //also the give logic should have some play here in terms of trading items with npc and also if you maybe press and he already gave the instructions and riddle and is waiting for item
-        //you can click him after that and then the inventory would pop up to select item to give
-        //i updated the inventory to have click handlers so we can select items from there when giving to npc
-        
-    }
+    //this is the dialogue text into the dialogue box
+    dialogueBox.setText(dialogueText);
+    dialogueBox.setWrapText(true);
+
+    nextButton.setVisible(false);
+    optionsBox.setVisible(false);
+}
 
     private void updateInventoryUI() {
         inventoryGrid.getChildren().clear(); // this is to clear the grid so we dont have duplicates when updating
