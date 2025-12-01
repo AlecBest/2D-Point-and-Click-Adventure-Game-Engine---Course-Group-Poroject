@@ -98,6 +98,8 @@ public class GameController {
 
     private boolean isCombineMode = false;
     private boolean isExamineMode = false;
+    private boolean isGiveMode = false;
+
     private List<Item> combineItems = new ArrayList<>();
     private SoundManager soundManager = new SoundManager();
 
@@ -119,17 +121,15 @@ public class GameController {
                 newScene.setOnKeyPressed(event -> {
                     if (gameEngine != null) {
                         switch (event.getCode()) {
-                            case I: // if I gets pressed it toggles inventory (opens or closes)
+                            case I: // toggle inventory
                                 toggleInventory();
                                 break;
+
                             case ESCAPE: // if escape is pressed it toggles inventory off if its on
                                 if (inventory.isVisible()) {
                                     toggleInventory();
                                 }
 
-                        else if (dialogueOverlay != null && dialogueOverlay.isVisible()) { //this is to make sure the dialogue overlay is invisible if it has no dialogue
-                            dialogueOverlay.setVisible(false);
-                        }
                         else if (saveGameSlots.isVisible()) {
                             saveGameSlots.setVisible(false);
                             gameTimer.play();
@@ -356,22 +356,33 @@ public class GameController {
     }
 
 private void handleNPCClick(NPC npc) {
-    //get dialogue text from the TalkCommand through GameEngine
+    // Get dialogue text from the TalkCommand through GameEngine
     String dialogueText = gameEngine.talkToNpc();
 
-    //show the dialogue overlay
+    // Show the dialogue overlay
     dialogueOverlay.setVisible(true);
 
-    //this is where the NPC name in the name label
+    // Show the NPC name in the name label
     dialogueNameLabel.setText(npc.getName());
 
-    //this is the dialogue text into the dialogue box
+    // Put the dialogue text into the dialogue box
     dialogueBox.setText(dialogueText);
     dialogueBox.setWrapText(true);
 
-    nextButton.setVisible(false);
+    // Enter give mode so the player can choose an item for this NPC
+    isGiveMode = true;
+
+    nextButton.setVisible(true);
     optionsBox.setVisible(false);
+
+    nextButton.setOnAction(e -> {
+        // Close the dialogue overlay and exit give mode when Next is pressed
+        dialogueOverlay.setVisible(false);
+        dialogueBox.clear();
+        isGiveMode = false;
+    });
 }
+
 
     private void updateInventoryUI() {
         inventoryGrid.getChildren().clear(); // this is to clear the grid so we dont have duplicates when updating
@@ -404,29 +415,27 @@ private void handleNPCClick(NPC npc) {
                     System.out.println("Slot clicked: col " + col + ", row " + row);
                     selected = item;
 
-                /* if (dialogueOverlay.isVisible() && gameEngine.getPlayer().getCurrentRoom().hasNPC() != null) {
-                    would put give item logic here for attempting to give the item they select
-                    if its a puzzle item then would unlock next door otherwise print whatever
+                    // Give logic: only when we are in give mode and dialogue is open
+                    if (isGiveMode && gameEngine.getPlayer().getCurrentRoom().hasNPC()) {
 
-                    could make it so that when the npc clicks next after whatever point in the dialogue where they are asking for an item and it has a next available,
-                    it would would open the inventory and let them select an item to give to the npc
+                        // Use GameEngine wrapper that calls GiveCommand with current NPC and this item
+                        String result = gameEngine.giveItemToCurrentNpc(selected.getName());
+                        System.out.println(result);
 
-                    might have to make it so that they have to click the next button after selecting item instead of just clicking the item
-                    that way they can read the dialogue click the item then click next to give it in the same flow 
+                        // Show result in the dialogue box
+                        dialogueBox.setText(result);
 
-                    so basically just put the logic here to handle if the npc is in a state where they are waiting for an item, 
-                    they can click on the item and the click next button to give the selected item to the npc
-                    and then handle the result of that give action.
-                }
-                 */ 
+                        // Inventory may have changed: refresh it
+                        updateInventoryUI();
+                    }
 
-                if (isCombineMode) {
+                    if (isCombineMode) {
                     handleCombineSelecting(selected);
-                }
+                    }
 
-                if (isExamineMode) {
+                    if (isExamineMode) {
                     refreshExaminePanel();
-                }
+                    }
 
                 
             });

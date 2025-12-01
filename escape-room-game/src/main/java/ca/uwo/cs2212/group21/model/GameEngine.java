@@ -17,6 +17,7 @@ import ca.uwo.cs2212.group21.commands.DropCommand;
 import ca.uwo.cs2212.group21.commands.UseCommand;
 import ca.uwo.cs2212.group21.commands.GoCommand;
 import ca.uwo.cs2212.group21.commands.TalkCommand;
+import ca.uwo.cs2212.group21.commands.GiveCommand;
 
 
 /**
@@ -242,6 +243,25 @@ public class GameEngine {
     public String talkToNpc() {
         TalkCommand cmd = new TalkCommand();
         return cmd.execute(player);
+    }
+
+        // GiveCommand wrapper method
+    public String giveItemToCurrentNpc(String itemName) {
+        GiveCommand cmd = new GiveCommand();
+
+        // Figure out which NPC is in the current room
+        Room room = player.getCurrentRoom();
+        if (room == null || !room.hasNPC()) {
+            return "There is no one here to give items to.";
+        }
+
+        NPC npc = room.getNPC();
+        if (npc == null) {
+            return "There is no one here to give items to.";
+        }
+
+        // Call your existing GiveCommand
+        return cmd.execute(player, npc.getName(), itemName);
     }
 
     public void playerMove(double newX, double newY) {
