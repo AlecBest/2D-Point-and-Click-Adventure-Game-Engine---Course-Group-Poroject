@@ -48,6 +48,8 @@ public class GameController {
     @FXML private AnchorPane interactiveLayer; // this is the layer on top of the background where we would put items, npcs, exits, etc
 
     @FXML private Label currentRoomLabel;
+    @FXML private Label roomDescriptionLabel;
+    @FXML private Label turnsTakenLabel;
     @FXML private Label timeLabel;
     @FXML private Label scoreLabel;
     @FXML private ImageView star1;
@@ -153,6 +155,7 @@ public class GameController {
 
             movePlayerVisuals(centeredX, centeredY);
             gameEngine.playerMove(centeredX, centeredY); // update in game state
+            gameEngine.getPlayer().incrementMovesCount(); // increment moves count each time they move idk if we should do it for movement or like rooms
             soundManager.playSoundEffect("footsteps.mp3");
         });
 
@@ -198,13 +201,19 @@ public class GameController {
             if (timeLeft > 0) {
                 gameEngine.getPlayer().setTimeRemaining(timeLeft - 1);
                 timeLabel.setText("Time left: " + timeInMinutes + ":" + seconds + " sec");
+                int currentScore = 3;
+                if (timeInMinutes < 7) currentScore = 2;
+                if (timeInMinutes < 5) currentScore = 1;
+                if (timeInMinutes <= 2) currentScore = 0;
+                gameEngine.getPlayer().setScore(currentScore);
+
             } else {
                 gameTimer.stop();
                 gameEngine.getPlayer().setGameOver(true);
             }
 
             if (timeLabel != null) {
-                timeLabel.setText("Time: " + timeInMinutes + ":" + seconds + " sec");
+                timeLabel.setText("Time remaining: " + timeInMinutes + ":" + seconds + " sec");
             }
         }));
 
@@ -272,6 +281,14 @@ public class GameController {
 
         Room currentRoom = gameEngine.getPlayer().getCurrentRoom(); // this is to get the current room the player is in from the engine
 
+        
+        currentRoomLabel.setText(currentRoom.getName());
+        roomDescriptionLabel.setText(currentRoom.getDescription());
+
+        turnsTakenLabel.setText("Moves Taken: " + gameEngine.getPlayer().getMovesCount());
+        
+        
+
         backgroundImageView.setImage(new Image(getClass().getResourceAsStream(currentRoom.getImagePath()))); // this is to set the background image to the current room image
         backgroundImageView.setFitWidth(1080); // this is to make sure the background image fits the screen size
         backgroundImageView.setFitHeight(720);
@@ -299,6 +316,8 @@ public class GameController {
                 interactiveLayer.getChildren().remove(itemView); // this is to remove the item from the screen to see if it works
 
                 gameEngine.pickUpItem(item.getName()); // this is to call the pick up command to add the item to the inventory
+
+                gameEngine.getPlayer().incrementMovesCount(); // increment moves count when picking up item we can just leave it like moves and items for now 
             });
 
             interactiveLayer.getChildren().add(itemView); // this is to add the item image to the game screen so it shows up
@@ -330,8 +349,8 @@ public class GameController {
         for (String exitDirection : currentRoom.getExitList()) {
 
             Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection),
-                    currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection),
-                    currentRoom.getExitHeight(exitDirection));
+            currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection),
+            currentRoom.getExitHeight(exitDirection));
             exitHitBox.setFill(Color.WHITE); // this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
 
             exitHitBox.setStroke(Color.RED); // this is just for testing purposes we would remove after we see that the hitbox works fine
@@ -344,6 +363,8 @@ public class GameController {
                 System.out.println(result);
                 soundManager.playSoundEffect("footsteps.mp3");
 
+                gameEngine.getPlayer().incrementMovesCount(); // increment moves count when changing rooms (so would be items + moves, idk what else to add for now)
+
                 // refresh the screen if the room changed
                 updateScreen();
                 updateInventoryUI();
@@ -352,6 +373,7 @@ public class GameController {
             interactiveLayer.getChildren().add(exitHitBox);
         }
         interactiveLayer.getChildren().add(playerImageView);
+        
 
     }
 

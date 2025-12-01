@@ -66,7 +66,7 @@
          </children>
       </AnchorPane>
 
-      <AnchorPane fx:id="gameScreen" prefHeight="720.0" prefWidth="1080.0" visible="false">
+      <AnchorPane fx:id="gameScreen" prefHeight="720.0" prefWidth="1080.0">
          <children>
 
             <ImageView fx:id="backgroundImageView" fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true" preserveRatio="false">
@@ -122,6 +122,16 @@
                   <VBox fx:id="optionsBox" layoutX="600.0" layoutY="20.0" prefHeight="120.0" prefWidth="180.0" spacing="10.0" />
                </children>
             </AnchorPane>
+            <Label fx:id="roomDescriptionLabel" layoutX="30.0" layoutY="680.0" text="Label" textFill="WHITE">
+               <font>
+                  <Font name="System Italic" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="turnsTakenLabel" layoutX="900.0" layoutY="15.0" text="Turns Taken: " textFill="WHITE" AnchorPane.rightAnchor="66.66666666666667" AnchorPane.topAnchor="15.0">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
 
@@ -212,7 +222,7 @@
       </AnchorPane>
       
 
-      <AnchorPane fx:id="saveGameSlots">
+      <AnchorPane fx:id="saveGameSlots" visible="false">
          <children>
             <Rectangle fill="#000000cc" height="720.0" width="1080.0" />
             <VBox alignment="CENTER" layoutX="440.0" layoutY="250.0" spacing="15.0">
