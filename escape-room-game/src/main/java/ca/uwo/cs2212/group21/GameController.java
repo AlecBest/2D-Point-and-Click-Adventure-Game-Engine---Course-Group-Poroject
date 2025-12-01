@@ -79,6 +79,17 @@ public class GameController {
     @FXML private TextArea itemDescriptionBox;
     @FXML private Button examineButton;
     @FXML private Button closeExamineButton;
+    @FXML private Button dropButton;
+
+    @FXML private AnchorPane pauseScreen;
+    @FXML private Button resumeButton;
+    @FXML private Button saveButton;
+    @FXML private Button quitToMainButton;
+
+    @FXML private AnchorPane saveGameSlots;
+    @FXML private Button saveSlot1;
+    @FXML private Button saveSlot2;
+    @FXML private Button saveSlot3;
 
     private TranslateTransition currentAnimation;
 
@@ -102,6 +113,8 @@ public class GameController {
         mainScreen.setVisible(true);
         dialogueOverlay.setVisible(false);
         examinePanel.setVisible(false);
+        pauseScreen.setVisible(false);
+        saveGameSlots.setVisible(false);
         
 
         mainScreen.sceneProperty().addListener((obs,oldScene,newScene) -> { //this is to add a key listener to the scene whenever it gets set so it can track key inputs
@@ -117,11 +130,16 @@ public class GameController {
                             toggleInventory();
                         }
 
-                        if (dialogueOverlay != null && dialogueOverlay.isVisible()) { //this is to make sure the dialogue overlay is invisible if it has no dialogue
+                        else if (dialogueOverlay != null && dialogueOverlay.isVisible()) { //this is to make sure the dialogue overlay is invisible if it has no dialogue
                             dialogueOverlay.setVisible(false);
-                            break;
-                        
-                    }   
+                        }
+                        else if (saveGameSlots.isVisible()) {
+                            saveGameSlots.setVisible(false);
+                            gameTimer.play();
+                        }
+                        else {
+                            togglePauseMenu();
+                        }
                     }
                 }
             });
@@ -140,6 +158,7 @@ public class GameController {
             gameEngine.playerMove(centeredX, centeredY); //update in game state
             
         });
+
     }
 
     /*
@@ -163,7 +182,7 @@ public class GameController {
         updateInventoryUI();
         startTimer();
 
-       // showIntroDialogue();    // trying to show what NPC intro will say 
+       // showIntroDialogue();    trying to show what NPC intro will say 
     }
     
 
@@ -203,6 +222,45 @@ public class GameController {
     public void stopTimer() {
         if (gameTimer != null) gameTimer.stop();
     }
+
+    private void togglePauseMenu() {
+        if (pauseScreen.isVisible()) {
+            pauseScreen.setVisible(false);
+            gameTimer.play(); //resume timer
+        }
+        else {
+            pauseScreen.setVisible(true);
+            gameTimer.pause(); //pause timer
+        }
+    }
+
+    public void onResumeClick(Event event) {
+        togglePauseMenu();
+    }  
+
+    public void onSaveGameClick(Event event) {
+        pauseScreen.setVisible(false);
+        saveGameSlots.setVisible(true);
+    }
+
+    public void saveSlot1Click(Event event) {
+        gameEngine.saveGame("saveSlot1.json");
+        saveGameSlots.setVisible(false);
+        gameTimer.play();
+    }
+
+    public void saveSlot2Click(Event event) {
+        gameEngine.saveGame("saveSlot2.json");
+        saveGameSlots.setVisible(false);
+        gameTimer.play();
+    }
+
+    public void saveSlot3Click(Event event) {
+        gameEngine.saveGame("saveSlot3.json");
+        saveGameSlots.setVisible(false);
+        gameTimer.play();
+    }
+
 
     /*
         * Updates the game screen to reflect the current game state.
@@ -256,7 +314,10 @@ public class GameController {
 
             currentNPCImageView.setOnMouseClicked(e -> {
                 System.out.println("Clicked on NPC: " + npc.getName());
+                e.consume();
+                //handleNPCClick(npc);
                 //would open dialogue box and start npc interaction here
+
             });
 
             interactiveLayer.getChildren().add(currentNPCImageView);
@@ -292,6 +353,25 @@ public class GameController {
 
     }
 
+    private void handleNPCClick(NPC npc) {
+        //would handle npc interaction here like opening dialogue box and stuff 
+        // todo: Please add the talk logic here and how to progress dialogue
+        // 
+        // 
+        dialogueOverlay.setVisible(true);
+        dialogueNameLabel.setText(npc.getName());
+
+        dialogueBox.setText("Hello, I am " + npc.getName() + ". [dialogue system not implemented yet.]");
+
+        nextButton.setVisible(true);
+        optionsBox.setVisible(false);
+
+        //also the give logic should have some play here in terms of trading items with npc and also if you maybe press and he already gave the instructions and riddle and is waiting for item
+        //you can click him after that and then the inventory would pop up to select item to give
+        //i updated the inventory to have click handlers so we can select items from there when giving to npc
+        
+    }
+
     private void updateInventoryUI() {
         inventoryGrid.getChildren().clear(); //this is to clear the grid so we dont have duplicates when updating 
 
@@ -322,6 +402,22 @@ public class GameController {
                 System.out.println("Slot clicked: col " + col + ", row " + row); 
                 selected = item;
 
+                /* if (dialogueOverlay.isVisible() && gameEngine.getPlayer().getCurrentRoom().hasNPC() != null) {
+                    would put give item logic here for attempting to give the item they select
+                    if its a puzzle item then would unlock next door otherwise print whatever
+
+                    could make it so that when the npc clicks next after whatever point in the dialogue where they are asking for an item and it has a next available,
+                    it would would open the inventory and let them select an item to give to the npc
+
+                    might have to make it so that they have to click the next button after selecting item instead of just clicking the item
+                    that way they can read the dialogue click the item then click next to give it in the same flow 
+
+                    so basically just put the logic here to handle if the npc is in a state where they are waiting for an item, 
+                    they can click on the item and the click next button to give the selected item to the npc
+                    and then handle the result of that give action.
+                }
+                 */ 
+
                 if (isCombineMode) {
                     handleCombineSelecting(selected);
                 }
@@ -329,6 +425,8 @@ public class GameController {
                 if (isExamineMode) {
                     refreshExaminePanel();
                 }
+
+                
             });
             slot.getChildren().add(icon);
         }
@@ -359,6 +457,7 @@ public class GameController {
         if (isCombineMode) { //if already in combine mode then exit it
             exitCombineMode();
             examineButton.setDisable(false); //reenable examine button when exiting combine mode
+            dropButton.setDisable(false); //reenable drop button when exiting combine mode
         } else {
             isCombineMode = true; //otherwise would turn it on then show the combine panel and update the slots
             combinePanel.setVisible(true);
@@ -366,6 +465,7 @@ public class GameController {
             updateCombineSlots();
             System.out.println("Combine Mode Activated");
             examineButton.setDisable(true); //disable examine button while in combine mode
+            dropButton.setDisable(true); //disable drop button while in combine mode
         }
 
     }
@@ -421,7 +521,7 @@ public class GameController {
 
     public void onMergeButtonClick(Event event) {
         if (combineItems.size() == 2) {
-            String result = gameEngine.useItem(combineItems.get(0).getName(), combineItems.get(1).getName());
+            String result = gameEngine.useItem(combineItems.get(0), combineItems.get(1));
             System.out.println(result); //this is to show the result of the combination attempt 
             //exitCombineMode();
             combineItems.clear();

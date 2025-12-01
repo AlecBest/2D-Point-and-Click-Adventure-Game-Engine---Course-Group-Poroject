@@ -1,5 +1,6 @@
 package ca.uwo.cs2212.group21.model;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -183,6 +184,26 @@ public class GameEngine {
         }
     }
 
+    public void saveGame(String fileName) {
+        JSONObject saveData = new JSONObject();
+        JSONArray inventoryArray = new JSONArray();
+
+        saveData.put("currentRoom", player.getCurrentRoom().getName());
+        saveData.put("timeRemaining", player.getTimeRemaining());
+
+        for (Item item : player.getInventory()) {
+            inventoryArray.put(item.getName());
+        }
+        saveData.put("inventory", inventoryArray);
+
+        try (FileWriter file = new FileWriter("escape-room-game/src/main/resources/" + fileName)) {
+            file.write(saveData.toString(4)); // this is just for readability
+            file.flush(); 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public HashMap<String, Room> getRooms() {
     return rooms;
     }
@@ -205,7 +226,7 @@ public class GameEngine {
     }
 
     // UseCommand wrapper method
-    public String useItem(String itemName, String... secondItemName) {
+    public String useItem(Item itemName, Item secondItemName) {
         UseCommand cmd = new UseCommand();
         return cmd.execute(player, itemName, secondItemName, this.items);
     }
