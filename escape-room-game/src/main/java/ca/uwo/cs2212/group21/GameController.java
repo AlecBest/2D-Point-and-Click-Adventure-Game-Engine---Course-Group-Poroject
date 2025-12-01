@@ -175,7 +175,7 @@ public class GameController {
 
             movePlayerVisuals(centeredX, centeredY);
             gameEngine.playerMove(centeredX, centeredY); // update in game state
-
+            soundManager.playSoundEffect("footsteps.mp3");
         });
     }
 

@@ -10,6 +10,7 @@ public class SoundManager {
     private MediaPlayer backgroundPlayer;
     private Map<String, Media> soundCache = new HashMap<>();
 
+    // Allows for background music to be played until stopped
     public void playBackgroundMusic(String filename) {
         try {
             if (backgroundPlayer != null) {
@@ -27,6 +28,7 @@ public class SoundManager {
         }
     }
 
+    // Allows for sound effects to be played
     public void playSoundEffect(String filename) {
         try {
             Media media = loadMedia(filename);
@@ -40,12 +42,14 @@ public class SoundManager {
         }
     }
 
+    // Stops the background music
     public void stopBackgroundMusic() {
         if (backgroundPlayer != null) {
             backgroundPlayer.stop();
         }
     }
 
+    // Loads the media file from the sounds folder
     private Media loadMedia(String filename) {
         if (soundCache.containsKey(filename)) {
             return soundCache.get(filename);
