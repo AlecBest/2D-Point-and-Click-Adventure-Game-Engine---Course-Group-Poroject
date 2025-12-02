@@ -79,10 +79,10 @@
         {
           "exit": "Library of Echoes",
           "exitDirection": "SOUTH",
-          "xPosition": 495.0,
+          "xPosition": 465.0,
           "yPosition": 240.0,
-          "width": 90.0,
-          "height": 150.0
+          "width": 170.0,
+          "height": 250.0
         }
       ]
     },
@@ -146,10 +146,10 @@
         {
           "exit": "Broken Kitchen",
           "exitDirection": "SOUTH",
-          "xPosition": 480.0,
-          "yPosition": 600.0,
-          "width": 80.0,
-          "height": 80.0
+          "xPosition": 460.0,
+          "yPosition": 259.0,
+          "width": 100.0,
+          "height": 200.0
         }
       ]
     },
@@ -205,10 +205,10 @@
         {
           "exit": "Assembly Room",
           "exitDirection": "NORTH",
-          "xPosition": 490.0,
-          "yPosition": 400.0,
-          "width": 80.0,
-          "height": 80.0
+          "xPosition": 480.0,
+          "yPosition": 270.0,
+          "width": 135.0,
+          "height": 250.0
         }
       ]
     },
@@ -233,10 +233,10 @@
         {
           "exit": "Game Completed",
           "exitDirection": "SOUTH",
-          "xPosition": 480.0,
-          "yPosition": 600.0,
-          "width": 100.0,
-          "height": 100.0
+          "xPosition": 510.0,
+          "yPosition": 307.0,
+          "width": 65.0,
+          "height": 65.0
         }
       ]
     },
