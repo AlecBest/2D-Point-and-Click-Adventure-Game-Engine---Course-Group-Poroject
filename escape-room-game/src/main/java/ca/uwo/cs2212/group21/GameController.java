@@ -201,8 +201,7 @@ public class GameController {
             gameScreen.setVisible(true);
 
             // Setup game state visuals BEFORE fading in
-            playerImageView = new ImageView(
-                    new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
+            playerImageView = new ImageView(new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
             playerImageView.setLayoutX(400);
             playerImageView.setLayoutY(300);
             playerImageView.setFitWidth(200);
