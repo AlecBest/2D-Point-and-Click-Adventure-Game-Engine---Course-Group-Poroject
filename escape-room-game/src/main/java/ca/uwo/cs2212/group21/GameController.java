@@ -180,6 +180,9 @@ public class GameController {
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
         fadeOut.setOnFinished(e -> {
+            // Start game music immediately to ensure it plays
+            soundManager.playBackgroundMusic("spooky_bgm.mp3");
+
             mainScreen.setVisible(false);
 
             // Initialize game engine
@@ -203,7 +206,7 @@ public class GameController {
             updateScreen();
             updateInventoryUI();
             startTimer();
-            soundManager.playBackgroundMusic("spooky_bgm.mp3");
+            
 
             // Fade in game screen
             javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.seconds(1),
@@ -413,9 +416,9 @@ public class GameController {
             Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection),currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection),
             currentRoom.getExitHeight(exitDirection));
             
-            exitHitBox.setFill(Color.WHITE); // this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
+            exitHitBox.setFill(Color.TRANSPARENT); // this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
 
-            exitHitBox.setStroke(Color.RED); // this is just for testing purposes we would remove after we see that the hitbox works fine
+            exitHitBox.setStroke(null); // this is just for testing purposes we would remove after we see that the hitbox works fine
 
             exitHitBox.setOnMouseClicked(e -> {
                 // call the go command through the game engine
@@ -877,6 +880,7 @@ public void toggleInventory() {
     }
 
     public void switchToMainScene(Event event) throws IOException {
+        soundManager.stopBackgroundMusic();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/gameView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
