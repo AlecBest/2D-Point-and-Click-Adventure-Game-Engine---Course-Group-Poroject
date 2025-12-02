@@ -178,6 +178,9 @@ public class GameController {
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
         fadeOut.setOnFinished(e -> {
+            // Start game music immediately to ensure it plays
+            soundManager.playBackgroundMusic("spooky_bgm.mp3");
+
             mainScreen.setVisible(false);
 
             // Initialize game engine
@@ -201,7 +204,7 @@ public class GameController {
             updateScreen();
             updateInventoryUI();
             startTimer();
-            soundManager.playBackgroundMusic("spooky_bgm.mp3");
+            
 
             // Fade in game screen
             javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.seconds(1),
@@ -866,6 +869,7 @@ public void toggleInventory() {
     }
 
     public void switchToMainScene(Event event) throws IOException {
+        soundManager.stopBackgroundMusic();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/gameView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
