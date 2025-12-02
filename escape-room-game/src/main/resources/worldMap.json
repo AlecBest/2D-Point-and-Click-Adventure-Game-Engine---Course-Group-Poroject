@@ -203,7 +203,7 @@
 
       "exits": [
         {
-          "exit": "Library of Echoes",
+          "exit": "Assembly Room",
           "exitDirection": "NORTH",
           "xPosition": 490.0,
           "yPosition": 400.0,
@@ -211,6 +211,53 @@
           "height": 80.0
         }
       ]
+    },
+
+    {
+      "name": "Assembly Room",
+      "description": "A silent chamber where ancient magic lingers. The air hums with the power of the shattered key fragments.",
+      "isLocked": false,
+      "roomImagePath": "/images/g4_key.png",
+
+      "items": [],
+
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "This is the chamber of binding. Combine the three fragments here to restore the Master Key.",
+        "isNPCTradeable": false,
+        "xPosition": 820.0,
+        "yPosition": 260.0
+      },
+
+      "exits": [
+        {
+          "exit": "Game Completed",
+          "exitDirection": "SOUTH",
+          "xPosition": 480.0,
+          "yPosition": 600.0,
+          "width": 100.0,
+          "height": 100.0
+        }
+      ]
+    },
+
+    {
+      "name": "Game Completed",
+      "description": "You have restored the Master Key and escaped the Mansion Beyond.",
+      "isLocked": false,
+      "roomImagePath": "/images/end.png",
+
+      "items": [],
+
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "You are free now. Your courage has shattered the curse.",
+        "isNPCTradeable": false,
+        "xPosition": 820.0,
+        "yPosition": 260.0
+      },
+
+      "exits": []
     }
   ]
 }
