@@ -48,6 +48,8 @@ public class GameController {
     @FXML private GridPane inventoryGrid; // this is the grid inside the inventory where items would go
     @FXML private AnchorPane interactiveLayer; // this is the layer on top of the background where we would put items, npcs, exits, etc
 
+    private NPC activeNpc;
+
     @FXML private Label currentRoomLabel;
     @FXML private Label roomDescriptionLabel;
     @FXML private Label turnsTakenLabel;
@@ -178,7 +180,14 @@ public class GameController {
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
         fadeOut.setOnFinished(e -> {
+<<<<<<< HEAD
         mainScreen.setVisible(false);
+=======
+            // Start game music immediately to ensure it plays
+            soundManager.playBackgroundMusic("spooky_bgm.mp3");
+
+            mainScreen.setVisible(false);
+>>>>>>> e7834b5591e8975b4d7f5813267dc5c61b7817f1
 
             // Initialize game engine
             gameEngine = new GameEngine("/worldMap.json");
@@ -202,7 +211,7 @@ public class GameController {
             updateScreen();
             updateInventoryUI();
             startTimer();
-            soundManager.playBackgroundMusic("spooky_bgm.mp3");
+            
 
             // Fade in game screen
             javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.seconds(1),
@@ -411,9 +420,9 @@ public class GameController {
             Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection),currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection),
             currentRoom.getExitHeight(exitDirection));
             
-            exitHitBox.setFill(Color.WHITE); // this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
+            exitHitBox.setFill(Color.TRANSPARENT); // this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
 
-            exitHitBox.setStroke(Color.RED); // this is just for testing purposes we would remove after we see that the hitbox works fine
+            exitHitBox.setStroke(null); // this is just for testing purposes we would remove after we see that the hitbox works fine
 
             exitHitBox.setOnMouseClicked(e -> {
                 // call the go command through the game engine
@@ -430,6 +439,7 @@ public class GameController {
     }
 
     private void handleNPCClick(NPC npc) {
+<<<<<<< HEAD
 
         Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
         String roomName = currentRoom.getName();
@@ -475,13 +485,104 @@ public class GameController {
 
         dialogueOverlay.setVisible(true);
         dialogueNameLabel.setText(npcDialogue.has("name") ? npcDialogue.getString("name") : "The Guide");
+=======
 
-        dialogueBox.setText(text);
+    // remember who we are talking to
+    activeNpc = npc;
 
-        optionsBox.getChildren().clear();
+    Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
+
+    // show overlay and set name
+    dialogueOverlay.setVisible(true);
+    dialogueNameLabel.setText(npc.getName());
+
+    // 1: First time talking to this NPC and we have a dialogue tree in dialogues.json:
+    //    use the dialogue tree with options.
+    if (!npc.hasInteracted() && dialogueData != null && dialogueData.has(npc.getName())) {
+
+        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
+        showDialogueNode(npcDialogue, "root");
+        return;
+    }
+
+    // 2: After the first time: use the per room line from worldMap.json
+    String dialogueText = npc.getDialogue();
+    dialogueBox.setText(dialogueText);
+    dialogueBox.setWrapText(true);
+
+    optionsBox.setVisible(false);
+    nextButton.setVisible(true);
+    isGiveMode = false;
+
+    // If this NPC can trade in this room, Next should open inventory for giving.
+    // Otherwise Next just closes the dialogue.
+    if (npc.isTradeable()) {
+
+        nextButton.setOnAction(e -> {
+            isGiveMode = true;
+
+            if (!inventory.isVisible()) {
+                updateInventoryUI();
+                inventory.setVisible(true);
+                inventory.requestFocus();
+            }
+
+            dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
+            dialogueBox.setWrapText(true);
+        });
+
+    } else {
+
+        nextButton.setOnAction(e -> {
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+    }
+}
+
+
+
+private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
+    if (!npcDialogue.has(nodeId)) {
+        return;
+    }
+
+    // get node from dialogues.json
+    org.json.JSONObject node = npcDialogue.getJSONObject(nodeId);
+
+    // set dialogue text
+    String text = node.getString("text");
+    dialogueBox.setText(text);
+    dialogueBox.setWrapText(true);
+
+    // get options
+    org.json.JSONObject options = node.getJSONObject("options");
+>>>>>>> e7834b5591e8975b4d7f5813267dc5c61b7817f1
+
+    // clear old buttons
+    optionsBox.getChildren().clear();
+
+    // if there are no options: this is the last node in the tree
+    if (options.isEmpty()) {
+
+        optionsBox.setVisible(false);
+        nextButton.setVisible(true);
+
+        // after this final line, mark NPC as interacted and close on Next
+        nextButton.setOnAction(e -> {
+            if (activeNpc != null) {
+                activeNpc.setHasInteracted(true);
+            }
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+
+    } else {
+        // there are options: hide Next and show buttons
         optionsBox.setVisible(true);
         nextButton.setVisible(false);
 
+<<<<<<< HEAD
         //separating the cases here because I wanted it to have the options show up differently if its a give node or not or if the npc is just yapping or if you have options to choose from
 
         if (options != null && !options.isEmpty()) { //this is for the case where the npc has options to choose from 
@@ -497,6 +598,17 @@ public class GameController {
                 optionButton.setOnAction(e -> showDialogueNode(npcDialogue, targetNode));
                 optionsBox.getChildren().add(optionButton);
             }
+=======
+        for (String optionText : options.keySet()) {
+            String nextNodeId = options.getString(optionText);
+
+            Button optionButton = new Button(optionText);
+            optionButton.setOnAction(e -> {
+                showDialogueNode(npcDialogue, nextNodeId);
+            });
+
+            optionsBox.getChildren().add(optionButton);
+>>>>>>> e7834b5591e8975b4d7f5813267dc5c61b7817f1
         }
         else if (nextNodeID != null && !nextNodeID.isEmpty()) { //this is for the case where there are no options but it has a next node to go to 
             optionsBox.setVisible(false);
@@ -624,6 +736,8 @@ public class GameController {
         }
         return null;
     }
+}
+
 
     private void showPickupPopup(String message) {
         pickupPopup.setText(message);
@@ -976,6 +1090,7 @@ public void toggleInventory() {
     }
 
     public void switchToMainScene(Event event) throws IOException {
+        soundManager.stopBackgroundMusic();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/gameView.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);

@@ -8,7 +8,7 @@
       "items": [],
       "npc": {
         "npc": "The Guide",
-        "npcDialogue": "Welcome, traveler. Find the key to escape.",
+        "npcDialogue": "Welcome, lost soul... You have crossed into the Mansion Beyond, a place built from shadows and forgotten memories.This house feeds on fear, and only those who endure its trials may escape.|The Master Key to your freedom was shattered into three fragments, each sealed within a different room.|To claim them, you must solve the puzzles before you—search the rooms, gather items, and study your surroundings closely.|Your inventory will hold what you collect, and some items may combine... but only the correct pairs will guide you forward, while a wrong attempt will cost you 30 seconds of your precious 10 minute journey.|Restore all three fragments and reclaim the Master Key, or be consumed by the mansion itself.|Now go, your first trial awaits in the Living Room of Shadows.",
         "isNPCTradeable": false,
         "xPosition": 780.0,
         "yPosition": 330.0
@@ -77,8 +77,8 @@
       ],
       "npc": {
         "npc": "The Guide",
-        "npcDialogue": "You stand in the Living Room of Shadows, the heart of the mansion’s darkness.",
-        "isNPCTradeable": false,
+        "npcDialogue": "Welcome to the Living Room of Shadows, the heart of this mansion's darkness. To break the first seal, you must forge a light strong enough to cut through the gloom. Search carefully... only the right spark will reveal the truth.",
+        "isNPCTradeable": true,
         "xPosition": 650.0,
         "yPosition": 320.0
       },
@@ -86,10 +86,10 @@
         {
           "exit": "Library of Echoes",
           "exitDirection": "SOUTH",
-          "xPosition": 495.0,
+          "xPosition": 465.0,
           "yPosition": 240.0,
-          "width": 90.0,
-          "height": 150.0
+          "width": 170.0,
+          "height": 250.0
         }
       ]
     },
@@ -146,8 +146,8 @@
       ],
       "npc": {
         "npc": "The Guide",
-        "npcDialogue": "Welcome to the Library of Echoes. Restore what was torn, and the story will guide you.",
-        "isNPCTradeable": false,
+        "npcDialogue": "Welcome to the Library of Echoes, where forgotten pages whisper in the dark. The knowledge here is fractured, seek what's missing, piece together the truth, and only then will this room let you pass.",
+        "isNPCTradeable": true,
         "xPosition": 560.0,
         "yPosition": 279.0
       },
@@ -163,10 +163,10 @@
         {
           "exit": "Broken Kitchen",
           "exitDirection": "SOUTH",
-          "xPosition": 480.0,
-          "yPosition": 600.0,
-          "width": 80.0,
-          "height": 80.0
+          "xPosition": 460.0,
+          "yPosition": 259.0,
+          "width": 100.0,
+          "height": 200.0
         }
       ]
     },
@@ -223,8 +223,8 @@
       ],
       "npc": {
         "npc": "The Guide",
-        "npcDialogue": "This kitchen once fed life. Now it devours mistakes. Prepare an offering worthy of me.",
-        "isNPCTradeable": false,
+        "npcDialogue": "You have come far. This kitchen feeds on mistakes. To earn the next fragment, craft an offering worthy of me. Choose wisely, or pay the price.",
+        "isNPCTradeable": true,
         "xPosition": 610.0,
         "yPosition": 295.0
       },
@@ -232,10 +232,10 @@
         {
           "exit": "Assembly Room",
           "exitDirection": "NORTH",
-          "xPosition": 490.0,
-          "yPosition": 400.0,
-          "width": 80.0,
-          "height": 80.0
+          "xPosition": 480.0,
+          "yPosition": 270.0,
+          "width": 135.0,
+          "height": 250.0
         }
       ]
     },
@@ -303,8 +303,8 @@
       ],
       "npc": {
         "npc": "The Guide",
-        "npcDialogue": "This is the chamber of binding. Combine the three fragments here to restore the Master Key.",
-        "isNPCTradeable": false,
+        "npcDialogue": "Ahha I was not expecting to see you here this far. This is the chamber of binding. Combine the three fragments here to restore the Master Key and win your way to freedom",
+        "isNPCTradeable": true,
         "xPosition": 820.0,
         "yPosition": 260.0
       },
@@ -312,10 +312,10 @@
         {
           "exit": "Game Completed",
           "exitDirection": "SOUTH",
-          "xPosition": 480.0,
-          "yPosition": 600.0,
-          "width": 100.0,
-          "height": 100.0
+          "xPosition": 510.0,
+          "yPosition": 307.0,
+          "width": 65.0,
+          "height": 65.0
         }
       ]
     },
@@ -328,7 +328,7 @@
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "You are free now. Your courage has shattered the curse.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 820.0,
         "yPosition": 260.0
       },

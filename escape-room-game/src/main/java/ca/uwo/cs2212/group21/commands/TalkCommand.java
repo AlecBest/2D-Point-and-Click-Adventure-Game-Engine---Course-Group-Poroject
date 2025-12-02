@@ -17,7 +17,6 @@ public class TalkCommand {
      */
     public String execute(GameState player) {
 
-        // Safety checks so we do not crash
         if (player == null) {
             return "There is no active game.";
         }
@@ -32,7 +31,6 @@ public class TalkCommand {
             return "There is no one here to talk to.";
         }
 
-        // Use your NPC getters
         String dialogue = npc.getDialogue();
 
         if (dialogue == null || dialogue.isEmpty()) {
