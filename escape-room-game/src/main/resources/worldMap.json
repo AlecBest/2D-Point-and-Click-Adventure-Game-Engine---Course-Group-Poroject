@@ -18,7 +18,7 @@
 
       "exits": [
         {
-          "exit": "Dining Room",
+          "exit": "Living Room",
           "exitDirection": "WEST",
           "xPosition": 60.0,
           "yPosition": 260.0,
@@ -29,7 +29,7 @@
     },
 
     {
-      "name": "Dining Room",
+      "name": "Living Room",
       "description": "A suffocatingly dark living room where shadows cling to every corner.",
       "isLocked": false,
       "roomImagePath": "/images/g1_background.png",
@@ -77,12 +77,71 @@
 
       "exits": [
         {
-          "exit": "Main Room",
+          "exit": "Library of Echoes",
           "exitDirection": "SOUTH",
-          "xPosition": 350.0,
-          "yPosition": 600.0,
-          "width": 100.0,
-          "height": 100.0
+          "xPosition": 495.0,
+          "yPosition": 240.0,
+          "width": 90.0,
+          "height": 150.0
+        }
+      ]
+    },
+
+    {
+      "name": "Library of Echoes",
+      "description": "A library filled with torn books and missing pages.",
+      "isLocked": false,
+      "roomImagePath": "/images/g2_background.png",
+
+      "items": [
+        {
+          "item": "Torn Book",
+          "itemDescription": "A heavy old tome with several pages ripped out.",
+          "isPuzzleItem": true,
+          "itemImagePath": "/images/g2_book.png",
+          "xPosition": 90.0,
+          "yPosition": 100.0,
+          "width": 70.0,
+          "height": 60.0
+        },
+        {
+          "item": "Missing Page",
+          "itemDescription": "A single loose page, its edges frayed and worn.",
+          "isPuzzleItem": true,
+          "itemImagePath": "/images/g2_paper.png",
+          "xPosition": 520.0,
+          "yPosition": 260.0,
+          "width": 60.0,
+          "height": 50.0
+        },
+        {
+          "item": "Pen",
+          "itemDescription": "An old ink pen, its tip still faintly stained.",
+          "isPuzzleItem": false,
+          "itemImagePath": "/images/g2_pen.png",
+          "xPosition": 760.0,
+          "yPosition": 395.0,
+          "width": 50.0,
+          "height": 40.0
+        }
+      ],
+
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "Welcome to the Library of Echoes. Restore what was torn, and the story will guide you.",
+        "isNPCTradeable": false,
+        "xPosition": 500.0,
+        "yPosition": 320.0
+      },
+
+      "exits": [
+        {
+          "exit": "Living Room",
+          "exitDirection": "WEST",
+          "xPosition": 495.0,
+          "yPosition": 240.0,
+          "width": 90.0,
+          "height": 150.0
         }
       ]
     }
