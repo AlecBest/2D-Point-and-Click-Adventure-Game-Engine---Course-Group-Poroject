@@ -70,7 +70,7 @@
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "Welcome to the Living Room of Shadows—the heart of this mansion's darkness. To break the first seal, you must forge a light strong enough to cut through the gloom. Search carefully... only the right spark will reveal the truth.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 650.0,
         "yPosition": 320.0
       },
@@ -129,7 +129,7 @@
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "Welcome to the Library of Echoes, where forgotten pages whisper in the dark. The knowledge here is fractured—seek what's missing, piece together the truth, and only then will this room let you pass.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 560.0,
         "yPosition": 279.0
       },
@@ -196,7 +196,7 @@
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "You have come far. This kitchen feeds on mistakes. To earn the next fragment, craft an offering worthy of me. Choose wisely, or pay the price.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 610.0,
         "yPosition": 295.0
       },
@@ -224,7 +224,7 @@
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "Ahha I was not expecting to see you here this far. This is the chamber of binding. Combine the three fragments here to restore the Master Key and win your way to freedom",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 820.0,
         "yPosition": 260.0
       },
@@ -252,7 +252,7 @@
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "You are free now. Your courage has shattered the curse.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 820.0,
         "yPosition": 260.0
       },
