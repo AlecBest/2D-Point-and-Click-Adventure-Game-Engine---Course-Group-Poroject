@@ -10,7 +10,7 @@
 
       "npc": {
         "npc": "The Guide",
-        "npcDialogue": "Welcome, lost soul... You have crossed into the Mansion Beyond, a place built from shadows and forgotten memories.This house feeds on fear, and only those who endure its trials may escape.|The Master Key to your freedom was shattered into three fragments, each sealed within a different room.|To claim them, you must solve the puzzles before you—search the rooms, gather items, and study your surroundings closely.|Your inventory will hold what you collect, and some items may combine... but only the correct pairs will guide you forward, while a wrong attempt will cost you 30 seconds of your precious ten-minute journey.|Restore all three fragments and reclaim the Master Key, or be consumed by the mansion itself.|Now go—your first trial awaits in the Living Room of Shadows.",
+        "npcDialogue": "Welcome, lost soul... You have crossed into the Mansion Beyond, a place built from shadows and forgotten memories.This house feeds on fear, and only those who endure its trials may escape.|The Master Key to your freedom was shattered into three fragments, each sealed within a different room.|To claim them, you must solve the puzzles before you—search the rooms, gather items, and study your surroundings closely.|Your inventory will hold what you collect, and some items may combine... but only the correct pairs will guide you forward, while a wrong attempt will cost you 30 seconds of your precious 10 minute journey.|Restore all three fragments and reclaim the Master Key, or be consumed by the mansion itself.|Now go, your first trial awaits in the Living Room of Shadows.",
         "isNPCTradeable": false,
         "xPosition": 780.0,
         "yPosition": 330.0
@@ -69,7 +69,7 @@
 
       "npc": {
         "npc": "The Guide",
-        "npcDialogue": "Welcome to the Living Room of Shadows—the heart of this mansion's darkness. To break the first seal, you must forge a light strong enough to cut through the gloom. Search carefully... only the right spark will reveal the truth.",
+        "npcDialogue": "Welcome to the Living Room of Shadows, the heart of this mansion's darkness. To break the first seal, you must forge a light strong enough to cut through the gloom. Search carefully... only the right spark will reveal the truth.",
         "isNPCTradeable": false,
         "xPosition": 650.0,
         "yPosition": 320.0
@@ -128,7 +128,7 @@
 
       "npc": {
         "npc": "The Guide",
-        "npcDialogue": "Welcome to the Library of Echoes, where forgotten pages whisper in the dark. The knowledge here is fractured—seek what's missing, piece together the truth, and only then will this room let you pass.",
+        "npcDialogue": "Welcome to the Library of Echoes, where forgotten pages whisper in the dark. The knowledge here is fractured, seek what's missing, piece together the truth, and only then will this room let you pass.",
         "isNPCTradeable": false,
         "xPosition": 560.0,
         "yPosition": 279.0
