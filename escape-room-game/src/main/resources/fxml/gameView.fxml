@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.GameController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.GameController">
    <children>
 
       <AnchorPane fx:id="mainScreen" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: black;" visible="false">
@@ -30,9 +30,9 @@
             <VBox alignment="CENTER" layoutX="440.0" layoutY="300.0" spacing="20.0">
                <children>
 
-                  <Button fx:id="startGameButton" mnemonicParsing="false" onAction="#startGame" prefHeight="70.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
+                  <Button fx:id="startGameButton" mnemonicParsing="false" onAction="#startGame" prefWidth="200.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
                      <graphic>
-                        <ImageView fitHeight="90.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="false">
                            <image>
                               <Image url="@../images/startButton.png" />
                            </image>
@@ -41,9 +41,9 @@
                   </Button>
                   
 
-                  <Button fx:id="loadGameButtonMenu" mnemonicParsing="false" onAction="#switchToLoadGameScene" prefHeight="70.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
+                  <Button fx:id="loadGameButtonMenu" mnemonicParsing="false" onAction="#switchToLoadGameScene" prefWidth="200.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
                      <graphic>
-                        <ImageView fitHeight="90.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="false">
                            <image>
                               <Image url="@../images/continueButton.png" />
                            </image>
@@ -52,9 +52,9 @@
                   </Button>
                   
 
-                  <Button fx:id="quitButton" mnemonicParsing="false" onAction="#quitGame" prefHeight="70.0" prefWidth="280.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
+                  <Button fx:id="quitButton" mnemonicParsing="false" onAction="#quitGame" prefWidth="200.0" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 0;">
                      <graphic>
-                        <ImageView fitHeight="90.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="false">
                            <image>
                               <Image url="@../images/quitButton.png" />
                            </image>
@@ -66,7 +66,7 @@
          </children>
       </AnchorPane>
 
-      <AnchorPane fx:id="gameScreen" prefHeight="720.0" prefWidth="1080.0" visible="false">
+      <AnchorPane fx:id="gameScreen" prefHeight="720.0" prefWidth="1080.0">
          <children>
 
             <ImageView fx:id="backgroundImageView" fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true" preserveRatio="false">
@@ -85,13 +85,13 @@
 
             <HBox fx:id="scoreboardHUD" layoutX="15.0" mouseTransparent="true" spacing="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
                <children>
-                  <Label fx:id="currentRoomLabel" styleClass="header-label" text="Current Room" textFill="WHITE">
+                  <Label fx:id="currentRoomLabel" text="Current Room" textFill="WHITE">
                      <font><Font name="System Bold" size="18.0" /></font>
                   </Label>
-                  <Label fx:id="timeLabel" styleClass="header-label" text="Time remaining: " textFill="WHITE">
+                  <Label fx:id="timeLabel" text="Time remaining: " textFill="WHITE">
                      <font><Font name="System Bold" size="18.0" /></font>
                   </Label>
-                  <Label fx:id="scoreLabel" styleClass="header-label" text="Score:" textFill="WHITE">
+                  <Label fx:id="scoreLabel" text="Score:" textFill="WHITE">
                      <font><Font name="System Bold" size="18.0" /></font>
                   </Label>
                   <HBox spacing="5.0">
@@ -104,7 +104,7 @@
                </children>
             </HBox>
 
-            <AnchorPane fx:id="dialogueOverlay" layoutX="140.0" layoutY="500.0" prefHeight="160.0" prefWidth="800.0" styleClass="dialogue-box" visible="false">
+            <AnchorPane fx:id="dialogueOverlay" layoutX="140.0" layoutY="500.0" prefHeight="160.0" prefWidth="800.0" visible="false">
                <children>
                   <ImageView fx:id="dialogueBoxBg" fitHeight="160.0" fitWidth="800.0" pickOnBounds="true" />
 
@@ -122,22 +122,31 @@
                   <VBox fx:id="optionsBox" layoutX="600.0" layoutY="20.0" prefHeight="120.0" prefWidth="180.0" spacing="10.0" />
                </children>
             </AnchorPane>
-            
-            <Label fx:id="pickupPopup" alignment="CENTER" layoutX="340.0" layoutY="100.0" mouseTransparent="true" prefHeight="40.0" prefWidth="400.0" style="-fx-background-color: #000000aa; -fx-text-fill: white; -fx-background-radius: 10;" text="Picked up item" visible="false">
+            <Label fx:id="roomDescriptionLabel" layoutX="30.0" layoutY="680.0" text="Label" textFill="WHITE">
+               <font>
+                  <Font name="System Italic" size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="turnsTakenLabel" layoutX="900.0" layoutY="15.0" text="Turns Taken: " textFill="WHITE" AnchorPane.rightAnchor="66.66666666666667" AnchorPane.topAnchor="15.0">
                <font>
                   <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="pickupPopup" alignment="CENTER" layoutX="500.0" layoutY="150.0" text="Label" textFill="WHITE" visible="false">
+               <font>
+                  <Font name="System Bold" size="16.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
 
-      <AnchorPane fx:id="inventory" visible="false">
+      <AnchorPane fx:id="inventory">
          <children>
             <Pane fx:id="inventoryUIBackground" mouseTransparent="true" opacity="0.0" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: black;" />
             
             <AnchorPane layoutX="760.0" layoutY="110.0" prefHeight="500.0" prefWidth="300.0" styleClass="panel-background">
                <children>
-                  <Label layoutX="50.0" layoutY="20.0" text="INVENTORY">
+                  <Label alignment="CENTER" layoutX="50.0" layoutY="20.0" prefHeight="35.0" prefWidth="209.0" text="INVENTORY" textFill="WHITE">
                      <font><Font name="System Bold" size="24.0" /></font>
                   </Label>
                   
@@ -218,7 +227,7 @@
       </AnchorPane>
       
 
-      <AnchorPane fx:id="saveGameSlots">
+      <AnchorPane fx:id="saveGameSlots" visible="false">
          <children>
             <Rectangle fill="#000000cc" height="720.0" width="1080.0" />
             <VBox alignment="CENTER" layoutX="440.0" layoutY="250.0" spacing="15.0">

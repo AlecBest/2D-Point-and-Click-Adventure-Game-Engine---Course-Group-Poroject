@@ -1,0 +1,11 @@
+{
+    "currentRoom": "Main Room",
+    "score": 0,
+    "timeRemaining": 591,
+    "inventory": [
+        "candle",
+        "holy oil",
+        "Jar of Coagulated Blood"
+    ],
+    "movesCount": 0
+}

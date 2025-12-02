@@ -17,6 +17,8 @@ public class GameState {
     private int timeRemaining;
     private double playerX;
     private double playerY;
+    private int score;
+    private int movesCount;
     
     /**
      * Initializes a new game state.
@@ -34,6 +36,9 @@ public class GameState {
 
         this.playerX = 600.0; //default starting x position we can change this later
         this.playerY = 360.0; //default starting y position
+
+        this.movesCount = 0; //the requirements said something about turn based so not sure if the timer is enough so adding this for clicks/moves 
+        this.score = 3; // assuming we start with 3 stars then they go down like the minecraft hunger bar 
     }
 
     /**
@@ -77,6 +82,26 @@ public class GameState {
 
     public double getPlayerY() {
         return playerY;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setMovesCount(int movesCount) {
+        this.movesCount = movesCount;
+    }
+
+    public void incrementMovesCount() {
+        this.movesCount++;
+    }
+
+    public int getMovesCount() {
+        return movesCount;
     }
 
     public void setPlayerImagePath(String imagePath) {

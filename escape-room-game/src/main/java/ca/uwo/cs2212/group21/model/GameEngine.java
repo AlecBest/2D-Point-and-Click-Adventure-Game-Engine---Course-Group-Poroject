@@ -35,6 +35,8 @@ public class GameEngine {
     private HashMap<String, Item> items;
     private HashMap<Room, Item> roomPuzzleItems;
     private List<Item> inventory;
+    private int movesCount;
+    private int score;
 
     /**
      * Initializes a new GameEngine instance.
@@ -80,6 +82,7 @@ public class GameEngine {
         Room loadedRoom = rooms.get(currentRoomName);
 
         int timeRemaining = saveData.getInt("timeRemaining");
+        
 
         this.player = new GameState(loadedRoom, timeRemaining); //this would put the player in wherever they were and with whatever time they had left 
 
@@ -94,6 +97,13 @@ public class GameEngine {
             }
             
         }
+
+        movesCount = saveData.getInt("movesCount");
+        this.player.setMovesCount(movesCount);
+
+        score = saveData.getInt("score"); 
+        this.player.setScore(score);
+
     }
 
     /**
@@ -192,6 +202,8 @@ public class GameEngine {
 
         saveData.put("currentRoom", player.getCurrentRoom().getName());
         saveData.put("timeRemaining", player.getTimeRemaining());
+        saveData.put("movesCount", this.movesCount);
+        saveData.put("score", this.score);
 
         for (Item item : player.getInventory()) {
             inventoryArray.put(item.getName());
@@ -213,6 +225,7 @@ public class GameEngine {
     public GameState getPlayer() {
     return player;
     }
+
 
     // -- command wrapper methods --
     // runs PickUpCommand on current game state
