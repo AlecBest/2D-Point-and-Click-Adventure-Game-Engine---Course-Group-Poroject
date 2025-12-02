@@ -100,7 +100,7 @@
           "isPuzzleItem": true,
           "itemImagePath": "/images/g2_book.png",
           "xPosition": 90.0,
-          "yPosition": 100.0,
+          "yPosition": 175.0,
           "width": 70.0,
           "height": 60.0
         },
@@ -109,8 +109,8 @@
           "itemDescription": "A single loose page, its edges frayed and worn.",
           "isPuzzleItem": true,
           "itemImagePath": "/images/g2_paper.png",
-          "xPosition": 520.0,
-          "yPosition": 260.0,
+          "xPosition": 240.0,
+          "yPosition": 395.0,
           "width": 60.0,
           "height": 50.0
         },
@@ -119,8 +119,8 @@
           "itemDescription": "An old ink pen, its tip still faintly stained.",
           "isPuzzleItem": false,
           "itemImagePath": "/images/g2_pen.png",
-          "xPosition": 760.0,
-          "yPosition": 395.0,
+          "xPosition": 785.0,
+          "yPosition": 400.0,
           "width": 50.0,
           "height": 40.0
         }
@@ -130,20 +130,134 @@
         "npc": "The Guide",
         "npcDialogue": "Welcome to the Library of Echoes. Restore what was torn, and the story will guide you.",
         "isNPCTradeable": false,
-        "xPosition": 500.0,
-        "yPosition": 320.0
+        "xPosition": 560.0,
+        "yPosition": 279.0
       },
 
       "exits": [
         {
           "exit": "Living Room",
           "exitDirection": "WEST",
-          "xPosition": 495.0,
+          "xPosition": 480.0,
           "yPosition": 240.0,
-          "width": 90.0,
-          "height": 150.0
+          "width": 50.0,
+          "height": 50.0
+        },
+        {
+          "exit": "Broken Kitchen",
+          "exitDirection": "SOUTH",
+          "xPosition": 480.0,
+          "yPosition": 600.0,
+          "width": 80.0,
+          "height": 80.0
         }
       ]
+    },
+
+    {
+      "name": "Broken Kitchen",
+      "description": "A ruined kitchen where failed meals and rotten offerings linger.",
+      "isLocked": false,
+      "roomImagePath": "/images/g3_background.png",
+
+      "items": [
+        {
+          "item": "Bread",
+          "itemDescription": "A simple slice of bread. Plain, but fresh.",
+          "isPuzzleItem": true,
+          "itemImagePath": "/images/g3_bread.png",
+          "xPosition": 125.0,
+          "yPosition": 474.0,
+          "width": 60.0,
+          "height": 40.0
+        },
+        {
+          "item": "Cheese",
+          "itemDescription": "A slice of cheese with small holes through it.",
+          "isPuzzleItem": true,
+          "itemImagePath": "/images/g3_cheese.png",
+          "xPosition": 125.0,
+          "yPosition": 110.0,
+          "width": 60.0,
+          "height": 40.0
+        },
+        {
+          "item": "Rotten Meat",
+          "itemDescription": "A foul piece of spoiled meat. The smell is unbearable.",
+          "isPuzzleItem": false,
+          "itemImagePath": "/images/g3_meat.png",
+          "xPosition": 760.0,
+          "yPosition": 410.0,
+          "width": 70.0,
+          "height": 50.0
+        }
+      ],
+
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "This kitchen once fed life. Now it devours mistakes. Prepare an offering worthy of me.",
+        "isNPCTradeable": false,
+        "xPosition": 610.0,
+        "yPosition": 295.0
+      },
+
+      "exits": [
+        {
+          "exit": "Assembly Room",
+          "exitDirection": "NORTH",
+          "xPosition": 490.0,
+          "yPosition": 400.0,
+          "width": 80.0,
+          "height": 80.0
+        }
+      ]
+    },
+
+    {
+      "name": "Assembly Room",
+      "description": "A silent chamber where ancient magic lingers. The air hums with the power of the shattered key fragments.",
+      "isLocked": false,
+      "roomImagePath": "/images/g4_key.png",
+
+      "items": [],
+
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "This is the chamber of binding. Combine the three fragments here to restore the Master Key.",
+        "isNPCTradeable": false,
+        "xPosition": 820.0,
+        "yPosition": 260.0
+      },
+
+      "exits": [
+        {
+          "exit": "Game Completed",
+          "exitDirection": "SOUTH",
+          "xPosition": 480.0,
+          "yPosition": 600.0,
+          "width": 100.0,
+          "height": 100.0
+        }
+      ]
+    },
+
+    {
+      "name": "Game Completed",
+      "description": "You have restored the Master Key and escaped the Mansion Beyond.",
+      "isLocked": false,
+      "roomImagePath": "/images/end.png",
+
+      "items": [],
+
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "You are free now. Your courage has shattered the curse.",
+        "isNPCTradeable": false,
+        "xPosition": 820.0,
+        "yPosition": 260.0
+      },
+
+      "exits": []
     }
   ]
 }
