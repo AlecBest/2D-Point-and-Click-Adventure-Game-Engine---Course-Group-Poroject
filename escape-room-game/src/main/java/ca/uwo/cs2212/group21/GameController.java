@@ -107,6 +107,7 @@ public class GameController {
 
     private List<Item> combineItems = new ArrayList<>();
     private SoundManager soundManager = new SoundManager();
+    private double lastPlayerX = 400; // Track last X position to determine direction
 
     /*
      * Initializes the game controller.
@@ -120,6 +121,8 @@ public class GameController {
         pauseScreen.setVisible(false);
         saveGameSlots.setVisible(false);
         
+        // Start main menu background music
+        soundManager.playBackgroundMusic("mainmenu.mp3");
 
         mainScreen.sceneProperty().addListener((obs, oldScene, newScene) -> { // this is to add a key listener to the scene whenever it gets set so it can track key inputs
             if (newScene != null) {
@@ -131,6 +134,7 @@ public class GameController {
                                 break;
 
                             case ESCAPE: // if escape is pressed it toggles inventory off if its on
+                                soundManager.playEscButtonSound();
                                 if (inventory.isVisible()) {
                                     toggleInventory();
                                 }
@@ -159,7 +163,6 @@ public class GameController {
 
             movePlayerVisuals(centeredX, centeredY);
             gameEngine.playerMove(centeredX, centeredY); // update in game state
-            soundManager.playSFootSteps();
         });
 
     }
@@ -169,6 +172,7 @@ public class GameController {
      * * @param event
      */
     public void startGame(ActionEvent event) throws IOException {
+        soundManager.playStartButtonSound();
        // Fade out main screen
         javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(Duration.seconds(1), mainScreen);
         fadeOut.setFromValue(1.0);
@@ -179,6 +183,9 @@ public class GameController {
             // Initialize game engine
             gameEngine = new GameEngine("/worldMap.json");
             gameEngine.startNewGame();
+            
+            // Set time limit AFTER game engine is initialized
+            gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);
 
             gameScreen.setOpacity(0.0);
             gameScreen.setVisible(true);
@@ -202,25 +209,9 @@ public class GameController {
             fadeIn.setFromValue(0.0);
             fadeIn.setToValue(1.0);
 
-            // Set NPC opacity to 0 initially so it doesn't show during screen fade
-            if (currentNPCImageView != null) {
-                currentNPCImageView.setOpacity(0.0);
-            }
-
-            fadeIn.setOnFinished(e2 -> {
-                // Fade in NPC if present
-                if (currentNPCImageView != null) {
-                    javafx.animation.FadeTransition npcFade = new javafx.animation.FadeTransition(Duration.seconds(2),
-                            currentNPCImageView);
-                    npcFade.setFromValue(0.0);
-                    npcFade.setToValue(1.0);
-                    npcFade.play();
-                }
-            });
             fadeIn.play();
         });
         fadeOut.play();
-        gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);
     }
 
 
@@ -281,10 +272,12 @@ public class GameController {
     }
 
     public void onResumeClick(Event event) {
+        soundManager.playEscButtonSound();
         togglePauseMenu();
     }  
 
     public void onSaveGameClick(Event event) {
+        soundManager.playEscButtonSound();
         pauseScreen.setVisible(false);
         saveGameSlots.setVisible(true);
     }
@@ -388,17 +381,27 @@ public class GameController {
             currentNPCImageView.setFitWidth(150);
             currentNPCImageView.setFitHeight(200); // we can change this would be a fixed thing anyways unless npc changes sizes for some reason idk
             currentNPCImageView.setPreserveRatio(true);
+            
+            // Set initial opacity to 0 for fade-in effect
+            currentNPCImageView.setOpacity(0.0);
 
             currentNPCImageView.setOnMouseClicked(e -> {
                 System.out.println("Clicked on NPC: " + npc.getName());
                 e.consume();
                 //handleNPCClick(npc);
                 //would open dialogue box and start npc interaction here
-
+                soundManager.playNPCsound();
                 handleNPCClick(npc);
             });
 
             interactiveLayer.getChildren().add(currentNPCImageView);
+            
+            // Create and play fade-in animation
+            javafx.animation.FadeTransition npcFadeIn = new javafx.animation.FadeTransition(Duration.seconds(1.5), currentNPCImageView);
+            npcFadeIn.setFromValue(0.0);
+            npcFadeIn.setToValue(1.0);
+            npcFadeIn.setDelay(Duration.millis(500)); // Slight delay to start after room fade-in begins
+            npcFadeIn.play();
         } else {
             this.currentNPCImageView = null; // if we decide to have a room with no npc just to make sure its null
         }
@@ -415,9 +418,8 @@ public class GameController {
             exitHitBox.setOnMouseClicked(e -> {
                 // call the go command through the game engine
                 Boolean moved = gameEngine.go(exitDirection);
-                soundManager.playSFootSteps();
                 soundManager.playSoundEffect("door.mp3");
-                if (moved) updateScreen();
+                if (moved) updateScreenWithTransition();
             });
 
             interactiveLayer.getChildren().add(exitHitBox);
@@ -429,69 +431,61 @@ public class GameController {
 
 private void handleNPCClick(NPC npc) {
 
-    // Find which room we are currently in
     Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
+    String roomName = currentRoom.getName();
 
-    // Always show overlay and NPC name when clicked
+    // Always show overlay and NPC name
     dialogueOverlay.setVisible(true);
     dialogueNameLabel.setText(npc.getName());
 
-    // 1: Intro room: talk only, no give
-    if ("Main Room".equals(currentRoom.getName())) {
-        // Use the per room dialogue text from JSON
-        String introText = npc.getDialogue();
-        dialogueBox.setText(introText);
-        dialogueBox.setWrapText(true);
+    // Use the dialogue string stored on the NPC (comes from JSON per room)
+    String dialogueText = npc.getDialogue();
+    dialogueBox.setText(dialogueText);
+    dialogueBox.setWrapText(true);
 
-        // In the intro room, Next just closes the dialogue
-        isGiveMode = false;
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
-
-        nextButton.setOnAction(e -> {
-            dialogueOverlay.setVisible(false);
-            dialogueBox.clear();
-        });
-
-        return;  // stop here; do not go into the give logic below
-    }
-
-    // 2: Other rooms: use dialogue tree or TalkCommand, then go to give mode
-
-    // Try JSON dialogue tree first
-    if (dialogueData != null && dialogueData.has(npc.getName())) {
-        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
-        showDialogueNode(npcDialogue, "root");
-    } else {
-        // Fallback: simple TalkCommand text
-        String dialogueText = gameEngine.talkToNpc();
-        dialogueBox.setText(dialogueText);
-        dialogueBox.setWrapText(true);
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
-    }
-
-    // Set up give phase to start when Next is clicked
+    // Default: no giving; Next just closes the dialogue
     isGiveMode = false;
     nextButton.setVisible(true);
     optionsBox.setVisible(false);
 
+    // Main Room: intro only; Next closes
+    if ("Main Room".equals(roomName)) {
+        nextButton.setOnAction(e -> {
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+        return;
+    }
+
+    // Living Room: talk; then Next enters give mode and opens inventory
+    if ("Living Room".equals(roomName)) {
+
+        nextButton.setOnAction(e -> {
+            // Enter give mode
+            isGiveMode = true;
+
+            // Open inventory so player can choose an item
+            if (!inventory.isVisible()) {
+                updateInventoryUI();
+                inventory.setVisible(true);
+                inventory.requestFocus();
+            }
+
+            dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
+            dialogueBox.setWrapText(true);
+        });
+
+        return;
+    }
+
+    // All other rooms (Library of Echoes, Broken Kitchen, etc):
+    // talk only; Next closes dialogue; no inventory trading
     nextButton.setOnAction(e -> {
-        // Switch into give mode
-        isGiveMode = true;
-
-        // Open inventory so they can pick an item
-        if (!inventory.isVisible()) {
-            updateInventoryUI();
-            inventory.setVisible(true);
-            inventory.requestFocus();
-        }
-
-        // Prompt player to choose an item
-        dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
-        dialogueBox.setWrapText(true);
+        dialogueOverlay.setVisible(false);
+        dialogueBox.clear();
     });
 }
+
 
 
 
@@ -519,6 +513,7 @@ private void handleNPCClick(NPC npc) {
             nextButton.setVisible(true);
             nextButton.setText("Close");
             nextButton.setOnAction(e -> {
+                soundManager.playDialogueCloseSound();
                 dialogueOverlay.setVisible(false);
                 dialogueBox.clear();
                 isGiveMode = false;
@@ -612,18 +607,36 @@ private void handleNPCClick(NPC npc) {
         }
     }
 
-    public void toggleInventory() {
-        if (inventory.isVisible()) {
-            inventory.setVisible(false);
-            gameScreen.requestFocus(); // this is to put the focus back to the game screen so can click again
-        } else {
-            updateInventoryUI(); // refresh the grid before it opens
-            inventory.setVisible(true);
-            inventory.requestFocus(); // this is to put the focus on the inventory so can click items in it
+public void toggleInventory() {
+    System.out.println("toggleInventory called. Before: " + inventory.isVisible());
+
+    if (inventory.isVisible()) {
+        // Closing inventory
+        inventory.setVisible(false);
+        gameScreen.requestFocus();
+
+        // If we were in give mode and player closed inventory with I,
+        // exit give mode and make Next close the dialogue instead of reopening inventory.
+        if (isGiveMode) {
+            isGiveMode = false;
+            nextButton.setOnAction(ev -> {
+                dialogueOverlay.setVisible(false);
+                dialogueBox.clear();
+            });
         }
+    } else {
+        // Opening inventory (normal gameplay)
+        updateInventoryUI();
+        inventory.setVisible(true);
+        inventory.requestFocus();
     }
 
+    System.out.println("After: " + inventory.isVisible());
+}
+
+
     public void dropItemFromInventory(Event event) {
+        soundManager.playDropButtonSound();
         gameEngine.dropItem(selected.getName());
         updateInventoryUI();
         updateScreen();
@@ -703,9 +716,7 @@ private void handleNPCClick(NPC npc) {
             combineItems.clear();
             updateCombineSlots();
             updateInventoryUI();
-            if (result.contains("Success") || result.contains("created")) { // Assuming success message contains these words
-                soundManager.playSoundEffect("success.mp3");
-            }
+            
         }
     }
 
@@ -762,6 +773,7 @@ private void handleNPCClick(NPC npc) {
 
         if (currentAnimation != null) { // this is so if you click queue a bunch of times it just stops the current anim to start another one
             currentAnimation.stop();
+            soundManager.stopFootsteps(); // Stop previous footsteps
         }
 
         double currentVisualX = playerImageView.getLayoutX() + playerImageView.getTranslateX(); // this is to get the current position since the translate wouldnt store like intermediate positions
@@ -777,19 +789,38 @@ private void handleNPCClick(NPC npc) {
         double difX = finalX - currentVisualX; // this is to get the difference between current position and target so it can animate to that position
         double difY = finalY - currentVisualY;
 
+
         currentAnimation = new TranslateTransition(Duration.seconds(1), playerImageView);
         currentAnimation.setToX(difX);
         currentAnimation.setToY(difY);
+
+        // Flip player sprite based on horizontal movement direction
+        double currentX = playerImageView.getLayoutX();
+        if (finalX < currentX) {
+            // Moving left - flip sprite horizontally
+            playerImageView.setScaleX(-1);
+        } else if (finalX > currentX) {
+            // Moving right - normal orientation
+            playerImageView.setScaleX(1);
+        }
+        // Update last position for next movement
+        lastPlayerX = finalX;
+
+        // Start footsteps when animation begins
+        soundManager.startFootsteps();
 
         currentAnimation.setOnFinished(e -> { // this is to set the final position properly and then reset translate so no weird stuff happens
             playerImageView.setLayoutX(finalX);
             playerImageView.setLayoutY(finalY);
             playerImageView.setTranslateX(0);
             playerImageView.setTranslateY(0);
+            // Stop footsteps when animation ends
+            soundManager.stopFootsteps();
         });
 
         currentAnimation.play();
     }
+
 
     public void onExamineClick(Event event) {
         examineSlot.getChildren().clear();
@@ -830,6 +861,7 @@ private void handleNPCClick(NPC npc) {
     }
 
     public void onCloseExamineClick(Event event) {
+        soundManager.playEscButtonSound();
         exitExamineMode();
     }
 
@@ -847,6 +879,7 @@ private void handleNPCClick(NPC npc) {
     }
 
     public void switchToLoadGameScene(Event event) throws IOException {
+        soundManager.playLoadGameSound();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/loadGame.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -855,8 +888,53 @@ private void handleNPCClick(NPC npc) {
     }
 
     public void quitGame(Event event) {
+        soundManager.playQuitButtonSound();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    /**
+     * Updates the screen with a fade out/fade in transition effect using a black overlay.
+     * This creates a smooth visual transition when changing rooms.
+     * Also checks for win condition when entering the final room.
+     */
+    private void updateScreenWithTransition() {
+        // Create a black rectangle overlay for the fade effect
+        Rectangle blackOverlay = new Rectangle(1080, 720);
+        blackOverlay.setFill(Color.BLACK);
+        blackOverlay.setOpacity(0.0);
+        
+        // Add overlay to the interactive layer (on top of everything)
+        interactiveLayer.getChildren().add(blackOverlay);
+        
+        // Fade to black
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(Duration.millis(400), blackOverlay);
+        fadeOut.setFromValue(0.0);
+        fadeOut.setToValue(1.0);
+        
+        fadeOut.setOnFinished(e -> {
+            // Update the room content while screen is black
+            updateScreen();
+            
+            // Check if player reached the final room (win condition)
+            if (gameEngine.getPlayer().getCurrentRoom().getName().equals("Game Completed")) {
+                soundManager.stopBackgroundMusic();
+                soundManager.playSuccessSequence(); // Play success.mp3 then success2.mp3
+                gameTimer.stop();
+            }
+            
+            // Fade from black
+            javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.millis(400), blackOverlay);
+            fadeIn.setFromValue(1.0);
+            fadeIn.setToValue(0.0);
+            fadeIn.setOnFinished(e2 -> {
+                // Remove the overlay after fade in completes
+                interactiveLayer.getChildren().remove(blackOverlay);
+            });
+            fadeIn.play();
+        });
+        
+        fadeOut.play();
     }
 
 }
