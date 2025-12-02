@@ -7,3 +7,7 @@ https://pixabay.com/sound-effects/pop-win-casino-winning-398059/ = Win Sound
 https://pixabay.com/sound-effects/080205-life-lost-game-over-89697/ = Game Over Sound
 
 https://pixabay.com/sound-effects/door-open-close-45475/ = Door opening
+
+https://pixabay.com/sound-effects/item-equip-6904/ = pickup.mp3
+
+https://pixabay.com/sound-effects/classic-ghost-sound-95773/ = Ghost sound
