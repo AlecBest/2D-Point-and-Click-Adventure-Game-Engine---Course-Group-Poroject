@@ -209,21 +209,6 @@ public class GameController {
             fadeIn.setFromValue(0.0);
             fadeIn.setToValue(1.0);
 
-            // Set NPC opacity to 0 initially so it doesn't show during screen fade
-            if (currentNPCImageView != null) {
-                currentNPCImageView.setOpacity(0.0);
-            }
-
-            fadeIn.setOnFinished(e2 -> {
-                // Fade in NPC if present
-                if (currentNPCImageView != null) {
-                    javafx.animation.FadeTransition npcFade = new javafx.animation.FadeTransition(Duration.seconds(2),
-                            currentNPCImageView);
-                    npcFade.setFromValue(0.0);
-                    npcFade.setToValue(1.0);
-                    npcFade.play();
-                }
-            });
             fadeIn.play();
         });
         fadeOut.play();
@@ -396,6 +381,9 @@ public class GameController {
             currentNPCImageView.setFitWidth(150);
             currentNPCImageView.setFitHeight(200); // we can change this would be a fixed thing anyways unless npc changes sizes for some reason idk
             currentNPCImageView.setPreserveRatio(true);
+            
+            // Set initial opacity to 0 for fade-in effect
+            currentNPCImageView.setOpacity(0.0);
 
             currentNPCImageView.setOnMouseClicked(e -> {
                 System.out.println("Clicked on NPC: " + npc.getName());
@@ -407,6 +395,13 @@ public class GameController {
             });
 
             interactiveLayer.getChildren().add(currentNPCImageView);
+            
+            // Create and play fade-in animation
+            javafx.animation.FadeTransition npcFadeIn = new javafx.animation.FadeTransition(Duration.seconds(1.5), currentNPCImageView);
+            npcFadeIn.setFromValue(0.0);
+            npcFadeIn.setToValue(1.0);
+            npcFadeIn.setDelay(Duration.millis(500)); // Slight delay to start after room fade-in begins
+            npcFadeIn.play();
         } else {
             this.currentNPCImageView = null; // if we decide to have a room with no npc just to make sure its null
         }
