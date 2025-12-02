@@ -11,7 +11,7 @@
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "Welcome, lost soul... You have crossed into the Mansion Beyond, a place built from shadows and forgotten memories.This house feeds on fear, and only those who endure its trials may escape.|The Master Key to your freedom was shattered into three fragments, each sealed within a different room.|To claim them, you must solve the puzzles before you—search the rooms, gather items, and study your surroundings closely.|Your inventory will hold what you collect, and some items may combine... but only the correct pairs will guide you forward, while a wrong attempt will cost you 30 seconds of your precious 10 minute journey.|Restore all three fragments and reclaim the Master Key, or be consumed by the mansion itself.|Now go, your first trial awaits in the Living Room of Shadows.",
-        "isNPCTradeable": true,
+        "isNPCTradeable": false,
         "xPosition": 780.0,
         "yPosition": 330.0
       },
