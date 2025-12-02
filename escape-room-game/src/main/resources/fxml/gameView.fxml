@@ -132,6 +132,11 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
+            <Label fx:id="pickupPopup" alignment="CENTER" layoutX="500.0" layoutY="150.0" text="Label" textFill="WHITE" visible="false">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
 

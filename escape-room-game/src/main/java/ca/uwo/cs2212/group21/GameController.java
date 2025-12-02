@@ -89,6 +89,9 @@ public class GameController {
     @FXML private Button saveSlot2;
     @FXML private Button saveSlot3;
 
+    private org.json.JSONObject dialogueData; // to hold all the dialogue data from the json file
+    @FXML private Label pickupPopup;
+
     private TranslateTransition currentAnimation;
     private GameEngine gameEngine;
     private Timeline gameTimer;
@@ -166,26 +169,60 @@ public class GameController {
      * * @param event
      */
     public void startGame(ActionEvent event) throws IOException {
-        gameEngine = new GameEngine("/worldMap.json"); // this is to start up a new game since doing the anchor pane method so would just set visible or not
-        gameEngine.startNewGame();
+       // Fade out main screen
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(Duration.seconds(1), mainScreen);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setOnFinished(e -> {
+            mainScreen.setVisible(false);
 
-        mainScreen.setVisible(false);
-        gameScreen.setVisible(true);
+            // Initialize game engine
+            gameEngine = new GameEngine("/worldMap.json");
+            gameEngine.startNewGame();
 
-        playerImageView = new ImageView(
-                new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
-        playerImageView.setLayoutX(400);
-        playerImageView.setLayoutY(300);
-        playerImageView.setFitWidth(200);
-        playerImageView.setFitHeight(150);
-        playerImageView.setPreserveRatio(true);
-        updateScreen();
-        updateInventoryUI();
-        startTimer();
+            gameScreen.setOpacity(0.0);
+            gameScreen.setVisible(true);
 
-        // showIntroDialogue(); // trying to show what NPC intro will say
-        soundManager.playBackgroundMusic("spooky_bgm.mp3");
+            // Setup game state visuals BEFORE fading in
+            playerImageView = new ImageView(
+                    new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
+            playerImageView.setLayoutX(400);
+            playerImageView.setLayoutY(300);
+            playerImageView.setFitWidth(200);
+            playerImageView.setFitHeight(150);
+            playerImageView.setPreserveRatio(true);
+
+            updateScreen();
+            updateInventoryUI();
+            startTimer();
+            soundManager.playBackgroundMusic("spooky_bgm.mp3");
+
+            // Fade in game screen
+            javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.seconds(1),
+                    gameScreen);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+
+            // Set NPC opacity to 0 initially so it doesn't show during screen fade
+            if (currentNPCImageView != null) {
+                currentNPCImageView.setOpacity(0.0);
+            }
+
+            fadeIn.setOnFinished(e2 -> {
+                // Fade in NPC if present
+                if (currentNPCImageView != null) {
+                    javafx.animation.FadeTransition npcFade = new javafx.animation.FadeTransition(Duration.seconds(2),
+                            currentNPCImageView);
+                    npcFade.setFromValue(0.0);
+                    npcFade.setToValue(1.0);
+                    npcFade.play();
+                }
+            });
+            fadeIn.play();
+        });
+        fadeOut.play();
     }
+
 
     public void startTimer() {
         gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);
@@ -317,6 +354,9 @@ public class GameController {
 
                 gameEngine.pickUpItem(item.getName()); // this is to call the pick up command to add the item to the inventory
 
+                showPickupPopup("Picked up: " + item.getName());
+                updateInventoryUI();
+
                 gameEngine.getPlayer().incrementMovesCount(); // increment moves count when picking up item we can just leave it like moves and items for now 
             });
 
@@ -377,70 +417,73 @@ public class GameController {
 
     }
 
-//combined version with dialogue tree + give phase
-private void handleNPCClick(NPC npc) {
-
-//shows the dialong and npc name 
-    dialogueOverlay.setVisible(true);
-    dialogueNameLabel.setText(npc.getName());
-
-    //JSON dialongue tree
-    if (dialogueData != null && dialogueData.has(npc.getName())) {
-        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
-        showDialogueNode(npcDialogue, "root");
-    } else {
-        //use simple TalkCommand dialogue
-        String dialogueText = gameEngine.talkToNpc();
-        dialogueBox.setText(dialogueText);
-        dialogueBox.setWrapText(true);
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
-    }
-
-    // 3. Set up the "give item" phase to start when Next is clicked
-    isGiveMode = false;          // start in talk mode
-    nextButton.setVisible(true); // make sure the Next button is visible
-    optionsBox.setVisible(false);
-
-    nextButton.setOnAction(e -> {
-        // When Next is clicked, turn on give mode
-        isGiveMode = true;
-
-        // Open inventory so the player can choose an item
-        if (!inventory.isVisible()) {
-            updateInventoryUI();
-            inventory.setVisible(true);
-            inventory.requestFocus();
+    private void handleNPCClick(NPC npc) {
+        if (dialogueData == null || !dialogueData.has(npc.getName())) {
+            System.out.println("No dialogue found for: " + npc.getName());
+            return;
         }
 
-        // Let the player know what to do
-        dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
-        dialogueBox.setWrapText(true);
-    });
-}
-
+        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
+        showDialogueNode(npcDialogue, "root");
+    }
 
     private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
         if (!npcDialogue.has(nodeId))
             return;
 
-    // Put the dialogue text into the dialogue box
-    dialogueBox.setText(dialogueText);
-    dialogueBox.setWrapText(true);
+        org.json.JSONObject node = npcDialogue.getJSONObject(nodeId);
+        String text = node.getString("text");
+        org.json.JSONObject options = node.getJSONObject("options");
 
-    // Enter give mode so the player can choose an item for this NPC
-    isGiveMode = true;
+        dialogueOverlay.setVisible(true);
+        dialogueNameLabel.setText(npcDialogue.has("name") ? npcDialogue.getString("name") : "The Guide");
+        // Better: pass NPC name to this method or store current NPC
+        // For now, let's just use the text.
 
-    nextButton.setVisible(true);
-    optionsBox.setVisible(false);
+        dialogueBox.setText(text);
 
-    nextButton.setOnAction(e -> {
-        // Close the dialogue overlay and exit give mode when Next is pressed
-        dialogueOverlay.setVisible(false);
-        dialogueBox.clear();
-        isGiveMode = false;
-    });
-}
+        optionsBox.getChildren().clear();
+        optionsBox.setVisible(true);
+        nextButton.setVisible(false);
+
+        if (options.isEmpty()) {
+            optionsBox.setVisible(false);
+            nextButton.setVisible(true);
+            nextButton.setText("Close");
+            nextButton.setOnAction(e -> {
+                dialogueOverlay.setVisible(false);
+                dialogueBox.clear();
+                isGiveMode = false;
+            });
+        } else {
+            for (String key : options.keySet()) {
+                String nextNodeId = options.getString(key);
+                Button optionButton = new Button(key);
+                optionButton.getStyleClass().add("button"); // Use CSS style
+                optionButton.setMaxWidth(Double.MAX_VALUE);
+                optionButton.setOnAction(e -> showDialogueNode(npcDialogue, nextNodeId));
+                optionsBox.getChildren().add(optionButton);
+            }
+        }
+    }
+
+    private void showPickupPopup(String message) {
+        pickupPopup.setText(message);
+        pickupPopup.setVisible(true);
+        pickupPopup.setOpacity(1.0);
+
+        // Simple fade out animation
+        javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(Duration.seconds(2), pickupPopup);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.0);
+        ft.setDelay(Duration.seconds(1));
+        ft.setOnFinished(e -> pickupPopup.setVisible(false));
+        ft.play();
+    }
+
+
+
+
 
 
     private void updateInventoryUI() {
