@@ -378,7 +378,7 @@ public class GameController {
                 e.consume();
                 //handleNPCClick(npc);
                 //would open dialogue box and start npc interaction here
-
+                soundManager.playNPCsound();
                 handleNPCClick(npc);
             });
 
@@ -709,9 +709,7 @@ private void handleNPCClick(NPC npc) {
             combineItems.clear();
             updateCombineSlots();
             updateInventoryUI();
-            if (result.contains("Success") || result.contains("created")) { // Assuming success message contains these words
-                soundManager.playSoundEffect("success.mp3");
-            }
+            
         }
     }
 

@@ -68,6 +68,19 @@ public class SoundManager {
         }
     }
 
+    public void playNPCsound() {
+        try {
+            Media media = loadMedia("npc.mp3");
+            if (media != null) {
+                MediaPlayer effectPlayer = new MediaPlayer(media);
+                effectPlayer.setVolume(0.8); // Slightly louder for effects
+                effectPlayer.play();
+            }
+        } catch (Exception e) {
+            System.err.println("Error playing sound effect: " + e.getMessage());
+        }
+    }
+
     // Loads the media file from the sounds folder
     private Media loadMedia(String filename) {
         if (soundCache.containsKey(filename)) {
