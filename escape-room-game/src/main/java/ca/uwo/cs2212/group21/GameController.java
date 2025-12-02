@@ -476,19 +476,41 @@ public class GameController {
 
     }
 
-//combined version with dialogue tree + give phase
 private void handleNPCClick(NPC npc) {
 
-//shows the dialong and npc name 
+    // Find which room we are currently in
+    Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
+
+    // Always show overlay and NPC name when clicked
     dialogueOverlay.setVisible(true);
     dialogueNameLabel.setText(npc.getName());
 
-    //JSON dialongue tree
+    // 1: Intro room: talk only, no give
+    if ("Main Room".equals(currentRoom.getName())) {
+        // Use the per room dialogue text from JSON
+        String introText = npc.getDialogue();
+        dialogueBox.setText(introText);
+        dialogueBox.setWrapText(true);
+
+        // In the intro room, Next just closes the dialogue
+        isGiveMode = false;
+        nextButton.setVisible(true);
+        optionsBox.setVisible(false);
+
+        nextButton.setOnAction(e -> {
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+
+        return;  // stop here; do not go into the give logic below
+    }
+
+    // Try JSON dialogue tree first
     if (dialogueData != null && dialogueData.has(npc.getName())) {
         org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
         showDialogueNode(npcDialogue, "root");
     } else {
-        //use simple TalkCommand dialogue
+        // Fallback: simple TalkCommand text
         String dialogueText = gameEngine.talkToNpc();
         dialogueBox.setText(dialogueText);
         dialogueBox.setWrapText(true);
@@ -496,27 +518,28 @@ private void handleNPCClick(NPC npc) {
         optionsBox.setVisible(false);
     }
 
-    // 3. Set up the "give item" phase to start when Next is clicked
-    isGiveMode = false;          // start in talk mode
-    nextButton.setVisible(true); // make sure the Next button is visible
+    // Set up give phase to start when Next is clicked
+    isGiveMode = false;
+    nextButton.setVisible(true);
     optionsBox.setVisible(false);
 
     nextButton.setOnAction(e -> {
-        // When Next is clicked, turn on give mode
+        // Switch into give mode
         isGiveMode = true;
 
-        // Open inventory so the player can choose an item
+        // Open inventory so they can pick an item
         if (!inventory.isVisible()) {
             updateInventoryUI();
             inventory.setVisible(true);
             inventory.requestFocus();
         }
 
-        // Let the player know what to do
+        // Prompt player to choose an item
         dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
         dialogueBox.setWrapText(true);
     });
 }
+
 
 
     private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
