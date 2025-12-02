@@ -9,6 +9,7 @@ import ca.uwo.cs2212.group21.commands.PickUpCommand;
 import ca.uwo.cs2212.group21.model.GameEngine;
 import ca.uwo.cs2212.group21.model.NPC;
 import ca.uwo.cs2212.group21.model.Item;
+import ca.uwo.cs2212.group21.model.Recipe;
 import ca.uwo.cs2212.group21.model.Room;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -89,7 +90,6 @@ public class GameController {
     @FXML private Button saveSlot2;
     @FXML private Button saveSlot3;
 
-    private org.json.JSONObject dialogueData; // to hold all the dialogue data from the json file
     @FXML private Label pickupPopup;
 
     private TranslateTransition currentAnimation;
@@ -178,10 +178,11 @@ public class GameController {
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
         fadeOut.setOnFinished(e -> {
-            mainScreen.setVisible(false);
+        mainScreen.setVisible(false);
 
             // Initialize game engine
             gameEngine = new GameEngine("/worldMap.json");
+            gameEngine.loadRecipes();
             gameEngine.startNewGame();
             
             // Set time limit AFTER game engine is initialized
@@ -388,8 +389,7 @@ public class GameController {
             currentNPCImageView.setOnMouseClicked(e -> {
                 System.out.println("Clicked on NPC: " + npc.getName());
                 e.consume();
-                //handleNPCClick(npc);
-                //would open dialogue box and start npc interaction here
+
                 soundManager.playNPCsound();
                 handleNPCClick(npc);
             });
@@ -429,78 +429,52 @@ public class GameController {
 
     }
 
-private void handleNPCClick(NPC npc) {
+    private void handleNPCClick(NPC npc) {
 
-    Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
-    String roomName = currentRoom.getName();
+        Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
+        String roomName = currentRoom.getName();
 
-    // Always show overlay and NPC name
-    dialogueOverlay.setVisible(true);
-    dialogueNameLabel.setText(npc.getName());
+        // Always show overlay and NPC name
+        dialogueOverlay.setVisible(true);
+        dialogueNameLabel.setText(npc.getName());
 
-    // Use the dialogue string stored on the NPC (comes from JSON per room)
-    String dialogueText = npc.getDialogue();
-    dialogueBox.setText(dialogueText);
-    dialogueBox.setWrapText(true);
+        // Use the dialogue string stored on the NPC (comes from JSON per room)
+        String dialogueText = npc.getDialogue();
+        dialogueBox.setText(dialogueText);
+        dialogueBox.setWrapText(true);
 
-    // Default: no giving; Next just closes the dialogue
-    isGiveMode = false;
-    nextButton.setVisible(true);
-    optionsBox.setVisible(false);
+        // Default: no giving; Next just closes the dialogue
+        isGiveMode = false;
+        nextButton.setVisible(true);
+        optionsBox.setVisible(false);
 
-    // Main Room: intro only; Next closes
-    if ("Main Room".equals(roomName)) {
-        nextButton.setOnAction(e -> {
-            dialogueOverlay.setVisible(false);
-            dialogueBox.clear();
-        });
-        return;
+        org.json.JSONObject allDialogues = gameEngine.getDialogueData();
+
+        if (allDialogues != null && allDialogues.has(npc.getName()) && allDialogues.getJSONObject(npc.getName()).has(roomName)) {
+            org.json.JSONObject npcDialogueSpecificRoom = allDialogues.getJSONObject(npc.getName()).getJSONObject(roomName);
+            showDialogueNode(npcDialogueSpecificRoom, "root");
+        } else {
+            dialogueBox.setText("The NPC has nothing to say right now.");
+            nextButton.setText("Close");
+            nextButton.setVisible(true);
+            optionsBox.setVisible(false);
+            nextButton.setOnAction(e -> {
+                dialogueOverlay.setVisible(false);
+                dialogueBox.clear();
+            });
+        }
     }
-
-    // Living Room: talk; then Next enters give mode and opens inventory
-    if ("Living Room".equals(roomName)) {
-
-        nextButton.setOnAction(e -> {
-            // Enter give mode
-            isGiveMode = true;
-
-            // Open inventory so player can choose an item
-            if (!inventory.isVisible()) {
-                updateInventoryUI();
-                inventory.setVisible(true);
-                inventory.requestFocus();
-            }
-
-            dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
-            dialogueBox.setWrapText(true);
-        });
-
-        return;
-    }
-
-    // All other rooms (Library of Echoes, Broken Kitchen, etc):
-    // talk only; Next closes dialogue; no inventory trading
-    nextButton.setOnAction(e -> {
-        dialogueOverlay.setVisible(false);
-        dialogueBox.clear();
-    });
-}
-
-
-
 
     private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
-        if (!npcDialogue.has(nodeId))
-            return;
+        if (!npcDialogue.has(nodeId)) return;
 
         org.json.JSONObject node = npcDialogue.getJSONObject(nodeId);
         String text = node.getString("text");
-        org.json.JSONObject options = node.getJSONObject("options");
+        org.json.JSONObject options = node.optJSONObject("options");
+        String nextNodeID = node.optString("next", null); //to see if the node is a give node which would be the point where the npc wants an item 
 
         dialogueOverlay.setVisible(true);
         dialogueNameLabel.setText(npcDialogue.has("name") ? npcDialogue.getString("name") : "The Guide");
-        // Better: pass NPC name to this method or store current NPC
-        // For now, let's just use the text.
 
         dialogueBox.setText(text);
 
@@ -508,26 +482,147 @@ private void handleNPCClick(NPC npc) {
         optionsBox.setVisible(true);
         nextButton.setVisible(false);
 
-        if (options.isEmpty()) {
-            optionsBox.setVisible(false);
-            nextButton.setVisible(true);
-            nextButton.setText("Close");
-            nextButton.setOnAction(e -> {
-                soundManager.playDialogueCloseSound();
-                dialogueOverlay.setVisible(false);
-                dialogueBox.clear();
-                isGiveMode = false;
-            });
-        } else {
+        //separating the cases here because I wanted it to have the options show up differently if its a give node or not or if the npc is just yapping or if you have options to choose from
+
+        if (options != null && !options.isEmpty()) { //this is for the case where the npc has options to choose from 
+            optionsBox.setVisible(true);
+            nextButton.setVisible(false); //since they have options we could hide the next button 
             for (String key : options.keySet()) {
-                String nextNodeId = options.getString(key);
+                String targetNode = options.getString(key);
+
                 Button optionButton = new Button(key);
-                optionButton.getStyleClass().add("button"); // Use CSS style
-                optionButton.setMaxWidth(Double.MAX_VALUE);
-                optionButton.setOnAction(e -> showDialogueNode(npcDialogue, nextNodeId));
+                optionButton.getStyleClass().add("button"); 
+                optionButton.setMaxWidth(Double.MAX_VALUE); // this is to make the button fill the width of the vbox
+
+                optionButton.setOnAction(e -> showDialogueNode(npcDialogue, targetNode));
                 optionsBox.getChildren().add(optionButton);
             }
         }
+        else if (nextNodeID != null && !nextNodeID.isEmpty()) { //this is for the case where there are no options but it has a next node to go to 
+            optionsBox.setVisible(false);
+            nextButton.setVisible(true);
+            nextButton.setText("Next");
+
+            nextButton.setOnAction(e -> showDialogueNode(npcDialogue, nextNodeID));
+        }
+        else { //this is for if the end of the conversation
+            optionsBox.setVisible(false);
+            nextButton.setVisible(true);
+
+            boolean isLockedDoorPresent = false;
+            Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
+
+            for (Room room : currentRoom.getExits().values()) {
+                if (room.isLocked()) {
+                    isLockedDoorPresent = true;
+                    break; //if it finds the door would just break 
+                }
+            }
+            if (isLockedDoorPresent) { //if the next room is locked then means npc still need item so if you click on them would have the option for give Mode, if not then would have an option for not ready yet
+                nextButton.setText("I'm ready");
+                nextButton.setOnAction(e -> enterGiveMode(gameEngine.getPlayer().getCurrentRoom().getNPC()));
+            } else {
+                nextButton.setText("Close");
+                nextButton.setOnAction(e -> {
+                dialogueOverlay.setVisible(false);
+                dialogueBox.clear();
+                });
+            }    
+        }
+    }
+
+    private void enterGiveMode(NPC npc) {
+        isGiveMode = true;
+        
+        if (!inventory.isVisible()) {
+            toggleInventory();
+        }
+
+        dialogueBox.setText("Please select an item from your inventory to give to " + npc.getName() + ".");
+
+        nextButton.setVisible(true);
+        nextButton.setText("Give Item"); //this is the set up for the give button when in give mode
+        nextButton.setOnAction(e -> handleGiveAttempt(npc));
+
+        optionsBox.getChildren().clear();
+        optionsBox.setVisible(true);
+
+        Button notReadyButton = new Button("Not ready yet"); //this is the whole not ready yet buttong in case the player clicks the npc but say they need to get another item first or was accidentally clicked
+        notReadyButton.getStyleClass().add("button"); //same options button styling
+        notReadyButton.setMaxWidth(Double.MAX_VALUE);
+        notReadyButton.setOnAction(e -> {
+            isGiveMode = false;
+            inventory.setVisible(false);
+            dialogueOverlay.setVisible(false);
+        });
+
+        optionsBox.getChildren().add(notReadyButton);
+    }
+
+    private void handleGiveAttempt(NPC npc) {
+        if (selected == null) { //this prob wont happen since selected is kinda global and would only be null at like the very start of the game but just in case
+            dialogueBox.setText("No item selected. Please select an item from your inventory to give to " + npc.getName() + ".");
+            return;
+        }
+
+        if (selected != null && selected.isKey()) { //this would be that they gave the right item to unlock the door (key item)
+            gameEngine.getPlayer().removeItemFromInventory(selected);
+            updateInventoryUI();
+
+            Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
+            for (Room rooms : currentRoom.getExits().values()) { //to go through and get the exit that is locked and unlock it since idk if we would have time to do rooms with multiple exits but coded in case
+                if (rooms.isLocked()) {
+                    rooms.setLocked(false);
+                    dialogueBox.setText("Thank you for the " + selected.getName() + "! The " + rooms.getName() + " is now unlocked."); //just made generic text we can change this 
+                    isGiveMode = false; //change back to false after 
+                    inventory.setVisible(false);
+                    break;
+                }
+            }
+            nextButton.setText("Close");
+            nextButton.setOnAction(e -> {
+                dialogueOverlay.setVisible(false);
+                optionsBox.setVisible(false);
+                dialogueBox.clear();
+            });
+        }
+        else { //if they give the wrong item then would trigger the penalty here 
+            gameEngine.getPlayer().removeItemFromInventory(selected);
+
+            gameEngine.getPlayer().decreaseTime(30);
+            triggerJumpScare(); //this is to trigger the npc going to the angry version then back 
+            dialogueBox.setText("This is not what I wanted! You lose 30 seconds. Please give me the correct item.");
+
+            Recipe recipe = findRecipeForResult(selected.getName());
+            if (recipe != null) { //this is if the item is crafted and not just one found in the room
+                for (String ingredientName : recipe.getInputs()) {
+                    Item originalPart = gameEngine.getItemList().get(ingredientName);
+                    if (originalPart != null) {
+                        gameEngine.getPlayer().addItemToInventory(originalPart);
+                    }
+                }
+                updateInventoryUI();
+                dialogueBox.setText("This is not what I wanted! You lose 30 seconds. I've returned the original items used to craft " + selected.getName() + ". Please give me the correct item.");
+            } else { //otherwise just normal item so would just give back to inventory
+                gameEngine.getPlayer().addItemToInventory(selected);
+                dialogueBox.setText("This is not what I wanted! You lose 30 seconds. I've returned the " + selected.getName() + " to your inventory. Please give me the correct item.");
+                updateInventoryUI();
+
+            }
+        }
+    }
+
+    private Recipe findRecipeForResult(String resultItemName) {
+        if (gameEngine.getPlayer().getRecipes() == null) {
+            return null;
+        }   
+
+        for (Recipe recipe : gameEngine.getPlayer().getRecipes()) {
+            if (recipe.getResultName().equals(resultItemName)) {
+                return recipe;
+            }
+        }
+        return null;
     }
 
     private void showPickupPopup(String message) {
@@ -543,6 +638,21 @@ private void handleNPCClick(NPC npc) {
         ft.setOnFinished(e -> pickupPopup.setVisible(false));
         ft.play();
         soundManager.playSoundEffect("pickup.mp3");
+    }
+
+    private void triggerJumpScare() {
+        Image angryNPC = new Image(getClass().getResourceAsStream("/images/npc_mad.png"));
+        Image normalNPC = new Image(getClass().getResourceAsStream("/images/defaultNPC.png"));
+        if (angryNPC != null) {
+            currentNPCImageView.setImage(angryNPC);
+        }
+        //leaving space here if you want to add sounds effects or screen shakes or something 
+
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(Duration.seconds(0.5)); //this is so the angry npc only shows for half a second then swaps back 
+        pause.setOnFinished(e -> {
+            currentNPCImageView.setImage(normalNPC);
+        });
+        pause.play();
     }
 
     private void updateInventoryUI() {

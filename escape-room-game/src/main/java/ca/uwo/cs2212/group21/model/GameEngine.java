@@ -39,6 +39,7 @@ public class GameEngine {
     private List<Item> inventory;
     private int movesCount;
     private int score;
+    private org.json.JSONObject dialogueData; 
 
     /**
      * Initializes a new GameEngine instance.
@@ -48,7 +49,9 @@ public class GameEngine {
         this.items = new HashMap<>();
         this.inventory = new ArrayList<>();
         this.roomPuzzleItems = new HashMap<>();
+        
         loadWorldData(jsonPath);
+        loadDialogueData();
     }
 
     public void startNewGame() {
@@ -220,8 +223,20 @@ public class GameEngine {
             e.printStackTrace();
         }
     }
+    
+    private void loadDialogueData() {
+        try (InputStream inputStream = getClass().getResourceAsStream("/dialogues.json")) {
+            if (inputStream == null) throw new FileNotFoundException("dialogues.json not found");
 
-    private void loadRecipes() {
+            JSONTokener tokener = new JSONTokener(inputStream);
+            this.dialogueData = new JSONObject(tokener);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.dialogueData = new JSONObject();
+        }
+    }
+
+    public void loadRecipes() {
     try (InputStream inputStream = getClass().getResourceAsStream("/recipes.json")) {
         if (inputStream == null) throw new FileNotFoundException("recipes.json not found");
         
@@ -258,6 +273,14 @@ public class GameEngine {
 
     public GameState getPlayer() {
     return player;
+    }
+
+    public HashMap<String, Item> getItemList() {
+        return items;
+    }
+
+    public  JSONObject getDialogueData() {
+        return this.dialogueData;
     }
 
     // -- command wrapper methods --

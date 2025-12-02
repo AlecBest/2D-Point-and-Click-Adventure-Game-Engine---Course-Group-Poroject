@@ -23,6 +23,10 @@ public class Recipe {
     public String getResultName() {
         return resultName;
     }
+    
+    public List<String> getInputs() {
+        return this.ingredients;
+    }
 
     public String getMessage() {
         return message;

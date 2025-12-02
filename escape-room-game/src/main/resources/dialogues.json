@@ -1,27 +1,40 @@
 {
-    "dialogues": {
-        "The Guide": {
+    "The Guide": {
+        "Main Room": {
             "root": {
-                "text": "Ah… a living soul. It has been ages since one has walked these halls. Do not fear. I am Lysander, the keeper of this forsaken place. You have come seeking escape… or answers, yes?",
+                "text": "Welcome. I am Lysander. I will guide you through this mansion, but I cannot open the doors for you. You must prove your worth.",
                 "options": {
-                    "Who are you?": "who_are_you",
-                    "I just want to get out of here.": "get_out"
+                    "How do I prove it?": "explain_mechanic"
                 }
             },
-            "who_are_you": {
-                "text": "A fair question. I was once the warden of knowledge here, before the walls turned cold and the doors sealed themselves. Now, I guide wanderers… though few make it far.",
+            "explain_mechanic": {
+                "text": "In each room, a barrier will block your path. I will give you a riddle. You must find the items in the room, combine them if necessary, and present the solution to me.",
+                "next": "end_tutorial"
+            },
+            "end_tutorial": {
+                "text": "Go now. Enter the Living Room and face your first trial.",
+                "options": {}
+            }
+        },
+        "Living Room": {
+            "root": {
+                "text": "The air here is heavy... This door requires a light that is pure. A normal flame will not suffice.",
                 "options": {
-                    "Continue": "final_advice"
+                    "Where do I find it?": "riddle_hint"
                 }
             },
-            "get_out": {
-                "text": "Escape… always the first instinct. But here, leaving is earned, not granted. Still, I admire your clarity of purpose.",
-                "options": {
-                    "Continue": "final_advice"
-                }
+            "riddle_hint": {
+                "text": "Seek the wax that has never burned, and anoint it with the oil of the ancients. Combine them, and bring me the result.",
+                "options": {} 
+            }
+        },
+        "Library of Echoes": {
+            "root": {
+                "text": "Knowledge is power, but this history is torn apart. I cannot let you pass until the story is whole.",
+                "next": "library_riddle"
             },
-            "final_advice": {
-                "text": "Whether you seek truth or freedom, your path begins the same: survive the trials, unravel the locks, and obey the rules of this place. I will appear when you need me… though not always when you want me. Step forward, and may the shadows be gentle with you.",
+            "library_riddle": {
+                "text": "Find the scattered pages and the broken tome. Restore the book, and the way forward will open.",
                 "options": {}
             }
         }
