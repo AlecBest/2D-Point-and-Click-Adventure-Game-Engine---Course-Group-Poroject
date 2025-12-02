@@ -576,19 +576,29 @@ private void handleNPCClick(NPC npc) {
                     System.out.println("Slot clicked: col " + col + ", row " + row);
                     selected = item;
 
-                    // Give logic: only when we are in give mode and dialogue is open
+                    // Give logic: only when we are in give mode and there is an NPC
                     if (isGiveMode && gameEngine.getPlayer().getCurrentRoom().hasNPC()) {
 
-                        // Use GameEngine wrapper that calls GiveCommand with current NPC and this item
                         String result = gameEngine.giveItemToCurrentNpc(selected.getName());
                         System.out.println(result);
 
-                        // Show result in the dialogue box
+                        // Show the result in the dialogue box
                         dialogueBox.setText(result);
+                        dialogueBox.setWrapText(true);
 
-                        // Inventory may have changed: refresh it
+                        // Inventory might have changed
                         updateInventoryUI();
+
+                        // We are done with the give phase for now
+                        isGiveMode = false;
+
+                        // After a give attempt, Next should just close the dialogue
+                        nextButton.setOnAction(ev -> {
+                            dialogueOverlay.setVisible(false);
+                            dialogueBox.clear();
+                        });
                     }
+
 
                     if (isCombineMode) {
                     handleCombineSelecting(selected);
