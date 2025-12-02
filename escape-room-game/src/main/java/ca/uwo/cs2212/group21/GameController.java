@@ -542,7 +542,7 @@ private void handleNPCClick(NPC npc) {
 
         // Simple fade out animation
         javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(Duration.seconds(2), pickupPopup);
-        ft.setFromValue(1.0);
+        ft.setFromValue(1);
         ft.setToValue(0.0);
         ft.setDelay(Duration.seconds(1));
         ft.setOnFinished(e -> pickupPopup.setVisible(false));

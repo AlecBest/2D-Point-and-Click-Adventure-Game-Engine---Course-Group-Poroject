@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group21.model;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public class GameEngine {
     */
     public void loadGame (String saveJSONpath) {
         try (InputStream inputStream = new FileInputStream(saveJSONpath)) { //path to the file we can probably put in resources folder
-            
+
         JSONTokener tokener = new JSONTokener(inputStream); //this is the tokenizer to read the jsonfile
         JSONObject saveData = new JSONObject(tokener); //this is to create a json object from the tokenizer
         JSONArray inventoryArray = saveData.getJSONArray("inventory"); //this is to get the array of items in the inventory from the json file
@@ -112,11 +113,9 @@ public class GameEngine {
     * @param jsonPath
     */
     public void loadWorldData (String jsonPath) {
-        InputStream inputStream = getClass().getResourceAsStream(jsonPath); //path to the file we can probably put in resources folder 
-
-        if (inputStream == null) {
-            throw new NullPointerException("Couldn't find resource file " + jsonPath);
-        }
+        
+        try (InputStream inputStream = getClass().getResourceAsStream(jsonPath)) {
+            if (inputStream == null) throw new FileNotFoundException("Couldn't find resource file " + jsonPath);
 
         JSONTokener tokener = new JSONTokener(inputStream); //this is the tokenizer to read the jsonfile 
         JSONObject worldData = new JSONObject(tokener); //this is to create a json object from the tokenizer
@@ -134,7 +133,8 @@ public class GameEngine {
             for (int j = 0; j < itemArray.length(); j++) {
                 JSONObject itemObj = itemArray.getJSONObject(j);
                 String itemName = itemObj.getString("item");
-                boolean isPuzzleItem = itemObj.getBoolean("isPuzzleItem");
+                boolean isKey = itemObj.getBoolean("isKey");
+                boolean startHidden = itemObj.getBoolean("startHidden");
                 String itemImagePath = itemObj.getString("itemImagePath");
                 String itemDescription = itemObj.getString("itemDescription");
                 double xPos = itemObj.getDouble("xPosition");
@@ -144,12 +144,11 @@ public class GameEngine {
 
 
                 if (itemName != null) {
-                    Item item = new Item(itemName, itemDescription, isPuzzleItem, itemImagePath, xPos, yPos, width, height);
+                    Item item = new Item(itemName, itemDescription, isKey, startHidden, itemImagePath, xPos, yPos, width, height);
                 
-                    // ALWAYS add the item to the room so it appears on screen
-                    room.addItem(item);
-                
-                    // Also store it in the global items map
+                    if (!startHidden){
+                        room.addItem(item);
+                    }
                     items.put(itemName, item);
                 }
                 
@@ -195,6 +194,9 @@ public class GameEngine {
                 }
             }
         }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveGame(String fileName) {
@@ -218,6 +220,37 @@ public class GameEngine {
             e.printStackTrace();
         }
     }
+
+    private void loadRecipes() {
+    try (InputStream inputStream = getClass().getResourceAsStream("/recipes.json")) {
+        if (inputStream == null) throw new FileNotFoundException("recipes.json not found");
+        
+        JSONTokener tokener = new JSONTokener(inputStream);
+        JSONArray jsonRecipes = new JSONArray(tokener);
+        
+        List<Recipe> recipeList = new ArrayList<>();
+        
+        for (int i = 0; i < jsonRecipes.length(); i++) {
+            JSONObject obj = jsonRecipes.getJSONObject(i);
+            
+            JSONArray inputsArray = obj.getJSONArray("inputs");
+            List<String> inputs = new ArrayList<>();
+            for(int j=0; j<inputsArray.length(); j++) {
+                inputs.add(inputsArray.getString(j).toLowerCase());
+            }
+            
+            String result = obj.getString("result");
+            String msg = obj.getString("successMessage");
+            
+            recipeList.add(new Recipe(inputs, result, msg));
+        }
+        
+        player.setRecipes(recipeList);
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
     public HashMap<String, Room> getRooms() {
     return rooms;

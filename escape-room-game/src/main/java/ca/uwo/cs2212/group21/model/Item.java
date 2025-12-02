@@ -9,7 +9,8 @@ public class Item {
 
     private String name; 
     private String description;
-    private boolean isPuzzleItem;
+    private boolean isKey;
+    private boolean startHidden;
     private String imagePath;
     private double x;
     private double y;
@@ -27,10 +28,11 @@ public class Item {
      * @param width       The width of the item's image.
      * @param height      The height of the item's image.
      */
-    public Item(String name, String description, boolean isPuzzleItem, String imagePath, double x, double y, double width, double height) {
+    public Item(String name, String description, boolean isPuzzleItem, boolean startHidden, String imagePath, double x, double y, double width, double height) {
         this.name = name;
         this.description = description;
-        this.isPuzzleItem = isPuzzleItem;
+        this.isKey = isKey;
+        this.startHidden = startHidden;
         this.imagePath = imagePath;
         this.x = x; 
         this.y = y;
@@ -52,8 +54,12 @@ public class Item {
         return description;
     }
 
-    public boolean isPuzzleItem() {
-        return this.isPuzzleItem;
+    public boolean isKey() {
+        return this.isKey;
+    }
+
+    public boolean isStartHidden() {
+        return this.startHidden;
     }
 
     public String getImagePath() {

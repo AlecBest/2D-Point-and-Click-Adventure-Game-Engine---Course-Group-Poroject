@@ -12,6 +12,7 @@ public class GameState {
  
     private Room currentRoom;
     private List<Item> inventory;
+    private List<Recipe> recipes;
     private String imagePath;
     private boolean isGameOver;
     private int timeRemaining;
@@ -29,6 +30,7 @@ public class GameState {
 
         this.currentRoom = startRoom;
         this.inventory = new ArrayList<>();
+        this.recipes = new ArrayList<>();
         this.isGameOver = false;
         this.timeRemaining = initialTime;
 
@@ -90,6 +92,14 @@ public class GameState {
 
     public int getScore() {
         return score;
+    }
+
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
     }
 
     public void setMovesCount(int movesCount) {
