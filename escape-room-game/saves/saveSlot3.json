@@ -1,0 +1,11 @@
+{
+    "currentRoom": "Library of Echoes",
+    "score": 3,
+    "timeRemaining": 586,
+    "inventory": [
+        "Cloth",
+        "Matchbox",
+        "Candle"
+    ],
+    "movesCount": 5
+}

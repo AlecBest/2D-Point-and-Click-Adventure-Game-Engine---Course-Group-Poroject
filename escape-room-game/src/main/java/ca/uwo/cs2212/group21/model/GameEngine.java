@@ -1,5 +1,6 @@
 package ca.uwo.cs2212.group21.model;
 
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class GameEngine {
     }
 
     public void startNewGame() {
-            int initialTime = 60; 
+            int initialTime = 600; // 10 minutes in seconds
             Room startingRoom = rooms.get("Main Room"); //we can change this to whatever we end up calling the starting room
             this.player = new GameState(startingRoom, initialTime);
     }
@@ -60,11 +61,8 @@ public class GameEngine {
      * @param saveJSONpath
     */
     public void loadGame (String saveJSONpath) {
-        InputStream inputStream = getClass().getResourceAsStream(saveJSONpath); //path to the file we can probably put in resources folder
-        if (inputStream == null) {
-            throw new NullPointerException("Couldn't find resource file " + saveJSONpath);
-        }
-
+        try (InputStream inputStream = new FileInputStream(saveJSONpath)) { //path to the file we can probably put in resources folder
+            
         JSONTokener tokener = new JSONTokener(inputStream); //this is the tokenizer to read the jsonfile
         JSONObject saveData = new JSONObject(tokener); //this is to create a json object from the tokenizer
         JSONArray inventoryArray = saveData.getJSONArray("inventory"); //this is to get the array of items in the inventory from the json file
@@ -104,6 +102,9 @@ public class GameEngine {
         score = saveData.getInt("score"); 
         this.player.setScore(score);
 
+    } catch (Exception e) {
+        e.printStackTrace();
+        }
     }
 
     /**
@@ -202,15 +203,15 @@ public class GameEngine {
 
         saveData.put("currentRoom", player.getCurrentRoom().getName());
         saveData.put("timeRemaining", player.getTimeRemaining());
-        saveData.put("movesCount", this.movesCount);
-        saveData.put("score", this.score);
+        saveData.put("movesCount", this.getPlayer().getMovesCount());
+        saveData.put("score", this.getPlayer().getScore());
 
         for (Item item : player.getInventory()) {
             inventoryArray.put(item.getName());
         }
         saveData.put("inventory", inventoryArray);
 
-        try (FileWriter file = new FileWriter("escape-room-game/src/main/resources/" + fileName)) {
+        try (FileWriter file = new FileWriter("saves/" + fileName)) {
             file.write(saveData.toString(4)); // this is just for readability
             file.flush(); 
         } catch (IOException e) {
@@ -225,7 +226,6 @@ public class GameEngine {
     public GameState getPlayer() {
     return player;
     }
-
 
     // -- command wrapper methods --
     // runs PickUpCommand on current game state
@@ -247,7 +247,7 @@ public class GameEngine {
     }
 
     // GoCommand wrapper method
-    public String go(String direction) {
+    public boolean go(String direction) {
         GoCommand cmd = new GoCommand();
         return cmd.execute(player, direction);
     }
