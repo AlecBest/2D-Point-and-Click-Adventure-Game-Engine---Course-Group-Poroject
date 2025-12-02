@@ -160,24 +160,8 @@ public class GameController {
             movePlayerVisuals(centeredX, centeredY);
             gameEngine.playerMove(centeredX, centeredY); // update in game state
             gameEngine.getPlayer().incrementMovesCount(); // increment moves count each time they move idk if we should do it for movement or like rooms
-            soundManager.playSoundEffect("footsteps.mp3");
+            soundManager.playSFootSteps();
         });
-
-         loadDialogues();
-    }
-
-    private void loadDialogues() {
-        try (java.io.InputStream is = getClass().getResourceAsStream("/dialogues.json")) {
-            if (is != null) {
-                String jsonText = new String(is.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
-                dialogueData = new org.json.JSONObject(jsonText).getJSONObject("dialogues");
-            } else {
-                System.err.println("Could not find dialogues.json");
-            }
-        } catch (IOException | org.json.JSONException e) {
-            e.printStackTrace();
-        }
-
 
     }
 
@@ -201,8 +185,7 @@ public class GameController {
             gameScreen.setVisible(true);
 
             // Setup game state visuals BEFORE fading in
-            playerImageView = new ImageView(
-                    new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
+            playerImageView = new ImageView(new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
             playerImageView.setLayoutX(400);
             playerImageView.setLayoutY(300);
             playerImageView.setFitWidth(200);
@@ -238,11 +221,11 @@ public class GameController {
             fadeIn.play();
         });
         fadeOut.play();
+        gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);
     }
 
 
     public void startTimer() {
-        gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);
 
         if (gameTimer != null) {
             gameTimer.stop();
@@ -325,6 +308,26 @@ public class GameController {
         gameTimer.play();
     }
 
+    public void setGameEngine(GameEngine engine) {
+        this.gameEngine = engine;
+    }
+
+    public void startGameFromLoad() {
+        gameScreen.setVisible(true);
+
+        playerImageView = new ImageView(new Image(getClass().getResourceAsStream(gameEngine.getPlayer().getImagePath())));
+        playerImageView.setLayoutX(400);
+        playerImageView.setLayoutY(300);
+        playerImageView.setFitWidth(200);
+        playerImageView.setFitHeight(150);
+        playerImageView.setPreserveRatio(true);
+
+        updateScreen();
+        updateInventoryUI();
+        startTimer();
+        soundManager.playBackgroundMusic("spooky_bgm.mp3");
+    }
+
 
     /*
      * Updates the game screen to reflect the current game state.
@@ -373,8 +376,6 @@ public class GameController {
 
                 showPickupPopup("Picked up: " + item.getName());
                 updateInventoryUI();
-
-                gameEngine.getPlayer().incrementMovesCount(); // increment moves count when picking up item we can just leave it like moves and items for now 
             });
 
             interactiveLayer.getChildren().add(itemView); // this is to add the item image to the game screen so it shows up
@@ -405,9 +406,9 @@ public class GameController {
 
         for (String exitDirection : currentRoom.getExitList()) {
 
-            Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection),
-            currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection),
+            Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection),currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection),
             currentRoom.getExitHeight(exitDirection));
+            
             exitHitBox.setFill(Color.WHITE); // this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
 
             exitHitBox.setStroke(Color.RED); // this is just for testing purposes we would remove after we see that the hitbox works fine
@@ -415,10 +416,10 @@ public class GameController {
             exitHitBox.setOnMouseClicked(e -> {
                 // call the go command through the game engine
                 String result = gameEngine.go(exitDirection);
-
+                soundManager.playSFootSteps();
+                soundManager.playSoundEffect("door.mp3");
                 // print the message for now
                 System.out.println(result);
-                soundManager.playSoundEffect("footsteps.mp3");
 
                 gameEngine.getPlayer().incrementMovesCount(); // increment moves count when changing rooms (so would be items + moves, idk what else to add for now)
 
@@ -548,11 +549,6 @@ private void handleNPCClick(NPC npc) {
         ft.play();
     }
 
-
-
-
-
-
     private void updateInventoryUI() {
         inventoryGrid.getChildren().clear(); // this is to clear the grid so we dont have duplicates when updating
 
@@ -584,29 +580,19 @@ private void handleNPCClick(NPC npc) {
                     System.out.println("Slot clicked: col " + col + ", row " + row);
                     selected = item;
 
-                    // Give logic: only when we are in give mode and there is an NPC
+                    // Give logic: only when we are in give mode and dialogue is open
                     if (isGiveMode && gameEngine.getPlayer().getCurrentRoom().hasNPC()) {
 
+                        // Use GameEngine wrapper that calls GiveCommand with current NPC and this item
                         String result = gameEngine.giveItemToCurrentNpc(selected.getName());
                         System.out.println(result);
 
-                        // Show the result in the dialogue box
+                        // Show result in the dialogue box
                         dialogueBox.setText(result);
-                        dialogueBox.setWrapText(true);
 
-                        // Inventory might have changed
+                        // Inventory may have changed: refresh it
                         updateInventoryUI();
-
-                        // We are done with the give phase for now
-                        isGiveMode = false;
-
-                        // After a give attempt, Next should just close the dialogue
-                        nextButton.setOnAction(ev -> {
-                            dialogueOverlay.setVisible(false);
-                            dialogueBox.clear();
-                        });
                     }
-
 
                     if (isCombineMode) {
                     handleCombineSelecting(selected);
@@ -773,6 +759,23 @@ public void toggleInventory() {
 
     public void movePlayerVisuals(double x, double y) {
 
+        double targetX = x;
+        double targetY = y;
+
+        double playerWidth = 150;
+        double playerHeight = 200;
+
+        double screenWidth = interactiveLayer.getWidth();
+        double screenHeight = interactiveLayer.getHeight();
+
+        double minX = 0;
+        double minY = 350;
+        double maxX = screenWidth - playerWidth;
+        double maxY = 550;
+
+        double finalX = Math.max(minX, Math.min(x, maxX)); // this is to clamp the the position so they dont walk off screen
+        double finalY = Math.max(minY, Math.min(y, maxY));
+
         if (currentAnimation != null) { // this is so if you click queue a bunch of times it just stops the current anim to start another one
             currentAnimation.stop();
         }
@@ -787,16 +790,16 @@ public void toggleInventory() {
         playerImageView.setX(0);
         playerImageView.setY(0);
 
-        double difX = x - currentVisualX; // this is to get the difference between current position and target so it can animate to that position
-        double difY = y - currentVisualY;
+        double difX = finalX - currentVisualX; // this is to get the difference between current position and target so it can animate to that position
+        double difY = finalY - currentVisualY;
 
         currentAnimation = new TranslateTransition(Duration.seconds(1), playerImageView);
         currentAnimation.setToX(difX);
         currentAnimation.setToY(difY);
 
         currentAnimation.setOnFinished(e -> { // this is to set the final position properly and then reset translate so no weird stuff happens
-            playerImageView.setLayoutX(x);
-            playerImageView.setLayoutY(y);
+            playerImageView.setLayoutX(finalX);
+            playerImageView.setLayoutY(finalY);
             playerImageView.setTranslateX(0);
             playerImageView.setTranslateY(0);
         });
