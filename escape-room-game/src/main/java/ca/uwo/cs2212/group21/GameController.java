@@ -47,6 +47,8 @@ public class GameController {
     @FXML private GridPane inventoryGrid; // this is the grid inside the inventory where items would go
     @FXML private AnchorPane interactiveLayer; // this is the layer on top of the background where we would put items, npcs, exits, etc
 
+    private NPC activeNpc;
+
     @FXML private Label currentRoomLabel;
     @FXML private Label roomDescriptionLabel;
     @FXML private Label turnsTakenLabel;
@@ -429,42 +431,42 @@ public class GameController {
 
     }
 
-private void handleNPCClick(NPC npc) {
+    private void handleNPCClick(NPC npc) {
+
+    // remember who we are talking to
+    activeNpc = npc;
 
     Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
-    String roomName = currentRoom.getName();
 
-    // Always show overlay and NPC name
+    // show overlay and set name
     dialogueOverlay.setVisible(true);
     dialogueNameLabel.setText(npc.getName());
 
-    // Use the dialogue string stored on the NPC (comes from JSON per room)
+    // 1: First time talking to this NPC and we have a dialogue tree in dialogues.json:
+    //    use the dialogue tree with options.
+    if (!npc.hasInteracted() && dialogueData != null && dialogueData.has(npc.getName())) {
+
+        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
+        showDialogueNode(npcDialogue, "root");
+        return;
+    }
+
+    // 2: After the first time: use the per room line from worldMap.json
     String dialogueText = npc.getDialogue();
     dialogueBox.setText(dialogueText);
     dialogueBox.setWrapText(true);
 
-    // Default: no giving; Next just closes the dialogue
-    isGiveMode = false;
-    nextButton.setVisible(true);
     optionsBox.setVisible(false);
+    nextButton.setVisible(true);
+    isGiveMode = false;
 
-    // Main Room: intro only; Next closes
-    if ("Main Room".equals(roomName)) {
-        nextButton.setOnAction(e -> {
-            dialogueOverlay.setVisible(false);
-            dialogueBox.clear();
-        });
-        return;
-    }
-
-    // Living Room: talk; then Next enters give mode and opens inventory
-    if ("Living Room".equals(roomName)) {
+    // If this NPC can trade in this room, Next should open inventory for giving.
+    // Otherwise Next just closes the dialogue.
+    if (npc.isTradeable()) {
 
         nextButton.setOnAction(e -> {
-            // Enter give mode
             isGiveMode = true;
 
-            // Open inventory so player can choose an item
             if (!inventory.isVisible()) {
                 updateInventoryUI();
                 inventory.setVisible(true);
@@ -475,60 +477,69 @@ private void handleNPCClick(NPC npc) {
             dialogueBox.setWrapText(true);
         });
 
-        return;
-    }
+    } else {
 
-    // All other rooms (Library of Echoes, Broken Kitchen, etc):
-    // talk only; Next closes dialogue; no inventory trading
-    nextButton.setOnAction(e -> {
-        dialogueOverlay.setVisible(false);
-        dialogueBox.clear();
-    });
+        nextButton.setOnAction(e -> {
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+    }
 }
 
 
 
+private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
+    if (!npcDialogue.has(nodeId)) {
+        return;
+    }
 
-    private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
-        if (!npcDialogue.has(nodeId))
-            return;
+    // get node from dialogues.json
+    org.json.JSONObject node = npcDialogue.getJSONObject(nodeId);
 
-        org.json.JSONObject node = npcDialogue.getJSONObject(nodeId);
-        String text = node.getString("text");
-        org.json.JSONObject options = node.getJSONObject("options");
+    // set dialogue text
+    String text = node.getString("text");
+    dialogueBox.setText(text);
+    dialogueBox.setWrapText(true);
 
-        dialogueOverlay.setVisible(true);
-        dialogueNameLabel.setText(npcDialogue.has("name") ? npcDialogue.getString("name") : "The Guide");
-        // Better: pass NPC name to this method or store current NPC
-        // For now, let's just use the text.
+    // get options
+    org.json.JSONObject options = node.getJSONObject("options");
 
-        dialogueBox.setText(text);
+    // clear old buttons
+    optionsBox.getChildren().clear();
 
-        optionsBox.getChildren().clear();
+    // if there are no options: this is the last node in the tree
+    if (options.isEmpty()) {
+
+        optionsBox.setVisible(false);
+        nextButton.setVisible(true);
+
+        // after this final line, mark NPC as interacted and close on Next
+        nextButton.setOnAction(e -> {
+            if (activeNpc != null) {
+                activeNpc.setHasInteracted(true);
+            }
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+
+    } else {
+        // there are options: hide Next and show buttons
         optionsBox.setVisible(true);
         nextButton.setVisible(false);
 
-        if (options.isEmpty()) {
-            optionsBox.setVisible(false);
-            nextButton.setVisible(true);
-            nextButton.setText("Close");
-            nextButton.setOnAction(e -> {
-                soundManager.playDialogueCloseSound();
-                dialogueOverlay.setVisible(false);
-                dialogueBox.clear();
-                isGiveMode = false;
+        for (String optionText : options.keySet()) {
+            String nextNodeId = options.getString(optionText);
+
+            Button optionButton = new Button(optionText);
+            optionButton.setOnAction(e -> {
+                showDialogueNode(npcDialogue, nextNodeId);
             });
-        } else {
-            for (String key : options.keySet()) {
-                String nextNodeId = options.getString(key);
-                Button optionButton = new Button(key);
-                optionButton.getStyleClass().add("button"); // Use CSS style
-                optionButton.setMaxWidth(Double.MAX_VALUE);
-                optionButton.setOnAction(e -> showDialogueNode(npcDialogue, nextNodeId));
-                optionsBox.getChildren().add(optionButton);
-            }
+
+            optionsBox.getChildren().add(optionButton);
         }
     }
+}
+
 
     private void showPickupPopup(String message) {
         pickupPopup.setText(message);
