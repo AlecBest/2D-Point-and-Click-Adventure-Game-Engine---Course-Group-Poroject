@@ -431,71 +431,61 @@ public class GameController {
 
 private void handleNPCClick(NPC npc) {
 
-    // Find which room we are currently in
     Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
+    String roomName = currentRoom.getName();
 
-    // Always show overlay and NPC name when clicked
+    // Always show overlay and NPC name
     dialogueOverlay.setVisible(true);
     dialogueNameLabel.setText(npc.getName());
 
-    // 1: Intro room: talk only, no give
-    if ("Main Room".equals(currentRoom.getName())) {
-        // Use the per room dialogue text from JSON
-        String introText = npc.getDialogue();
-        dialogueBox.setText(introText);
-        dialogueBox.setWrapText(true);
+    // Use the dialogue string stored on the NPC (comes from JSON per room)
+    String dialogueText = npc.getDialogue();
+    dialogueBox.setText(dialogueText);
+    dialogueBox.setWrapText(true);
 
-        // In the intro room, Next just closes the dialogue
-        isGiveMode = false;
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
-
-        nextButton.setOnAction(e -> {
-            soundManager.playDialogueCloseSound();
-            dialogueOverlay.setVisible(false);
-            dialogueBox.clear();
-        });
-
-        return;  // stop here; do not go into the give logic below
-    }
-
-    // 2: Other rooms: use dialogue tree or TalkCommand, then go to give mode
-
-    // Try JSON dialogue tree first
-    if (dialogueData != null && dialogueData.has(npc.getName())) {
-        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
-        showDialogueNode(npcDialogue, "root");
-    } else {
-        // Fallback: simple TalkCommand text
-        String dialogueText = gameEngine.talkToNpc();
-        dialogueBox.setText(dialogueText);
-        dialogueBox.setWrapText(true);
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
-    }
-
-    // Set up give phase to start when Next is clicked
+    // Default: no giving; Next just closes the dialogue
     isGiveMode = false;
     nextButton.setVisible(true);
     optionsBox.setVisible(false);
 
+    // Main Room: intro only; Next closes
+    if ("Main Room".equals(roomName)) {
+        nextButton.setOnAction(e -> {
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+        return;
+    }
+
+    // Living Room: talk; then Next enters give mode and opens inventory
+    if ("Living Room".equals(roomName)) {
+
+        nextButton.setOnAction(e -> {
+            // Enter give mode
+            isGiveMode = true;
+
+            // Open inventory so player can choose an item
+            if (!inventory.isVisible()) {
+                updateInventoryUI();
+                inventory.setVisible(true);
+                inventory.requestFocus();
+            }
+
+            dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
+            dialogueBox.setWrapText(true);
+        });
+
+        return;
+    }
+
+    // All other rooms (Library of Echoes, Broken Kitchen, etc):
+    // talk only; Next closes dialogue; no inventory trading
     nextButton.setOnAction(e -> {
-        soundManager.playNextButtonSound();
-        // Switch into give mode
-        isGiveMode = true;
-
-        // Open inventory so they can pick an item
-        if (!inventory.isVisible()) {
-            updateInventoryUI();
-            inventory.setVisible(true);
-            inventory.requestFocus();
-        }
-
-        // Prompt player to choose an item
-        dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
-        dialogueBox.setWrapText(true);
+        dialogueOverlay.setVisible(false);
+        dialogueBox.clear();
     });
 }
+
 
 
 
@@ -617,17 +607,33 @@ private void handleNPCClick(NPC npc) {
         }
     }
 
-    public void toggleInventory() {
-        soundManager.playInventorySound();
-        if (inventory.isVisible()) {
-            inventory.setVisible(false);
-            gameScreen.requestFocus(); // this is to put the focus back to the game screen so can click again
-        } else {
-            updateInventoryUI(); // refresh the grid before it opens
-            inventory.setVisible(true);
-            inventory.requestFocus(); // this is to put the focus on the inventory so can click items in it
+public void toggleInventory() {
+    System.out.println("toggleInventory called. Before: " + inventory.isVisible());
+
+    if (inventory.isVisible()) {
+        // Closing inventory
+        inventory.setVisible(false);
+        gameScreen.requestFocus();
+
+        // If we were in give mode and player closed inventory with I,
+        // exit give mode and make Next close the dialogue instead of reopening inventory.
+        if (isGiveMode) {
+            isGiveMode = false;
+            nextButton.setOnAction(ev -> {
+                dialogueOverlay.setVisible(false);
+                dialogueBox.clear();
+            });
         }
+    } else {
+        // Opening inventory (normal gameplay)
+        updateInventoryUI();
+        inventory.setVisible(true);
+        inventory.requestFocus();
     }
+
+    System.out.println("After: " + inventory.isVisible());
+}
+
 
     public void dropItemFromInventory(Event event) {
         soundManager.playDropButtonSound();
