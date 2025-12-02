@@ -118,7 +118,6 @@ public class GameController {
         dialogueOverlay.setVisible(false);
         examinePanel.setVisible(false);
         pauseScreen.setVisible(false);
-        inventory.setPickOnBounds(false); // Allow clicks to pass through transparent parts
         saveGameSlots.setVisible(false);
         
 
@@ -151,6 +150,7 @@ public class GameController {
         
 
         interactiveLayer.setOnMouseClicked(event -> {
+            
             double targetX = event.getX();
             double targetY = event.getY(); // to get the coordinates to move to
 
@@ -160,24 +160,8 @@ public class GameController {
             movePlayerVisuals(centeredX, centeredY);
             gameEngine.playerMove(centeredX, centeredY); // update in game state
             gameEngine.getPlayer().incrementMovesCount(); // increment moves count each time they move idk if we should do it for movement or like rooms
-            soundManager.playSoundEffect("footsteps.mp3");
+            soundManager.playSFootSteps();
         });
-
-         loadDialogues();
-    }
-
-    private void loadDialogues() {
-        try (java.io.InputStream is = getClass().getResourceAsStream("/dialogues.json")) {
-            if (is != null) {
-                String jsonText = new String(is.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
-                dialogueData = new org.json.JSONObject(jsonText).getJSONObject("dialogues");
-            } else {
-                System.err.println("Could not find dialogues.json");
-            }
-        } catch (IOException | org.json.JSONException e) {
-            e.printStackTrace();
-        }
-
 
     }
 
@@ -414,10 +398,10 @@ public class GameController {
             exitHitBox.setOnMouseClicked(e -> {
                 // call the go command through the game engine
                 String result = gameEngine.go(exitDirection);
-
+                soundManager.playSFootSteps();
+                soundManager.playSoundEffect("door.mp3");
                 // print the message for now
                 System.out.println(result);
-                soundManager.playSoundEffect("footsteps.mp3");
 
                 gameEngine.getPlayer().incrementMovesCount(); // increment moves count when changing rooms (so would be items + moves, idk what else to add for now)
 
@@ -553,6 +537,7 @@ private void handleNPCClick(NPC npc) {
         ft.setDelay(Duration.seconds(1));
         ft.setOnFinished(e -> pickupPopup.setVisible(false));
         ft.play();
+        soundManager.playSoundEffect("pickup.mp3");
     }
 
 
