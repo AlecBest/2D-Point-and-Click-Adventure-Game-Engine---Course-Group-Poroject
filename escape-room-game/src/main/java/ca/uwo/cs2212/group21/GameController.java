@@ -118,7 +118,8 @@ public class GameController {
         dialogueOverlay.setVisible(false);
         examinePanel.setVisible(false);
         pauseScreen.setVisible(false);
-        saveGameSlots.setVisible(false);
+                inventory.setPickOnBounds(false);
+                saveGameSlots.setVisible(false);
         
 
         mainScreen.sceneProperty().addListener((obs, oldScene, newScene) -> { // this is to add a key listener to the scene whenever it gets set so it can track key inputs
@@ -150,7 +151,6 @@ public class GameController {
         
 
         interactiveLayer.setOnMouseClicked(event -> {
-            
             double targetX = event.getX();
             double targetY = event.getY(); // to get the coordinates to move to
 
@@ -160,8 +160,24 @@ public class GameController {
             movePlayerVisuals(centeredX, centeredY);
             gameEngine.playerMove(centeredX, centeredY); // update in game state
             gameEngine.getPlayer().incrementMovesCount(); // increment moves count each time they move idk if we should do it for movement or like rooms
-            soundManager.playSFootSteps();
+            soundManager.playSoundEffect("footsteps.mp3");
         });
+
+         loadDialogues();
+    }
+
+    private void loadDialogues() {
+        try (java.io.InputStream is = getClass().getResourceAsStream("/dialogues.json")) {
+            if (is != null) {
+                String jsonText = new String(is.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+                dialogueData = new org.json.JSONObject(jsonText).getJSONObject("dialogues");
+            } else {
+                System.err.println("Could not find dialogues.json");
+            }
+        } catch (IOException | org.json.JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -399,10 +415,10 @@ public class GameController {
             exitHitBox.setOnMouseClicked(e -> {
                 // call the go command through the game engine
                 String result = gameEngine.go(exitDirection);
-                soundManager.playSFootSteps();
-                soundManager.playSoundEffect("door.mp3");
+
                 // print the message for now
                 System.out.println(result);
+                soundManager.playSoundEffect("footsteps.mp3");
 
                 gameEngine.getPlayer().incrementMovesCount(); // increment moves count when changing rooms (so would be items + moves, idk what else to add for now)
 
@@ -420,69 +436,61 @@ public class GameController {
 
 private void handleNPCClick(NPC npc) {
 
-    // Find which room we are currently in
     Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
+    String roomName = currentRoom.getName();
 
-    // Always show overlay and NPC name when clicked
+    // Always show overlay and NPC name
     dialogueOverlay.setVisible(true);
     dialogueNameLabel.setText(npc.getName());
 
-    // 1: Intro room: talk only, no give
-    if ("Main Room".equals(currentRoom.getName())) {
-        // Use the per room dialogue text from JSON
-        String introText = npc.getDialogue();
-        dialogueBox.setText(introText);
-        dialogueBox.setWrapText(true);
+    // Use the dialogue string stored on the NPC (comes from JSON per room)
+    String dialogueText = npc.getDialogue();
+    dialogueBox.setText(dialogueText);
+    dialogueBox.setWrapText(true);
 
-        // In the intro room, Next just closes the dialogue
-        isGiveMode = false;
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
-
-        nextButton.setOnAction(e -> {
-            dialogueOverlay.setVisible(false);
-            dialogueBox.clear();
-        });
-
-        return;  // stop here; do not go into the give logic below
-    }
-
-    // 2: Other rooms: use dialogue tree or TalkCommand, then go to give mode
-
-    // Try JSON dialogue tree first
-    if (dialogueData != null && dialogueData.has(npc.getName())) {
-        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
-        showDialogueNode(npcDialogue, "root");
-    } else {
-        // Fallback: simple TalkCommand text
-        String dialogueText = gameEngine.talkToNpc();
-        dialogueBox.setText(dialogueText);
-        dialogueBox.setWrapText(true);
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
-    }
-
-    // Set up give phase to start when Next is clicked
+    // Default: no giving; Next just closes the dialogue
     isGiveMode = false;
     nextButton.setVisible(true);
     optionsBox.setVisible(false);
 
+    // Main Room: intro only; Next closes
+    if ("Main Room".equals(roomName)) {
+        nextButton.setOnAction(e -> {
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+        return;
+    }
+
+    // Living Room: talk; then Next enters give mode and opens inventory
+    if ("Living Room".equals(roomName)) {
+
+        nextButton.setOnAction(e -> {
+            // Enter give mode
+            isGiveMode = true;
+
+            // Open inventory so player can choose an item
+            if (!inventory.isVisible()) {
+                updateInventoryUI();
+                inventory.setVisible(true);
+                inventory.requestFocus();
+            }
+
+            dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
+            dialogueBox.setWrapText(true);
+        });
+
+        return;
+    }
+
+    // All other rooms (Library of Echoes, Broken Kitchen, etc):
+    // talk only; Next closes dialogue; no inventory trading
     nextButton.setOnAction(e -> {
-        // Switch into give mode
-        isGiveMode = true;
-
-        // Open inventory so they can pick an item
-        if (!inventory.isVisible()) {
-            updateInventoryUI();
-            inventory.setVisible(true);
-            inventory.requestFocus();
-        }
-
-        // Prompt player to choose an item
-        dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
-        dialogueBox.setWrapText(true);
+        dialogueOverlay.setVisible(false);
+        dialogueBox.clear();
     });
 }
+
 
 
 
@@ -538,7 +546,6 @@ private void handleNPCClick(NPC npc) {
         ft.setDelay(Duration.seconds(1));
         ft.setOnFinished(e -> pickupPopup.setVisible(false));
         ft.play();
-        soundManager.playSoundEffect("pickup.mp3");
     }
 
 
@@ -618,16 +625,33 @@ private void handleNPCClick(NPC npc) {
         }
     }
 
-    public void toggleInventory() {
-        if (inventory.isVisible()) {
-            inventory.setVisible(false);
-            gameScreen.requestFocus(); // this is to put the focus back to the game screen so can click again
-        } else {
-            updateInventoryUI(); // refresh the grid before it opens
-            inventory.setVisible(true);
-            inventory.requestFocus(); // this is to put the focus on the inventory so can click items in it
+public void toggleInventory() {
+    System.out.println("toggleInventory called. Before: " + inventory.isVisible());
+
+    if (inventory.isVisible()) {
+        // Closing inventory
+        inventory.setVisible(false);
+        gameScreen.requestFocus();
+
+        // If we were in give mode and player closed inventory with I,
+        // exit give mode and make Next close the dialogue instead of reopening inventory.
+        if (isGiveMode) {
+            isGiveMode = false;
+            nextButton.setOnAction(ev -> {
+                dialogueOverlay.setVisible(false);
+                dialogueBox.clear();
+            });
         }
+    } else {
+        // Opening inventory (normal gameplay)
+        updateInventoryUI();
+        inventory.setVisible(true);
+        inventory.requestFocus();
     }
+
+    System.out.println("After: " + inventory.isVisible());
+}
+
 
     public void dropItemFromInventory(Event event) {
         gameEngine.dropItem(selected.getName());
