@@ -10,6 +10,25 @@ public class SoundManager {
     private MediaPlayer backgroundPlayer;
     private Map<String, Media> soundCache = new HashMap<>();
 
+    private boolean footstepsPlaying = false;
+
+    public void playSFootSteps() {
+        if (footstepsPlaying) return; // already playing → do not overlap
+
+        footstepsPlaying = true;
+        try {
+            Media media = loadMedia("footsteps.mp3");
+            if (media != null) {
+                MediaPlayer effectPlayer = new MediaPlayer(media);
+                effectPlayer.setVolume(0.8); // Slightly louder for effects
+                effectPlayer.play();
+                effectPlayer.setOnEndOfMedia(() -> footstepsPlaying = false);
+            }
+        } catch (Exception e) {
+            System.err.println("Error playing sound effect: " + e.getMessage());
+        }
+    }
+
     // Allows for background music to be played until stopped
     public void playBackgroundMusic(String filename) {
         try {
