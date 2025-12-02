@@ -1,0 +1,13 @@
+{
+    "currentRoom": "Living Room",
+    "score": 3,
+    "timeRemaining": 578,
+    "inventory": [
+        "Cloth",
+        "Matchbox",
+        "Candle",
+        "Torn Book",
+        "Pen"
+    ],
+    "movesCount": 10
+}

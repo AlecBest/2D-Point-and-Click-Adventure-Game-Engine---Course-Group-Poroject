@@ -19,18 +19,18 @@ public class GoCommand {
      * @param direction the direction to move in (for example, "NORTH") where the doors are locatedd
      * @return          a message describing what happened
      */
-    public String execute(GameState player, String direction) {
+    public Boolean execute(GameState player, String direction) {
 
         // simple safety checks
         if (player == null || direction == null) {
-            return "You can't go that way.";
+            return false;
         }
 
         Room currentRoom = player.getCurrentRoom();
 
         if (currentRoom == null) {
             // this should not normally happen, but this stops a crash
-            return "You are nowhere. Something went wrong.";
+            return false;
         }
 
         // look up the neighbouring room in the given directiion
@@ -38,19 +38,20 @@ public class GoCommand {
 
         // if there is no exit in that direction, stay where you are
         if (nextRoom == null) {
-            return "You can't go that way.";
+            return false;
         }
 
         // if the current room is locked, do not allow them to leave yet
         if (nextRoom.isLocked()) {
-            return "The door is locked. You cannot leave this room yet.";
+            return false;
         }
 
         // everything is okay, so move the player to the next room
         player.setCurrentRoom(nextRoom);
+        player.incrementMovesCount();
 
         // simple message for now, you can change text later for story flavour
-        return "You move to " + nextRoom.getName() + ".";
+        return true;
     }
 }
 
