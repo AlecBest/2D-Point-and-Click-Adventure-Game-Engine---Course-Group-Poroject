@@ -118,6 +118,7 @@ public class GameController {
         dialogueOverlay.setVisible(false);
         examinePanel.setVisible(false);
         pauseScreen.setVisible(false);
+        inventory.setPickOnBounds(false); // Allow clicks to pass through transparent parts
         saveGameSlots.setVisible(false);
         
 
@@ -161,6 +162,22 @@ public class GameController {
             gameEngine.getPlayer().incrementMovesCount(); // increment moves count each time they move idk if we should do it for movement or like rooms
             soundManager.playSoundEffect("footsteps.mp3");
         });
+
+         loadDialogues();
+    }
+
+    private void loadDialogues() {
+        try (java.io.InputStream is = getClass().getResourceAsStream("/dialogues.json")) {
+            if (is != null) {
+                String jsonText = new String(is.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+                dialogueData = new org.json.JSONObject(jsonText).getJSONObject("dialogues");
+            } else {
+                System.err.println("Could not find dialogues.json");
+            }
+        } catch (IOException | org.json.JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

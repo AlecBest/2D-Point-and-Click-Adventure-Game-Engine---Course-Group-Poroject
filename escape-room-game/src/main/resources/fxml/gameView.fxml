@@ -16,7 +16,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.GameController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.GameController">
    <children>
 
       <AnchorPane fx:id="mainScreen" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: black;" visible="false">
@@ -104,7 +104,7 @@
                </children>
             </HBox>
 
-            <AnchorPane fx:id="dialogueOverlay" layoutX="140.0" layoutY="500.0" prefHeight="160.0" prefWidth="800.0" visible="false">
+            <AnchorPane fx:id="dialogueOverlay" layoutX="80.0" layoutY="450.0" prefHeight="160.0" prefWidth="703.0" visible="false">
                <children>
                   <ImageView fx:id="dialogueBoxBg" fitHeight="160.0" fitWidth="800.0" pickOnBounds="true" />
 
