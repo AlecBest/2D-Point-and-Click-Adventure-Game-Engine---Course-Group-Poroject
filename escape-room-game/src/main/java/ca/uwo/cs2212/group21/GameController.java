@@ -377,15 +377,52 @@ public class GameController {
 
     }
 
+//combined version with dialogue tree + give phase
 private void handleNPCClick(NPC npc) {
-    // Get dialogue text from the TalkCommand through GameEngine
-    String dialogueText = gameEngine.talkToNpc();
 
-    // Show the dialogue overlay
+//shows the dialong and npc name 
     dialogueOverlay.setVisible(true);
-
-    // Show the NPC name in the name label
     dialogueNameLabel.setText(npc.getName());
+
+    //JSON dialongue tree
+    if (dialogueData != null && dialogueData.has(npc.getName())) {
+        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
+        showDialogueNode(npcDialogue, "root");
+    } else {
+        //use simple TalkCommand dialogue
+        String dialogueText = gameEngine.talkToNpc();
+        dialogueBox.setText(dialogueText);
+        dialogueBox.setWrapText(true);
+        nextButton.setVisible(true);
+        optionsBox.setVisible(false);
+    }
+
+    // 3. Set up the "give item" phase to start when Next is clicked
+    isGiveMode = false;          // start in talk mode
+    nextButton.setVisible(true); // make sure the Next button is visible
+    optionsBox.setVisible(false);
+
+    nextButton.setOnAction(e -> {
+        // When Next is clicked, turn on give mode
+        isGiveMode = true;
+
+        // Open inventory so the player can choose an item
+        if (!inventory.isVisible()) {
+            updateInventoryUI();
+            inventory.setVisible(true);
+            inventory.requestFocus();
+        }
+
+        // Let the player know what to do
+        dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
+        dialogueBox.setWrapText(true);
+    });
+}
+
+
+    private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
+        if (!npcDialogue.has(nodeId))
+            return;
 
     // Put the dialogue text into the dialogue box
     dialogueBox.setText(dialogueText);

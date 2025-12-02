@@ -9,7 +9,6 @@ import ca.uwo.cs2212.group21.model.Room;
 import ca.uwo.cs2212.group21.model.NPC;
 
 /**
- * 
  * Player gives an item from their inventory to an NPC in the current room.
  */
 public class GiveCommand {
@@ -17,6 +16,7 @@ public class GiveCommand {
     /**
      * Executes the GIVE command.
      * If itemName is "all", tries to give all inventory items to the NPC.
+     *
      * @param state    current game state
      * @param npcName  name of the NPC to give the item to
      * @param itemName name of the item in the player's inventory, or "all"
@@ -89,7 +89,6 @@ public class GiveCommand {
 
     // Handle giving all items in inventory
     private String giveAllItems(GameState state, NPC target) {
-        // make a copy so we do not modify the list while iterating
         List<Item> inventorySnapshot = new ArrayList<>(state.getInventory());
 
         if (inventorySnapshot.isEmpty()) {
