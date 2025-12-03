@@ -130,6 +130,10 @@ public class GameEngine {
             String roomDescription = roomObject.getString("description");
             boolean isLocked = roomObject.getBoolean("isLocked"); 
             Room room = new Room(roomName, roomDescription, isLocked, roomObject.getString("roomImagePath"));
+            
+            int lockCode = roomObject.optInt("lockCode", -1);
+            room.setLockCode(lockCode);
+            
             rooms.put(roomName, room);
 
             JSONArray itemArray = roomObject.getJSONArray("items"); //this is to go through each item in the room and add them to the specific room

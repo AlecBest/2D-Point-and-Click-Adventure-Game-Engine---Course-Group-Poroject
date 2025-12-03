@@ -28,17 +28,18 @@ public class Item {
      * @param width       The width of the item's image.
      * @param height      The height of the item's image.
      */
-    public Item(String name, String description, boolean isPuzzleItem, boolean startHidden, String imagePath, double x, double y, double width, double height) {
-        this.name = name;
-        this.description = description;
-        this.isKey = isKey;
-        this.startHidden = startHidden;
-        this.imagePath = imagePath;
-        this.x = x; 
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
+public Item(String name, String description, boolean isKey, boolean startHidden,
+        String imagePath, double x, double y, double width, double height) {
+    this.name = name;
+    this.description = description;
+    this.isKey = isKey;          // uses the parameter
+    this.startHidden = startHidden;
+    this.imagePath = imagePath;
+    this.x = x; 
+    this.y = y;
+    this.width = width;
+    this.height = height;
+}
 
     //Getters and Setters
 

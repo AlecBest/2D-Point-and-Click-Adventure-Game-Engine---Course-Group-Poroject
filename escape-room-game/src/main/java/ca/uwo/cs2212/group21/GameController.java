@@ -34,6 +34,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.geometry.Pos;
+import javafx.scene.text.Font;
 
 public class GameController {
 
@@ -110,7 +112,13 @@ public class GameController {
     private List<Item> combineItems = new ArrayList<>();
     private SoundManager soundManager = new SoundManager();
     private double lastPlayerX = 400; // Track last X position to determine direction
-    private Label endScreenTimeLabel;
+
+    // Keypad fields
+    private AnchorPane keypadOverlay;
+    private Label keypadDisplay;
+    private String currentInputCode = "";
+    private Room pendingTargetRoom;
+    private String pendingExitDirection;
 
     private String formatTime(int totalSeconds) {
         int minutes = totalSeconds / 60;
@@ -193,8 +201,9 @@ public class GameController {
 
             // Initialize game engine
             gameEngine = new GameEngine("/worldMap.json");
-            gameEngine.loadRecipes();
-            gameEngine.startNewGame();
+            gameEngine.startNewGame();   // create player first
+            gameEngine.loadRecipes();    // now player is NOT null, recipes can be attached
+
             
             // Set time limit AFTER game engine is initialized
             gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);
@@ -364,9 +373,17 @@ public class GameController {
             itemView.setX(item.getX());
             itemView.setY(item.getY());
 
-            itemView.setFitWidth(item.getWidth()); // this is to set the width and height of the item so we could get it to be a specific size wherever we want it
-            itemView.setFitHeight(item.getHeight());
-            itemView.setPreserveRatio(true); // this is to make sure the image doesnt get like warped kinda
+            double w = item.getWidth();
+            double h = item.getHeight();
+            
+            // Fallback sizes so dropped items don’t become huge
+            if (w <= 0) w = 60;
+            if (h <= 0) h = 60;
+            
+            itemView.setFitWidth(w);
+            itemView.setFitHeight(h);
+            itemView.setPreserveRatio(true);
+             // this is to make sure the image doesnt get like warped kinda
 
             itemView.setOnMouseClicked(e -> {
                 e.consume(); // this is to stop the event from propagating to the layer below so the player doesnt move when clicking an item
@@ -422,15 +439,20 @@ public class GameController {
             Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection),currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection),
             currentRoom.getExitHeight(exitDirection));
             
-            exitHitBox.setFill(Color.TRANSPARENT); // this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
-
-            exitHitBox.setStroke(null); // this is just for testing purposes we would remove after we see that the hitbox works fine
+            exitHitBox.setFill(Color.RED.deriveColor(0, 1, 1, 0.3)); // Visible for debugging
+            exitHitBox.setStroke(Color.RED); // Visible stroke for debugging
 
             exitHitBox.setOnMouseClicked(e -> {
-                // call the go command through the game engine
-                Boolean moved = gameEngine.go(exitDirection);
-                soundManager.playSoundEffect("door.mp3");
-                if (moved) updateScreenWithTransition();
+                Room nextRoom = currentRoom.getExit(exitDirection);
+                if (nextRoom != null && nextRoom.isLocked() && nextRoom.getLockCode() != -1) {
+                    showKeypad(nextRoom, exitDirection);
+                } else {
+                    Boolean moved = gameEngine.go(exitDirection);
+                    if (moved) {
+                        soundManager.playSoundEffect("door.mp3");
+                        updateScreenWithTransition();
+                    }
+                }
             });
 
             interactiveLayer.getChildren().add(exitHitBox);
@@ -1090,6 +1112,123 @@ public class GameController {
         });
         
         fadeOut.play();
+    }
+
+    // --- Keypad Logic ---
+
+    private void createKeypad() {
+        keypadOverlay = new AnchorPane();
+        keypadOverlay.setPrefSize(1080, 720);
+        keypadOverlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
+        keypadOverlay.setVisible(false);
+
+        VBox keypadContainer = new VBox(20);
+        keypadContainer.setAlignment(Pos.CENTER);
+        keypadContainer.setStyle("-fx-background-color: #333; -fx-padding: 30; -fx-background-radius: 10; -fx-border-color: #555; -fx-border-width: 2;");
+        
+        AnchorPane.setTopAnchor(keypadContainer, 150.0);
+        AnchorPane.setLeftAnchor(keypadContainer, 400.0);
+
+        Label title = new Label("ENTER CODE");
+        title.setTextFill(Color.WHITE);
+        title.setFont(new Font("Arial", 24));
+
+        keypadDisplay = new Label("---");
+        keypadDisplay.setStyle("-fx-background-color: black; -fx-text-fill: #00ff00; -fx-padding: 10; -fx-background-radius: 5;");
+        keypadDisplay.setFont(new Font("Monospaced", 30));
+        keypadDisplay.setPrefWidth(200);
+        keypadDisplay.setAlignment(Pos.CENTER);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setAlignment(Pos.CENTER);
+
+        int[][] keys = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int num = keys[i][j];
+                Button btn = new Button(String.valueOf(num));
+                btn.setPrefSize(60, 60);
+                btn.setStyle("-fx-font-size: 20; -fx-base: #555;");
+                btn.setOnAction(e -> handleKeypadInput(String.valueOf(num)));
+                grid.add(btn, j, i);
+            }
+        }
+
+        Button btn0 = new Button("0");
+        btn0.setPrefSize(60, 60);
+        btn0.setStyle("-fx-font-size: 20; -fx-base: #555;");
+        btn0.setOnAction(e -> handleKeypadInput("0"));
+        grid.add(btn0, 1, 3);
+
+        Button btnClear = new Button("C");
+        btnClear.setPrefSize(60, 60);
+        btnClear.setStyle("-fx-font-size: 20; -fx-base: #800; -fx-text-fill: white;");
+        btnClear.setOnAction(e -> {
+            currentInputCode = "";
+            updateKeypadDisplay();
+        });
+        grid.add(btnClear, 0, 3);
+
+        Button btnEnter = new Button("E");
+        btnEnter.setPrefSize(60, 60);
+        btnEnter.setStyle("-fx-font-size: 20; -fx-base: #080; -fx-text-fill: white;");
+        btnEnter.setOnAction(e -> checkKeypadCode());
+        grid.add(btnEnter, 2, 3);
+
+        Button closeBtn = new Button("Cancel");
+        closeBtn.setOnAction(e -> keypadOverlay.setVisible(false));
+
+        keypadContainer.getChildren().addAll(title, keypadDisplay, grid, closeBtn);
+        keypadOverlay.getChildren().add(keypadContainer);
+
+        // Add to main game screen (assuming gameScreen is the parent anchor pane)
+        gameScreen.getChildren().add(keypadOverlay);
+    }
+
+    private void showKeypad(Room targetRoom, String direction) {
+        if (keypadOverlay == null) {
+            createKeypad();
+        }
+        this.pendingTargetRoom = targetRoom;
+        this.pendingExitDirection = direction;
+        this.currentInputCode = "";
+        updateKeypadDisplay();
+        keypadOverlay.setVisible(true);
+    }
+
+    private void handleKeypadInput(String digit) {
+        if (currentInputCode.length() < 3) {
+            currentInputCode += digit;
+            updateKeypadDisplay();
+        }
+    }
+
+    private void updateKeypadDisplay() {
+        String display = currentInputCode;
+        while (display.length() < 3) {
+            display += "-";
+        }
+        keypadDisplay.setText(display);
+    }
+
+    private void checkKeypadCode() {
+        if (pendingTargetRoom != null && currentInputCode.equals(String.valueOf(pendingTargetRoom.getLockCode()))) {
+            // Correct code
+            pendingTargetRoom.setLocked(false);
+            keypadOverlay.setVisible(false);
+            soundManager.playSoundEffect("pickup.mp3"); // Success sound
+            
+            // Proceed with movement
+            Boolean moved = gameEngine.go(pendingExitDirection);
+            if (moved) updateScreenWithTransition();
+        } else {
+            // Incorrect code
+            currentInputCode = "";
+            updateKeypadDisplay();
+            // soundManager.playSoundEffect("error.mp3"); // Error sound (if exists, or reuse another)
+        }
     }
 
 }
