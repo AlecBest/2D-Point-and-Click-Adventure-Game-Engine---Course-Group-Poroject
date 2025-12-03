@@ -96,7 +96,6 @@
           "width": 0.0,
           "height": 0.0
         }
-
       ],
       "npc": {
         "npc": "The Guide",
@@ -156,7 +155,7 @@
           "height": 40.0
         },
         {
-          "item": "restored book  ",
+          "item": "restored book",
           "itemDescription": "An old book with all its pages back in place.",
           "isKey": true,
           "startHidden": true,
@@ -188,9 +187,6 @@
           "width": 0.0,
           "height": 0.0
         }
-
-
-        
       ],
       "npc": {
         "npc": "The Guide",
@@ -221,7 +217,7 @@
     {
       "name": "Broken Kitchen",
       "description": "A ruined kitchen where failed meals and rotten offerings linger.",
-      "isLocked": false,
+      "isLocked": true,
       "roomImagePath": "/images/g3_background.png",
       "items": [
         {
@@ -290,7 +286,7 @@
     {
       "name": "Laundry Room",
       "description": "A damp room filled with piles of old, moldy clothes.",
-      "isLocked": false,
+      "isLocked": true,
       "roomImagePath": "/images/laundryroom.png",
       "items": [
         {
@@ -331,7 +327,6 @@
         }
       ]
     },
-
     {
       "name": "Storage Room",
       "description": "Dusty shelves line the walls, holding forgotten artifacts.",
@@ -364,7 +359,6 @@
         }
       ]
     },
-
     {
       "name": "Boiler Room",
       "description": "The heat is oppressive here. The pipes hiss with escaping steam.",
@@ -410,7 +404,6 @@
         }
       ]
     },
-
     {
       "name": "Secret Room",
       "description": "A hidden chamber, untouched by time. Shadows dance on the walls.",
@@ -418,7 +411,7 @@
       "roomImagePath": "/images/secretroom.png",
       "items": [
         {
-          "item": "Book",
+          "item": "book",
           "itemDescription": "The hobbit",
           "isKey": false,
           "startHidden": false,
@@ -455,7 +448,6 @@
         }
       ]
     },
-
     {
       "name": "Ward Room",
       "description": "A mystical chamber with protective wards etched into the walls. Ancient symbols glow faintly in the darkness.",
@@ -500,7 +492,6 @@
         }
       ]
     },
-
     {
       "name": "Assembly Room",
       "description": "A silent chamber where ancient magic lingers. The air hums with the power of the shattered key fragments.",
@@ -552,7 +543,7 @@
           "height": 0.0
         },
         {
-          "item": "Liberation Key",
+          "item": "liberation key",
           "itemDescription": "The final key that unlocks your escape.",
           "isKey": true,
           "startHidden": true,

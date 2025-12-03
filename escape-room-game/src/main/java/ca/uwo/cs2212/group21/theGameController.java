@@ -241,6 +241,9 @@ public class theGameController {
             fadeIn.play();
         });
         fadeOut.play();
+
+        showPickupPopup("Press 'I' to open inventory during the game");
+        showPickupPopup("Press 'ESC' to pause the game.");
     }
 
 
@@ -551,6 +554,11 @@ public class theGameController {
 
             exitHitBox.setOnMouseClicked(e -> {
                 Room nextRoom = currentRoom.getExit(exitDirection);
+
+                if (nextRoom.isLocked()) {
+                    showPickupPopup("The door is locked, solve the riddle to unlock it.");
+                }
+
                 if (nextRoom != null && nextRoom.isLocked() && nextRoom.getLockCode() != -1) {
                     showKeypad(nextRoom, exitDirection);
                 } else {

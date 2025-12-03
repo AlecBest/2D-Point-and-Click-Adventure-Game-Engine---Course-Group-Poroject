@@ -132,7 +132,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <VBox fx:id="notificationBox" layoutX="400.0" layoutY="80.0" prefHeight="200.0" prefWidth="200.0" />
+            <VBox fx:id="notificationBox" layoutX="368.0" layoutY="80.0" prefHeight="200.0" prefWidth="270.0" />
          </children>
       </AnchorPane>
 

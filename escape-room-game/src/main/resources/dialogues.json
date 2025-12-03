@@ -85,6 +85,10 @@
     "Storage Room": {
       "root": {
         "text": "Study the fallen cubes. Patterns hide in silence. When you are ready, use the keypad on the vault door to enter the code.",
+        "next": "storage_mid"
+      },
+      "storage_mid": {
+        "text": "What am I?",
         "options": {}
       }
     },
