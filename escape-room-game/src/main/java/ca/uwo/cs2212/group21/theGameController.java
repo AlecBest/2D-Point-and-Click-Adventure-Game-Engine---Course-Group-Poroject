@@ -108,7 +108,7 @@ public class theGameController {
     private Timeline gameTimer;
     // private final Image STAR_FULL = new Image(getClass().getResourceAsStream("/images/star_full.png")); //whenever we get a star image we put it here
     // private final Image STAR_EMPTY = new Image(getClass().getResourceAsStream("/images/star_empty.png")); //whenever we get an empty star image we put it here
-    private final int TIME_LIMIT = 600; // 10 minutes but in seconds we can change later if too long
+    private final int TIME_LIMIT = 120; // 10 minutes but in seconds we can change later if too long
 
     private Item selected; // to keep track of selected item in inventory
 
@@ -311,25 +311,26 @@ public class theGameController {
 
     public void handleGameOver() {
         // i jut copied the victory but changed it so it used an image instead of a room still need to test it 
-        gameScreen.setVisible(false);
+        inventory.setVisible(false);
+        dialogueBox.clear();
+        dialogueBox.setVisible(false);
         soundManager.stopBackgroundMusic();
         soundManager.playSoundEffect("gameover.mp3");
 
         Rectangle blackOverlay = new Rectangle(1080, 720);
         blackOverlay.setFill(Color.BLACK);
         blackOverlay.setOpacity(0.0);
-    
-    
+
         interactiveLayer.getChildren().add(blackOverlay);
     
         javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(Duration.millis(1000), blackOverlay); 
         fadeOut.setToValue(1.0);
     
         fadeOut.setOnFinished(e -> {
-
+            interactiveLayer.getChildren().remove(blackOverlay);
             if (playerImageView != null) playerImageView.setVisible(false);
             if (currentNPCImageView != null) currentNPCImageView.setVisible(false);
-
+            
             Image gameOverImg = new Image(getClass().getResourceAsStream("/images/gameOver.png")); 
             ImageView gameOverView = new ImageView(gameOverImg);
             gameOverView.setFitWidth(1080);
@@ -344,9 +345,9 @@ public class theGameController {
             statusText.setStroke(Color.BLACK);
             statusText.setStrokeWidth(2);
 
-            Text funText = new Text("Better luck next time...");
-            funText.setFont(Font.font("Comic Sans MS", 18));
-            funText.setFill(Color.WHITE);
+            Text sans = new Text("Better luck next time...");
+            sans.setFont(Font.font("Comic Sans MS", 18));
+            sans.setFill(Color.WHITE);
 
             Button tryAgainBtn = new Button("Try Again");
             Button quitToMainBtn = new Button("Quit to Main Menu");
@@ -372,7 +373,7 @@ public class theGameController {
                     exception.printStackTrace();
                 }
             });
-            VBox endGameBox = new VBox(20, statusText, funText, tryAgainBtn, quitToMainBtn);
+            VBox endGameBox = new VBox(20, statusText, sans, tryAgainBtn, quitToMainBtn);
             endGameBox.setAlignment(Pos.CENTER);
             endGameBox.setTranslateY(300); 
             endGameBox.setPrefWidth(1080); 

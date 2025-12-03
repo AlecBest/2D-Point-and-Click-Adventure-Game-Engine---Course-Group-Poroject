@@ -11,6 +11,14 @@ import java.io.IOException;
 /**
  * JavaFX App
  */
+/**
+ * Main application class for the Escape Room Game.
+ * This class extends JavaFX Application and serves as the entry point for the game.
+ * It handles scene management and FXML loading for different views in the game.
+ * 
+ * @author Group 21
+ * @version 1.0
+ */
 public class App extends Application {
 
     private static Scene scene;
