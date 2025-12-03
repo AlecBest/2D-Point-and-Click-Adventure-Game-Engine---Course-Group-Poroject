@@ -131,6 +131,21 @@
       }
     },
 
+    "Ward Room": {
+      "root": {
+        "text": "Many secrets have flowed through here.",
+        "next": "secret_mid"
+      },
+      "secret_mid": {
+        "text": "Secrets are not always dry.",
+        "next": "secret_riddle"
+      },
+      "secret_riddle": {
+        "text": "I hope the mystics have blessed you with the gift of swimming.",
+        "options": {}
+      }
+    },
+
     "Game Completed": {
       "root": {
         "text": "This is the moment. The Master Key vibrates with power, glowing gold. Go, carry your freedom with pride. Few who enter this place ever walk out again.",
