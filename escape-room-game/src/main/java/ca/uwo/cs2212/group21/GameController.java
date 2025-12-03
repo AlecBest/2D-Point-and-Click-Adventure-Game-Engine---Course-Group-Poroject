@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,10 +29,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.geometry.Pos;
@@ -114,6 +119,8 @@ public class GameController {
     private List<Item> combineItems = new ArrayList<>();
     private SoundManager soundManager = new SoundManager();
     private double lastPlayerX = 400; // Track last X position to determine direction
+<<<<<<< HEAD
+=======
 
     // Keypad fields
     private AnchorPane keypadOverlay;
@@ -121,6 +128,7 @@ public class GameController {
     private String currentInputCode = "";
     private Room pendingTargetRoom;
     private String pendingExitDirection;
+>>>>>>> 3225d8f1ad4b9cd58ec24f54cd8144114edfeb7d
 
     private String formatTime(int totalSeconds) {
         int minutes = totalSeconds / 60;
@@ -273,9 +281,80 @@ public class GameController {
     }
 
     public void handleGameOver() {
-        // would handle game over screen stuff here
+        // i jut copied the victory but changed it so it used an image instead of a room still need to test it 
+        gameScreen.setVisible(false);
         soundManager.stopBackgroundMusic();
         soundManager.playSoundEffect("gameover.mp3");
+
+        Rectangle blackOverlay = new Rectangle(1080, 720);
+        blackOverlay.setFill(Color.BLACK);
+        blackOverlay.setOpacity(0.0);
+    
+    
+        interactiveLayer.getChildren().add(blackOverlay);
+    
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(Duration.millis(1000), blackOverlay); 
+        fadeOut.setToValue(1.0);
+    
+        fadeOut.setOnFinished(e -> {
+
+            if (playerImageView != null) playerImageView.setVisible(false);
+            if (currentNPCImageView != null) currentNPCImageView.setVisible(false);
+
+            Image gameOverImg = new Image(getClass().getResourceAsStream("/images/gameOver.png")); 
+            ImageView gameOverView = new ImageView(gameOverImg);
+            gameOverView.setFitWidth(1080);
+            gameOverView.setFitHeight(720);
+            gameOverView.setPreserveRatio(false);
+
+            int timeLeft = gameEngine.getPlayer().getTimeRemaining(); 
+        
+            Text statusText = new Text("Time has run out!");
+            statusText.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 36));
+            statusText.setFill(Color.RED); 
+            statusText.setStroke(Color.BLACK);
+            statusText.setStrokeWidth(2);
+
+            Text funText = new Text("Better luck next time...");
+            funText.setFont(Font.font("Comic Sans MS", 18));
+            funText.setFill(Color.WHITE);
+
+            Button tryAgainBtn = new Button("Try Again");
+            Button quitToMainBtn = new Button("Quit to Main Menu");
+
+            String btnStyle = "-fx-font-size: 18px; -fx-background-radius: 10; -fx-min-width: 160px; -fx-background-color: #333; -fx-text-fill: white;"; 
+            tryAgainBtn.setStyle(btnStyle);
+            quitToMainBtn.setStyle(btnStyle);
+
+            tryAgainBtn.setOnAction(ev -> {
+                try {
+                    interactiveLayer.getChildren().removeAll(blackOverlay, gameOverView, tryAgainBtn.getParent()); 
+                    if (playerImageView != null) playerImageView.setVisible(true);
+                    startGame(ev);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            });
+
+            quitToMainBtn.setOnAction(ev -> {
+                try {
+                    switchToMainScene(ev);
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+            });
+            VBox endGameBox = new VBox(20, statusText, funText, tryAgainBtn, quitToMainBtn);
+            endGameBox.setAlignment(Pos.CENTER);
+            endGameBox.setTranslateY(300); 
+            endGameBox.setPrefWidth(1080); 
+
+            interactiveLayer.getChildren().addAll(gameOverView, endGameBox);
+        
+            gameOverView.toFront();
+            endGameBox.toFront(); 
+        });
+    
+        fadeOut.play();
     }
 
     public void stopTimer() {
@@ -286,11 +365,11 @@ public class GameController {
     private void togglePauseMenu() {
         if (pauseScreen.isVisible()) {
             pauseScreen.setVisible(false);
-            gameTimer.play(); //resume timer
+            gameTimer.play(); // resume timer
         }
         else {
             pauseScreen.setVisible(true);
-            gameTimer.pause(); //pause timer
+            gameTimer.pause(); // pause timer
         }
     }
 
@@ -583,16 +662,33 @@ public class GameController {
 
         nextButton.setVisible(true);
         nextButton.setText("Give Item"); //this is the set up for the give button when in give mode
-        nextButton.setOnAction(e -> handleGiveAttempt(npc));
+        nextButton.setOnAction(e -> startGiveInteraction(npc));
+    }
+
+    private void startGiveInteraction(NPC npc) {
+        this.selected = null; 
+        this.isGiveMode = true;
+
+        inventory.setVisible(true);
+        updateInventoryUI(); // make sure UI shows current items
+
+        dialogueBox.setText("What would you like to give to " + npc.getName() + "? Select an item and click Confirm.");
+
+        nextButton.setText("Confirm");
+        nextButton.setVisible(true);
+
+        nextButton.setOnAction(e -> {
+        handleGiveAttempt(npc); 
+        });
     }
 
     private void handleGiveAttempt(NPC npc) {
-        if (selected == null) { //this prob wont happen since selected is kinda global and would only be null at like the very start of the game but just in case
+        if (selected == null) { 
             dialogueBox.setText("No item selected. Please select an item from your inventory to give to " + npc.getName() + ".");
             return;
         }
 
-        if (selected != null && selected.isKey()) { //this would be that they gave the right item to unlock the door (key item)
+        if (selected.isKey()) { //this would be that they gave the right item to unlock the door (key item)
             gameEngine.getPlayer().removeItemFromInventory(selected);
             updateInventoryUI();
 
@@ -727,16 +823,12 @@ public class GameController {
                         // Inventory may have changed: refresh it
                         updateInventoryUI();
                     }
-
                     if (isCombineMode) {
                     handleCombineSelecting(selected);
                     }
-
                     if (isExamineMode) {
                     refreshExaminePanel();
-                    }
-
-                
+                    }        
             });
             slot.getChildren().add(icon);
         }
@@ -1065,9 +1157,22 @@ public class GameController {
                     gameTimer.stop();
                 }
 
+                if (playerImageView != null) {
+                    playerImageView.setVisible(false); // hide player sprite 
+                }
+
+                if (currentNPCImageView != null) {
+                    currentNPCImageView.setVisible(false); // hide NPC 
+                }
+
+                Rectangle clickBlocker = new Rectangle(1080, 720, Color.TRANSPARENT); //so that we cant click and hear moving in the background still
+                clickBlocker.setOnMouseClicked(event -> event.consume()); // 
+                interactiveLayer.getChildren().add(clickBlocker);
+
                 int timeLeft  = gameEngine.getPlayer().getTimeRemaining();
                 int timeTaken = TIME_LIMIT - timeLeft;   // how long they actually took
                 String pretty = formatTime(timeTaken);
+                int starCount = gameEngine.getPlayer().getScore();
 
                 // Update the HUD text at the top (optional)
                 timeLabel.setText("Time taken: " + pretty);
@@ -1075,34 +1180,64 @@ public class GameController {
             
                 turnsTakenLabel.setText("Moves Taken: " + gameEngine.getPlayer().getMovesCount());
 
-                // ---------- label beside the ghost on the end screen ----------
-                if (endScreenTimeLabel == null) {
-                    endScreenTimeLabel = new Label("      " + pretty);
-                    endScreenTimeLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white;");
+                Text timeText = new Text("Time Taken: " + pretty);
+                timeText.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 24)); //lol
+                timeText.setFill(Color.WHITE);
+                timeText.setX(340);
+                timeText.setY(300);
+                timeText.setStrokeWidth(1);
 
-                    // so numbers fit next to ghost
-                    double ghostX = currentNPCImageView.getX();
-                    double ghostY = currentNPCImageView.getY();
+                HBox scoreBox = new HBox(15);
+                scoreBox.setAlignment(Pos.CENTER); //center allign the stars in the hbox, easier to manage that way
 
-                    endScreenTimeLabel.setLayoutX(ghostX - 260);  
-                    endScreenTimeLabel.setLayoutY(ghostY + 40); 
+                Image filledStarImage = new Image(getClass().getResourceAsStream("/images/starFilled.png"));
+                Image emptyStarImage = new Image(getClass().getResourceAsStream("/images/starEmpty.png"));
+                
 
-                    interactiveLayer.getChildren().add(endScreenTimeLabel);
-                } else {
-                    endScreenTimeLabel.setText("Time Completed: " + pretty);
-
-                    double ghostX = currentNPCImageView.getX();
-                    double ghostY = currentNPCImageView.getY();
-                    endScreenTimeLabel.setLayoutX(ghostX - 5);
-                    endScreenTimeLabel.setLayoutY(ghostY + 40);
-
-                    if (!interactiveLayer.getChildren().contains(endScreenTimeLabel)) {
-                        interactiveLayer.getChildren().add(endScreenTimeLabel);
-                    }
+                for (int i = 1; i <= 3; i++) {
+                    boolean isFilled = (i <= starCount);
+                    ImageView starView = new ImageView(isFilled ? filledStarImage : emptyStarImage);
+                    starView.setFitWidth(50);
+                    starView.setFitHeight(50);
+                    scoreBox.getChildren().add(starView);
                 }
-            }
 
-            
+                Button tryAgainBtn = new Button("Try Again");
+                Button quitToMainBtn = new Button("Quit to Main Menu");
+
+                String btnStyle = "-fx-font-size: 18px; -fx-background-radius: 10; -fx-min-width: 160px;"; //can change the style if we want to just didnt want default
+                tryAgainBtn.setStyle(btnStyle);
+                quitToMainBtn.setStyle(btnStyle);
+
+                tryAgainBtn.setOnAction(ev -> {
+                    try {
+                        interactiveLayer.getChildren().removeAll(blackOverlay, tryAgainBtn.getParent());
+                        if (playerImageView != null) playerImageView.setVisible(true);
+                        startGame(ev);
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+                });
+
+                quitToMainBtn.setOnAction(ev -> {
+                        try {
+                            switchToMainScene(ev);
+                        } catch (IOException exception) {
+                            exception.printStackTrace();
+                        }
+                    });
+
+                VBox endGameBox = new VBox(20, timeText, scoreBox, tryAgainBtn, quitToMainBtn);
+                endGameBox.setAlignment(Pos.CENTER);
+                endGameBox.setTranslateY(250);
+                endGameBox.setPrefWidth(1080); 
+
+                interactiveLayer.getChildren().add(endGameBox);
+
+                clickBlocker.toFront();
+                blackOverlay.toFront(); 
+                endGameBox.toFront();// just to make sure buttons are on top and clickable
+            }
             // Fade from black
             javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.millis(400), blackOverlay);
             fadeIn.setFromValue(1.0);

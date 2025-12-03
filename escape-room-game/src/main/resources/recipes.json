@@ -1,5 +1,3 @@
-
-
 [
     {
       "inputs": ["candle", "matchbox"],
@@ -25,12 +23,29 @@
         "inputs": ["Missing Page", "Pen"],
         "result": "Scribbled Page",
         "successMessage": "You scribble all over the page in panic. The words twist into nonsense... this won’t impress the Guide."
-      },
-      {
+    },
+    {
         "inputs": ["Torn Book", "Pen"],
         "result": "Defaced Book",
         "successMessage": "You scrawl ink across the already damaged book. Whatever wisdom it held is now completely ruined."
-      }
+    },
+
+    {
+        "inputs": ["Bread", "Cheese"],
+        "result": "Mystic Meal",
+        "successMessage": "You carefully assemble the bread and cheese into a strange, glowing meal. The air hums with quiet energy."
+    },
+    {
+        "inputs": ["Bread", "Rotten Meat"],
+        "result": "Rotten Sandwich",
+        "successMessage": "You force the rotten meat between the bread. The sandwich oozes and reeks—this cannot be the offering the Guide wants."
+    },
+    {
+        "inputs": ["Cheese", "Rotten Meat"],
+        "result": "Spoiled Cheese Plate",
+        "successMessage": "You pair the cheese with rotting meat. The plate looks cursed, not blessed."
+    }
+  
   
   ]
 
