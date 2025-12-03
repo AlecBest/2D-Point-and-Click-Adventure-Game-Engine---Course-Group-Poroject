@@ -1,114 +1,129 @@
-/* Global Styles */
 .root {
+    -fx-background-color: radial-gradient(center 50% 50%, radius 100%, #2b2b2b, #000000);
     -fx-font-family: "Courier New", monospace;
-    /* Typewriter style for a mystery feel */
     -fx-text-fill: #e0e0e0;
 }
 
-/* Labels */
 .label {
-    -fx-text-fill: #e0e0e0;
+    -fx-text-fill: #dcdcdc;
     -fx-font-size: 14px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.8), 2, 0, 1, 1);
 }
 
 .header-label {
-    -fx-font-size: 24px;
+    -fx-font-family: "Times New Roman", serif; 
+    -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-text-fill: #b22222;
-    /* Firebrick red */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 5, 0, 0, 0);
+    -fx-text-fill: #8a0f0f; 
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 1.0), 2, 0, 2, 2), 
+                dropshadow(three-pass-box, rgba(138, 15, 15, 0.4), 15, 0, 0, 0); 
 }
 
-/* Buttons */
 .button {
-    -fx-background-color: #2b2b2b;
+    -fx-background-color: 
+        linear-gradient(to bottom, #4a4a4a, #2b2b2b);
+    -fx-background-radius: 4px;
     -fx-text-fill: #e0e0e0;
-    -fx-border-color: #555555;
-    -fx-border-width: 1px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
-    -fx-cursor: hand;
     -fx-font-family: "Courier New", monospace;
     -fx-font-weight: bold;
+
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 2);
+    -fx-border-color: #555555 #111111 #111111 #555555;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
 }
 
 .button:hover {
-    -fx-background-color: #3c3c3c;
-    -fx-border-color: #8b0000;
-    /* Dark red border on hover */
-    -fx-effect: dropshadow(three-pass-box, #8b0000, 10, 0, 0, 0);
+    -fx-background-color: linear-gradient(to bottom, #5c5c5c, #3c3c3c);
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #8b0000; 
+    -fx-effect: dropshadow(three-pass-box, #8b0000, 10, 0.3, 0, 0); 
 }
 
 .button:pressed {
-    -fx-background-color: #1a1a1a;
+
+    -fx-background-color: linear-gradient(to bottom, #1a1a1a, #333333);
+    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 0);
+    -fx-padding: 6px 4px 4px 6px;
 }
 
-/* Panels (Inventory, Dialogue, Pause) */
 .panel-background {
-    -fx-background-color: rgba(20, 20, 20, 0.95);
-    -fx-border-color: #444444;
-    -fx-border-width: 2px;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 20, 0, 0, 0);
+    -fx-background-color: rgba(15, 15, 15, 0.95);
+    -fx-background-radius: 8px;
+    -fx-border-color: #333333, #000000;
+    -fx-border-width: 1px, 2px;
+    -fx-border-insets: 0, 1;
+    -fx-border-radius: 8px, 7px;
+    
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.9), 20, 0.5, 0, 10);
 }
 
-/* Inventory Grid Slots */
 .inventory-slot {
-    -fx-background-color: #333333;
-    -fx-border-color: #555555;
+    -fx-background-color: #222222;
+    -fx-border-color: #444444;
     -fx-border-width: 1px;
+    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.8), 8, 0.5, 0, 0);
 }
 
 .inventory-slot:hover {
-    -fx-border-color: #8b0000;
+    -fx-background-color: #2a2a2a;
+    -fx-border-color: #666666;
 }
 
-/* Selected Inventory Slot */
 .inventory-slot-selected {
+    -fx-background-color: #2a2a2a;
     -fx-border-color: #ffd700;
-    /* Gold */
-    -fx-border-width: 2px;
-    -fx-background-color: #444444;
-    -fx-effect: dropshadow(three-pass-box, #ffd700, 5, 0, 0, 0);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 215, 0, 0.6), 10, 0, 0, 0);
 }
 
-/* Dialogue Box */
 .dialogue-box {
-    -fx-background-color: rgba(0, 0, 0, 0.8);
-    -fx-border-color: #e0e0e0;
-    -fx-border-width: 2px;
-    -fx-padding: 10px;
+    -fx-background-color: rgba(10, 10, 10, 0.9);
+    -fx-border-color: #555555;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1.0), 10, 0, 0, 5);
+    -fx-padding: 15px;
 }
 
 .dialogue-text {
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #f0f0f0;
     -fx-font-size: 16px;
+    -fx-font-family: "Courier New", monospace;
+    -fx-effect: dropshadow(one-pass-box, black, 1, 0, 1, 1);
 }
 
-/* Text Areas */
 .text-area {
-    -fx-control-inner-background: #2b2b2b;
     -fx-text-fill: #e0e0e0;
-    -fx-background-color: #2b2b2b;
-    -fx-border-color: #555555;
+    -fx-display-caret: true;
 }
 
 .text-area .content {
-    -fx-background-color: #2b2b2b;
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: #333333;
 }
 
-/* Pause Menu */
+
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.scroll-bar .thumb {
+    -fx-background-color: #444444;
+    -fx-background-radius: 5px;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: #666666;
+}
+
 .pause-menu {
-    -fx-background-color: rgba(0, 0, 0, 0.9);
+    -fx-background-color: rgba(0, 0, 0, 0.85);
 }
 
-/* Item Glow */
+
 .item-glow {
-    -fx-effect: dropshadow(three-pass-box, yellow, 10, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(200, 255, 255, 0.7), 10, 0.5, 0, 0);
 }
 
 .item-glow:hover {
-    -fx-effect: dropshadow(three-pass-box, #ffd700, 15, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgba(200, 255, 255, 0.9), 20, 0.7, 0, 0);
     -fx-cursor: hand;
 }

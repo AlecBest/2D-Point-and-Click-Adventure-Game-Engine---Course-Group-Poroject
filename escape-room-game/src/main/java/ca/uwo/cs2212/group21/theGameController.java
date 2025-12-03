@@ -101,7 +101,7 @@ public class theGameController {
     @FXML private Button saveSlot2;
     @FXML private Button saveSlot3;
 
-    @FXML private Label pickupPopup;
+    @FXML private VBox notificationBox;
 
     private TranslateTransition currentAnimation;
     private GameEngine gameEngine;
@@ -143,6 +143,7 @@ public class theGameController {
         examinePanel.setVisible(false);
         pauseScreen.setVisible(false);
         saveGameSlots.setVisible(false);
+        inventory.setPickOnBounds(false);
         
         // Start main menu background music
         soundManager.playBackgroundMusic("mainmenu.mp3");
@@ -249,27 +250,55 @@ public class theGameController {
             gameTimer.stop();
         }
 
+        Image starFilled = new Image(getClass().getResourceAsStream("/images/starFilled.png"));
+        Image starEmpty = new Image(getClass().getResourceAsStream("/images/starEmpty.png"));
+
         gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             int timeLeft = gameEngine.getPlayer().getTimeRemaining();
             int timeInMinutes = gameEngine.getPlayer().getTimeRemaining() / 60;
             int seconds = timeLeft % 60;
             if (timeLeft > 0) {
                 gameEngine.getPlayer().setTimeRemaining(timeLeft - 1);
-                timeLabel.setText("Time left: " + timeInMinutes + ":" + seconds + " sec");
-                int currentScore = 3;
-                if (timeInMinutes < 7) currentScore = 2;
-                if (timeInMinutes < 5) currentScore = 1;
-                if (timeInMinutes <= 2) currentScore = 0;
+                timeLabel.setText("Time left: " + timeInMinutes + ":" + seconds + " sec");  
+                int currentScore;
+            
+            if (timeInMinutes <= 2) { // less than 2 get 0 stars, 2 for 1 star, 5 for 2 stars ,  for 3 stars
+                currentScore = 0;
+                star1.setImage(starEmpty);
+                star2.setImage(starEmpty);
+                star3.setImage(starEmpty);
+            } 
+            else if (timeInMinutes < 5) {
+                currentScore = 1;
+                star1.setImage(starFilled);
+                star2.setImage(starEmpty);
+                star3.setImage(starEmpty);
+            } 
+            else if (timeInMinutes < 7) {
+                currentScore = 2;
+                star1.setImage(starFilled);
+                star2.setImage(starFilled);
+                star3.setImage(starEmpty);
+            } 
+            else {
+                currentScore = 3;
+                star1.setImage(starFilled);
+                star2.setImage(starFilled);
+                star3.setImage(starFilled);
+            }
                 gameEngine.getPlayer().setScore(currentScore);
 
             } else {
                 gameTimer.stop();
                 gameEngine.getPlayer().setGameOver(true);
+                handleGameOver();
             }
 
             if (timeLabel != null) {
                 timeLabel.setText("Time remaining: " + timeInMinutes + ":" + seconds + " sec");
             }
+
+            
         }));
 
         gameTimer.setCycleCount(Timeline.INDEFINITE);
@@ -560,6 +589,7 @@ public class theGameController {
             nextButton.setVisible(true);
             optionsBox.setVisible(false);
             nextButton.setOnAction(e -> {
+                soundManager.playDialogueCloseSound();
                 dialogueOverlay.setVisible(false);
                 dialogueBox.clear();
             });
@@ -591,7 +621,10 @@ public class theGameController {
                 Button optionButton = new Button(key);
                 optionButton.getStyleClass().add("button");
                 optionButton.setMaxWidth(Double.MAX_VALUE);
-                optionButton.setOnAction(e -> showDialogueNode(npcDialogue, targetNode));
+                optionButton.setOnAction(e -> {
+                    soundManager.playNextButtonSound();
+                    showDialogueNode(npcDialogue, targetNode);
+                });
                 optionsBox.getChildren().add(optionButton);
             }
         }   
@@ -599,7 +632,10 @@ public class theGameController {
             optionsBox.setVisible(false);
             nextButton.setVisible(true);
             nextButton.setText("Next");
-            nextButton.setOnAction(e -> showDialogueNode(npcDialogue, nextNodeID));
+            nextButton.setOnAction(e -> {
+                soundManager.playNextButtonSound();
+                showDialogueNode(npcDialogue, nextNodeID);
+            });
         }
         else { //this is the case where its the end of the dialogue so no more options or next
             optionsBox.setVisible(false);
@@ -616,12 +652,9 @@ public class theGameController {
                     }
                 }
             }
-
+     
             if (isLockedDoorPresent) { //if it finds a locked door then you could select im ready to give the item
-                nextButton.setText("I'm ready");
-                nextButton.setOnAction(e -> enterGiveMode(currentRoom.getNPC())); 
-
-                
+                nextButton.setVisible(false);            
                 optionsBox.getChildren().clear();
                 optionsBox.setVisible(true);
 
@@ -629,15 +662,23 @@ public class theGameController {
                 notReadyButton.getStyleClass().add("button"); //same options button styling
                 notReadyButton.setMaxWidth(Double.MAX_VALUE);
                 notReadyButton.setOnAction(e -> {
+                    soundManager.playDialogueCloseSound();
                     isGiveMode = false;
                     inventory.setVisible(false);
                     dialogueOverlay.setVisible(false);
                 });
 
+                Button readyButton = new Button ("I'm ready");
+                readyButton.getStyleClass().add("button"); //same options button styling
+                readyButton.setMaxWidth(Double.MAX_VALUE);
+                readyButton.setOnAction(e -> enterGiveMode(currentRoom.getNPC()));
+
                 optionsBox.getChildren().add(notReadyButton);
+                optionsBox.getChildren().add(readyButton);
             } else {
                 nextButton.setText("Close"); //if no locked door then would just end dialogue normally
                 nextButton.setOnAction(e -> {
+                    soundManager.playDialogueCloseSound();
                     if (activeNpc != null) {
                         activeNpc.setHasInteracted(true);
                 }
@@ -650,26 +691,34 @@ public class theGameController {
 
     private void enterGiveMode(NPC npc) {
         isGiveMode = true;
+        selected = null;
         
         if (!inventory.isVisible()) {
             toggleInventory();
         }
 
+        dialogueOverlay.toFront();
         dialogueBox.setText("Please select an item from your inventory to give to " + npc.getName() + ".");
 
-        nextButton.setVisible(true);
-        nextButton.setText("Give Item"); //this is the set up for the give button when in give mode
-        nextButton.setOnAction(e -> startGiveInteraction(npc));
+        Button giveButton = new Button("Give item"); //this is the whole not ready yet buttong in case the player clicks the npc but say they need to get another item first or was accidentally clicked
+        giveButton.getStyleClass().add("button"); //same options button styling
+        giveButton.setMaxWidth(Double.MAX_VALUE);
+        giveButton.setOnAction(e -> askForConfirmation(npc));
+        optionsBox.getChildren().add(giveButton);
+
+        giveButton.setOnAction(e -> {
+            if (selected == null) {
+                dialogueBox.setText("You haven't selected anything yet!");
+            } else {
+                askForConfirmation(npc);
+            }
+        });
     }
 
-    private void startGiveInteraction(NPC npc) {
-        this.selected = null; 
-        this.isGiveMode = true;
+    private void askForConfirmation(NPC npc) {
+        optionsBox.getChildren().clear(); //so it just has confrim to flow better, was too many buttons
 
-        inventory.setVisible(true);
-        updateInventoryUI(); // make sure UI shows current items
-
-        dialogueBox.setText("What would you like to give to " + npc.getName() + "? Select an item and click Confirm.");
+        dialogueBox.setText("Are you sure you want to give " + selected.getName() + " to " + npc.getName() + "?");
 
         nextButton.setText("Confirm");
         nextButton.setVisible(true);
@@ -677,6 +726,19 @@ public class theGameController {
         nextButton.setOnAction(e -> {
         handleGiveAttempt(npc); 
         });
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.getStyleClass().add("button");
+        cancelButton.setMaxWidth(Double.MAX_VALUE);
+        cancelButton.setOnAction(e -> { //so could cancel out if anything
+            dialogueOverlay.setVisible(false);
+            optionsBox.getChildren().clear();
+            dialogueBox.clear();
+            isGiveMode = false;
+            inventory.setVisible(false);
+        }
+        );
+        optionsBox.getChildren().add(cancelButton);
     }
 
     private void handleGiveAttempt(NPC npc) {
@@ -699,10 +761,11 @@ public class theGameController {
                     break;
                 }
             }
+            optionsBox.getChildren().clear(); 
+            optionsBox.setVisible(false);
             nextButton.setText("Close");
             nextButton.setOnAction(e -> {
                 dialogueOverlay.setVisible(false);
-                optionsBox.setVisible(false);
                 dialogueBox.clear();
             });
         }
@@ -712,6 +775,18 @@ public class theGameController {
             gameEngine.getPlayer().decreaseTime(30);
             triggerJumpScare(); //this is to trigger the npc going to the angry version then back 
             dialogueBox.setText("This is not what I wanted! You lose 30 seconds. Please give me the correct item.");
+
+            optionsBox.getChildren().clear(); //so it just has confrim to flow better, was too many buttons
+            optionsBox.setVisible(false);
+
+            nextButton.setVisible(true);
+            nextButton.setText("Done");
+            nextButton.setOnAction(e -> { 
+                dialogueOverlay.setVisible(false);
+                dialogueBox.clear();
+                isGiveMode = false;
+                inventory.setVisible(false);
+            });
 
             Recipe recipe = findRecipeForResult(selected.getName());
             if (recipe != null) { //this is if the item is crafted and not just one found in the room
@@ -747,18 +822,26 @@ public class theGameController {
 
 
     private void showPickupPopup(String message) {
-        pickupPopup.setText(message);
-        pickupPopup.setVisible(true);
-        pickupPopup.setOpacity(1.0);
+        Label newPopup = new Label(message);
 
-        // Simple fade out animation
-        javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(Duration.seconds(2), pickupPopup);
-        ft.setFromValue(1);
+        newPopup.getStyleClass().add("pickup-label");
+    
+        notificationBox.getChildren().add(newPopup); //changed to using a vbox so they stack and dont overlap or go away all at once
+    
+        javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(Duration.seconds(3), newPopup);
+        ft.setFromValue(1.0);
         ft.setToValue(0.0);
-        ft.setDelay(Duration.seconds(1));
-        ft.setOnFinished(e -> pickupPopup.setVisible(false));
+        ft.setDelay(Duration.seconds(1)); // Wait 1 second before fading
+    
+        ft.setOnFinished(e -> {
+            notificationBox.getChildren().remove(newPopup);
+        });
+    
         ft.play();
-        soundManager.playSoundEffect("pickup.mp3");
+    
+        if (notificationBox.getChildren().size() < 5) { //added this cause if you did too much it would spam the sound 
+            soundManager.playSoundEffect("pickup.mp3");
+        }
     }
 
     private void triggerJumpScare() {
@@ -783,6 +866,11 @@ public class theGameController {
 
         int maxSlots = 16;
 
+        String normalStyle = "-fx-border-color: #555555; -fx-border-width: 1px; -fx-background-color: #dddddd;";
+        String hoverStyle = "-fx-border-color: #ffffff; -fx-border-width: 1px; -fx-background-color: #eeeeee; -fx-cursor: hand;";
+        String selectedStyle = "-fx-border-color: #FFD700; -fx-border-width: 2px; -fx-background-color: #ffffaa;";
+
+
         for (int i = 0; i < maxSlots; i++) { // this is to add empty slots to the inventory grid so it looks like an inventory even if there are no items
             int col = i % 4;
             int row = i / 4;
@@ -799,40 +887,51 @@ public class theGameController {
                 icon.setFitWidth(40);
                 icon.setFitHeight(40);
                 icon.setPreserveRatio(true);
+
+                
+                slot.setOnMouseEntered(e -> {
+                // Only show hover effect if this slot is NOT the currently selected one
+                if (this.selected != item) {
+                    slot.setStyle(hoverStyle);
+                }
+                });
+
+                slot.setOnMouseExited(e -> {
+                // When mouse leaves, revert to normal, BUT only if it's not selected
+                if (this.selected != item) {
+                    slot.setStyle(normalStyle);
+                }
+                });
+
+
                 slot.setOnMouseClicked(e -> {
-                    System.out.println("Selected: " + item.getName());
-                    inventoryGrid.getChildren().forEach(n -> n.setStyle(
-                            "-fx-border-color: #555555; -fx-border-width: 1px; -fx-background-color: #dddddd;"));
-                    slot.setStyle("-fx-border-color: #FFD700; -fx-border-width: 2px; -fx-background-color: #ffffaa;"); // this is to highlight the selected item in gold could change if we want
-                    System.out.println("Slot clicked: col " + col + ", row " + row);
-                    selected = item;
+                inventoryGrid.getChildren().forEach(n -> n.setStyle(normalStyle));
+                slot.setStyle(selectedStyle); // this is to highlight the selected item in gold could change if we want
+                selected = item;
 
-                    // Give logic: only when we are in give mode and dialogue is open
-                    if (isGiveMode && gameEngine.getPlayer().getCurrentRoom().hasNPC()) {
-
-                        // Use GameEngine wrapper that calls GiveCommand with current NPC and this item
-                        String result = gameEngine.giveItemToCurrentNpc(selected.getName());
-                        System.out.println(result);
-
-                        // Show result in the dialogue box
-                        dialogueBox.setText(result);
-
-                        // Inventory may have changed: refresh it
-                        updateInventoryUI();
-                    }
-                    if (isCombineMode) {
+                // Give logic: only when we are in give mode and dialogue is open
+                if (isGiveMode && gameEngine.getPlayer().getCurrentRoom().hasNPC()) {
+                    dialogueBox.setText("You have selected " + selected.getName() + " to give to " +
+                    gameEngine.getPlayer().getCurrentRoom().getNPC().getName() + ". Click 'Give item' to proceed.");
+                    return;
+                }
+                if (isCombineMode) {
                     handleCombineSelecting(selected);
-                    }
-                    if (isExamineMode) {
+                }
+                if (isExamineMode) {
                     refreshExaminePanel();
-                    }        
-            });
-            slot.getChildren().add(icon);
-        }
+                }        
+                });
+                slot.getChildren().add(icon);
+            }  else {
+                slot.setOnMouseEntered(e -> slot.setStyle(hoverStyle)); //so that the empty slots also have hover effect
+                slot.setOnMouseExited(e -> slot.setStyle(normalStyle));
+            }
+            
             inventoryGrid.add(slot, col, row); 
            
+            }
         }
-    }
 
     public void toggleInventory() {
         System.out.println("toggleInventory called. Before: " + inventory.isVisible());
@@ -858,7 +957,15 @@ public class theGameController {
             inventory.requestFocus();
         }
 
-        System.out.println("After: " + inventory.isVisible());
+        if (isCombineMode) {
+            isCombineMode = false;
+            combineItems.clear();
+            combinePanel.setVisible(false);
+        }
+        if (isExamineMode) {
+            isExamineMode = false;
+            examinePanel.setVisible(false);
+        }
     }
 
 

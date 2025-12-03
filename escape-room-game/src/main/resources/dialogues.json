@@ -16,7 +16,6 @@
         "options": {}
       }
     },
-
     "Living Room": {
       "root": {
         "text": "The air here is heavy... This door requires a light that is pure. A normal flame will not suffice.",
@@ -29,7 +28,6 @@
         "options": {}
       }
     },
-
     "Library of Echoes": {
       "root": {
         "text": "Knowledge is power, but this history is torn apart. I cannot let you pass until the story is whole.",
@@ -40,7 +38,6 @@
         "options": {}
       }
     },
-
     "Broken Kitchen": {
       "root": {
         "text": "You have reached the Broken Kitchen, where this house once fed the living and now feeds on mistakes.I cannot let you move on until a worthy offering is prepared.",
@@ -55,7 +52,6 @@
         "options": {}
       }
     },
-
     "Assembly Room": {
       "root": {
         "text": "This is the Assembly Room, a silent chamber where ancient magic lingers. You will not pass beyond this point until the key is made whole.",
@@ -131,6 +127,21 @@
       }
     },
 
+    "Ward Room": {
+      "root": {
+        "text": "Many secrets have flowed through here.",
+        "next": "secret_mid"
+      },
+      "secret_mid": {
+        "text": "Secrets are not always dry.",
+        "next": "secret_riddle"
+      },
+      "secret_riddle": {
+        "text": "I hope the mystics have blessed you with the gift of swimming.",
+        "options": {}
+      }
+    },
+
     "Game Completed": {
       "root": {
         "text": "This is the moment. The Master Key vibrates with power, glowing gold. Go, carry your freedom with pride. Few who enter this place ever walk out again.",
@@ -143,4 +154,3 @@
     }
   }
 }
-

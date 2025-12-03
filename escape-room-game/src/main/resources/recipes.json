@@ -1,39 +1,50 @@
-
-
 [
     {
       "inputs": ["candle", "matchbox"],
-      "result": "Purified Candle",
+      "result": "purified candle",
       "successMessage": "You strike a match and light the candle. A pure white flame cuts through the shadows, this must be the right light."
     },
     {
       "inputs": ["candle", "cloth"],
-      "result": "Smothered Candle",
+      "result": "smothered candle",
       "successMessage": "You wrap the cloth around the candle. The light dies, leaving only a smothered stump. This doesn’t feel right..."
     },
     {
       "inputs": ["matchbox", "cloth"],
-      "result": "Burning Cloth",
+      "result": "burning cloth",
       "successMessage": "You light the cloth on fire. It flares briefly, then crumbles to ash. Whatever this is, it’s not a blessed flame."
     },
     {
-        "inputs": ["Torn Book", "Missing Page"],
-        "result": "Restored Book",
+        "inputs": ["torn book", "missing page"],
+        "result": "restored book",
         "successMessage": "As you slide the missing page back into the torn book, the text glows faintly. The knowledge feels whole again."
     },
     {
-        "inputs": ["Missing Page", "Pen"],
-        "result": "Scribbled Page",
+        "inputs": ["missing page", "pen"],
+        "result": "scribbled page",
         "successMessage": "You scribble all over the page in panic. The words twist into nonsense... this won’t impress the Guide."
-      },
-      {
-        "inputs": ["Torn Book", "Pen"],
-        "result": "Defaced Book",
+    },
+    {
+        "inputs": ["torn book", "pen"],
+        "result": "defaced book",
         "successMessage": "You scrawl ink across the already damaged book. Whatever wisdom it held is now completely ruined."
-      }
+    },
+
+    {
+        "inputs": ["bread", "cheese"],
+        "result": "mystic meal",
+        "successMessage": "You carefully assemble the bread and cheese into a strange, glowing meal. The air hums with quiet energy."
+    },
+    {
+        "inputs": ["bread", "rotten meat"],
+        "result": "rotten sandwich",
+        "successMessage": "You force the rotten meat between the bread. The sandwich oozes and reeks—this cannot be the offering the Guide wants."
+    },
+    {
+        "inputs": ["cheese", "rotten meat"],
+        "result": "spoiled cheese plate",
+        "successMessage": "You pair the cheese with rotting meat. The plate looks cursed, not blessed."
+    }
+  
   
   ]
-
-  
-  
-  
