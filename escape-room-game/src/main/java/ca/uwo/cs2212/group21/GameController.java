@@ -93,6 +93,7 @@ public class GameController {
     @FXML private Button saveSlot3;
 
     @FXML private Label pickupPopup;
+    private Label endScreenTimeLabel;
 
     private TranslateTransition currentAnimation;
     private GameEngine gameEngine;
@@ -110,7 +111,13 @@ public class GameController {
     private List<Item> combineItems = new ArrayList<>();
     private SoundManager soundManager = new SoundManager();
     private double lastPlayerX = 400; // Track last X position to determine direction
+    private Label endScreenTimeLabel;
 
+    private String formatTime(int totalSeconds) {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%d:%02d", minutes, seconds);
+    }
     /*
      * Initializes the game controller.
      */
@@ -914,6 +921,7 @@ public class GameController {
         // Update last position for next movement
         lastPlayerX = finalX;
 
+
         // Start footsteps when animation begins
         soundManager.startFootsteps();
 
@@ -1029,8 +1037,47 @@ public class GameController {
             if (gameEngine.getPlayer().getCurrentRoom().getName().equals("Game Completed")) {
                 soundManager.stopBackgroundMusic();
                 soundManager.playSuccessSequence(); // Play success.mp3 then success2.mp3
-                gameTimer.stop();
+                if (gameTimer != null) {
+                    gameTimer.stop();
+                }
+
+                int timeLeft  = gameEngine.getPlayer().getTimeRemaining();
+                int timeTaken = TIME_LIMIT - timeLeft;   // how long they actually took
+                String pretty = formatTime(timeTaken);
+
+                // Update the HUD text at the top (optional)
+                timeLabel.setText("Time taken: " + pretty);
+                
+            
+                turnsTakenLabel.setText("Moves Taken: " + gameEngine.getPlayer().getMovesCount());
+
+                // ---------- label beside the ghost on the end screen ----------
+                if (endScreenTimeLabel == null) {
+                    endScreenTimeLabel = new Label("      " + pretty);
+                    endScreenTimeLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: white;");
+
+                    // so numbers fit next to ghost
+                    double ghostX = currentNPCImageView.getX();
+                    double ghostY = currentNPCImageView.getY();
+
+                    endScreenTimeLabel.setLayoutX(ghostX - 260);  
+                    endScreenTimeLabel.setLayoutY(ghostY + 40); 
+
+                    interactiveLayer.getChildren().add(endScreenTimeLabel);
+                } else {
+                    endScreenTimeLabel.setText("Time Completed: " + pretty);
+
+                    double ghostX = currentNPCImageView.getX();
+                    double ghostY = currentNPCImageView.getY();
+                    endScreenTimeLabel.setLayoutX(ghostX - 5);
+                    endScreenTimeLabel.setLayoutY(ghostY + 40);
+
+                    if (!interactiveLayer.getChildren().contains(endScreenTimeLabel)) {
+                        interactiveLayer.getChildren().add(endScreenTimeLabel);
+                    }
+                }
             }
+
             
             // Fade from black
             javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.millis(400), blackOverlay);
