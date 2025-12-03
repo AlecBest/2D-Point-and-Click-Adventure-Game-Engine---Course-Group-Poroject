@@ -84,6 +84,8 @@ public class GameController {
     @FXML private Button closeExamineButton;
     @FXML private Button dropButton;
 
+    private Label endScreenTimeLabel;
+
     @FXML private AnchorPane pauseScreen;
     @FXML private Button resumeButton;
     @FXML private Button saveButton;
@@ -95,7 +97,6 @@ public class GameController {
     @FXML private Button saveSlot3;
 
     @FXML private Label pickupPopup;
-    private Label endScreenTimeLabel;
 
     private TranslateTransition currentAnimation;
     private GameEngine gameEngine;
