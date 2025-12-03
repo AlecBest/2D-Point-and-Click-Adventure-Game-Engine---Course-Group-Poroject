@@ -561,6 +561,7 @@ public class theGameController {
             nextButton.setVisible(true);
             optionsBox.setVisible(false);
             nextButton.setOnAction(e -> {
+                soundManager.playDialogueCloseSound();
                 dialogueOverlay.setVisible(false);
                 dialogueBox.clear();
             });
@@ -592,7 +593,10 @@ public class theGameController {
                 Button optionButton = new Button(key);
                 optionButton.getStyleClass().add("button");
                 optionButton.setMaxWidth(Double.MAX_VALUE);
-                optionButton.setOnAction(e -> showDialogueNode(npcDialogue, targetNode));
+                optionButton.setOnAction(e -> {
+                    soundManager.playNextButtonSound();
+                    showDialogueNode(npcDialogue, targetNode);
+                });
                 optionsBox.getChildren().add(optionButton);
             }
         }   
@@ -600,7 +604,10 @@ public class theGameController {
             optionsBox.setVisible(false);
             nextButton.setVisible(true);
             nextButton.setText("Next");
-            nextButton.setOnAction(e -> showDialogueNode(npcDialogue, nextNodeID));
+            nextButton.setOnAction(e -> {
+                soundManager.playNextButtonSound();
+                showDialogueNode(npcDialogue, nextNodeID);
+            });
         }
         else { //this is the case where its the end of the dialogue so no more options or next
             optionsBox.setVisible(false);
@@ -617,9 +624,9 @@ public class theGameController {
                     }
                 }
             }
-
-            if (isLockedDoorPresent) { //if it finds a locked door then you could select im ready to give the item\
-                nextButton.setVisible(false);              
+     
+            if (isLockedDoorPresent) { //if it finds a locked door then you could select im ready to give the item
+                nextButton.setVisible(false);            
                 optionsBox.getChildren().clear();
                 optionsBox.setVisible(true);
 
@@ -627,6 +634,7 @@ public class theGameController {
                 notReadyButton.getStyleClass().add("button"); //same options button styling
                 notReadyButton.setMaxWidth(Double.MAX_VALUE);
                 notReadyButton.setOnAction(e -> {
+                    soundManager.playDialogueCloseSound();
                     isGiveMode = false;
                     inventory.setVisible(false);
                     dialogueOverlay.setVisible(false);
@@ -642,6 +650,7 @@ public class theGameController {
             } else {
                 nextButton.setText("Close"); //if no locked door then would just end dialogue normally
                 nextButton.setOnAction(e -> {
+                    soundManager.playDialogueCloseSound();
                     if (activeNpc != null) {
                         activeNpc.setHasInteracted(true);
                 }
