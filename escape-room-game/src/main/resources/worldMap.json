@@ -31,7 +31,7 @@
       "roomImagePath": "/images/g1_background.png",
       "items": [
         {
-          "item": "Candle",
+          "item": "candle",
           "itemDescription": "An old wax candle with an unburned wick.",
           "isKey": false,
           "startHidden": false,
@@ -42,7 +42,7 @@
           "height": 60.0
         },
         {
-          "item": "Matchbox",
+          "item": "matchbox",
           "itemDescription": "A small worn matchbox. A few matches remain.",
           "isKey": false,
           "startHidden": false,
@@ -53,7 +53,7 @@
           "height": 40.0
         },
         {
-          "item": "Cloth",
+          "item": "cloth",
           "itemDescription": "A ragged cloth, slightly singed at the edges.",
           "isKey": false,
           "startHidden": false,
@@ -64,7 +64,7 @@
           "height": 40.0
         },
         {
-          "item": "Purified Candle",
+          "item": "purified candle",
           "itemDescription": "A candle burning with holy white flame.",
           "isKey": true,
           "startHidden": true,
@@ -75,7 +75,7 @@
           "height": 0.0
         },
         {
-          "item": "Smothered Candle",
+          "item": "smothered candle",
           "itemDescription": "The flame is choked out by the cloth. It feels… wrong.",
           "isKey": false,
           "startHidden": true,
@@ -86,7 +86,7 @@
           "height": 0.0
         },
         {
-          "item": "Burning Cloth",
+          "item": "burning cloth",
           "itemDescription": "The cloth catches fire and burns away. Definitely not holy.",
           "isKey": false,
           "startHidden": true,
@@ -119,7 +119,7 @@
     {
       "name": "Library of Echoes",
       "description": "A library filled with torn books and missing pages.",
-      "isLocked": false,
+      "isLocked": true,
       "roomImagePath": "/images/g2_background.png",
       "items": [
         {
