@@ -263,6 +263,28 @@
           "yPosition": 0.0,
           "width": 0.0,
           "height": 0.0
+        },
+        {
+          "item": "rotten sandwich",
+          "itemDescription": "A disgusting sandwich oozing with rot.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g3_wrong_answer2.png",
+          "xPosition": 0.0,
+          "yPosition": 0.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "spoiled cheese plate",
+          "itemDescription": "A cursed plate of cheese and meat.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g3_wrong_answer1.png",
+          "xPosition": 0.0,
+          "yPosition": 0.0,
+          "width": 0.0,
+          "height": 0.0
         }
       ],
       "npc": {
@@ -575,7 +597,7 @@
     {
       "name": "Game Completed",
       "description": "You have restored the Master Key and escaped the Mansion Beyond.",
-      "isLocked": false,
+      "isLocked": true,
       "roomImagePath": "/images/victoryScreen.png",
       "items": [],
       "npc": {
