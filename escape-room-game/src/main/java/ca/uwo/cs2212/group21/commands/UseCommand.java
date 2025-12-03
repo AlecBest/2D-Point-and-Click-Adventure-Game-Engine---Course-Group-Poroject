@@ -11,6 +11,13 @@ import ca.uwo.cs2212.group21.model.Recipe;
 // can use key or key fragment to open a door
 public class UseCommand {
 
+    /** 
+     * @param state
+     * @param itemName
+     * @param secondItemName
+     * @param masterList
+     * @return String
+     */
     // runs Use command
     // if secondItemName is null or blank, this treats it as "use item alone" (ex. key)
     // if secondItemName is given, then this treats it as "use item with another item" (ex. combine)
@@ -25,6 +32,11 @@ public class UseCommand {
         }
     }
 
+    /** 
+     * @param state
+     * @param itemName
+     * @return String
+     */
     //use one item by itself
     private String useSingle(GameState state, Item itemName){
 
@@ -38,6 +50,13 @@ public class UseCommand {
         return "nothing happens if you use " + itemName.getName() + " by itself.";
     }
 
+    /** 
+     * @param state
+     * @param first
+     * @param second
+     * @param masterList
+     * @return String
+     */
     //for using an inventory item with another (combining items)
     private String useWithItem(GameState state, Item first, Item second, HashMap<String, Item> masterList){
 
@@ -69,6 +88,13 @@ public class UseCommand {
         return "oof...these items don't react well together. you've lost 30 seconds.";
     }
 
+    /** 
+     * @param a
+     * @param b
+     * @param x
+     * @param y
+     * @return boolean
+     */
     // helper to check if two item names match the correct recipe pair (order doesnt matter)
     private boolean isPair(String a, String b, String x, String y) {
         return (a.equals(x) && b.equals(y)) || (a.equals(y) && b.equals(x));

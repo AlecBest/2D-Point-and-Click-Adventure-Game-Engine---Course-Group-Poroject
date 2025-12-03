@@ -49,60 +49,102 @@ public class NPC {
         return isTradeable && playerItem.getName().equals(requiredItem.getName());
     }
 
+    /** 
+     * @param itemToGive
+     */
     //Getters and Setters
 
     public void setItemToGive(Item itemToGive) {
         this.itemToGive = itemToGive;
     }
     
+    /** 
+     * @param requiredItem
+     */
     public void setRequiredItem(Item requiredItem) {
         this.requiredItem = requiredItem;
     }
 
+    /** 
+     * @param hint
+     */
     public void setHint(String hint) { 
         this.hint = hint;
     }
 
+    /** 
+     * @param hasInteracted
+     */
     public void setHasInteracted(boolean hasInteracted) {
         this.hasInteracted = hasInteracted;
     }
 
+    /** 
+     * @return String
+     */
     public String getName() {
         return name;
     }
 
+    /** 
+     * @return String
+     */
     public String getDialogue() {
         return dialogue;
     }
 
+    /** 
+     * @return Item
+     */
     public Item getItemToGive() {
         return itemToGive;
     }
 
+    /** 
+     * @return Item
+     */
     public Item getRequiredItem() {
         return requiredItem;
     }
     
+    /** 
+     * @return String
+     */
     public String getHint() {
         return hint;
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isTradeable() {
         return isTradeable;
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean hasInteracted() {
         return hasInteracted;
     }
 
+    /** 
+     * @return double
+     */
     public double getX() {
         return x;
     }
 
+    /** 
+     * @return double
+     */
     public double getY() {
         return y;
     }
 
+    /** 
+     * @return String
+     */
     public String getImagePath() {
         return imagePath;
     }

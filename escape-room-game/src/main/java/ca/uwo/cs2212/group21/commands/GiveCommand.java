@@ -61,6 +61,12 @@ public class GiveCommand {
         return giveSingleItem(state, target, itemName);
     }
 
+    /** 
+     * @param state
+     * @param target
+     * @param itemName
+     * @return String
+     */
     // handle giving one specific item
     private String giveSingleItem(GameState state, NPC target, String itemName) {
         Item item = state.getItemFromInventory(itemName);
@@ -89,6 +95,11 @@ public class GiveCommand {
         return "You give " + item.getName() + " to " + target.getName() + ".";
     }
 
+    /** 
+     * @param state
+     * @param target
+     * @return String
+     */
     // handle giving all items in inventory
     private String giveAllItems(GameState state, NPC target) {
         List<Item> inventorySnapshot = new ArrayList<>(state.getInventory());

@@ -47,6 +47,14 @@ public class Room {
         this.puzzleItem = null; //default to no puzzle item required
     }
 
+    /** 
+     * @param direction
+     * @param neighbRoom
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
     //Getters and Setters
 
     public void setExit(String direction, Room neighbRoom, double x, double y, double width, double height) {
@@ -58,14 +66,23 @@ public class Room {
         this.exitHeight = height;
     }
 
+    /** 
+     * @param npc
+     */
     public void setNPC(NPC npc) {
         this.npc = npc;
     }
 
+    /** 
+     * @return NPC
+     */
     public NPC getNPC() {
         return npc;
     }
 
+    /** 
+     * @return List<NPC>
+     */
     //talkcommand issues when compiling...this keeps it compiling for now so i can test some commands
     //can be removed once TalkCommand is updated to use getNPC()
     public java.util.List<NPC> getNPCS(){
@@ -76,18 +93,31 @@ public class Room {
         return list;
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean hasNPC() {
         return this.npc != null;
     }
 
+    /** 
+     * @param item
+     */
     public void addItem (Item item) {
         items.add(item);
     }
 
+    /** 
+     * @param item
+     */
     public void removeItem(Item item) {
         items.remove(item);
     }
 
+    /** 
+     * @param itemName
+     * @return Item
+     */
     //helper method to find an item in this room by name
     // returns the item if found. otherwise returns null
     public Item findItem(String itemName){
@@ -100,74 +130,133 @@ public class Room {
         return null;
     }
 
+    /** 
+     * @return Boolean
+     */
     public Boolean requiresPuzzleItem() {
         return puzzleItem != null;
     }
 
+    /** 
+     * @return Item
+     */
     public Item getPuzzleItem() {
         return puzzleItem;
     }
 
+    /** 
+     * @param puzzleItem
+     */
     public void setPuzzleItem(Item puzzleItem) {
         this.puzzleItem = puzzleItem;
     }
 
+    /** 
+     * @return String
+     */
     public String getName() {
         return name;
     }
 
+    /** 
+     * @return String
+     */
     public String getDescription() {
         return description;
     }
 
+    /** 
+     * @return List<Item>
+     */
     public List<Item> getItems() {
         return items;
     }
 
+    /** 
+     * @return HashMap<String, Room>
+     */
     public HashMap<String, Room> getExits() {
         return exits;
     }
 
+    /** 
+     * @return List<String>
+     */
     public List<String> getExitList() {
         return exitList;
     }
     
+    /** 
+     * @param direction
+     * @return Room
+     */
     public Room getExit(String direction) {
         return exits.get(direction);
     }
     
+    /** 
+     * @param direction
+     * @return double
+     */
     public double getExitX(String direction) {
         return this.exitX;
     }
 
+    /** 
+     * @param direction
+     * @return double
+     */
     public double getExitY(String direction) {
         return this.exitY;
     }
     
+    /** 
+     * @param direction
+     * @return double
+     */
     public double getExitWidth(String direction) {
         return this.exitWidth;
     }
     
+    /** 
+     * @param direction
+     * @return double
+     */
     public double getExitHeight(String direction) {
         return this.exitHeight; 
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isLocked() {
         return isLocked;
     }
 
+    /** 
+     * @param isLocked
+     */
     public void setLocked(boolean isLocked) {
         this.isLocked = isLocked;
     }
 
+    /** 
+     * @return String
+     */
     public String getImagePath() {
         return imagePath;
     }
 
+    /** 
+     * @return int
+     */
     public int getLockCode() {
         return lockCode;
     }
 
+    /** 
+     * @param lockCode
+     */
     public void setLockCode(int lockCode) {
         this.lockCode = lockCode;
     }

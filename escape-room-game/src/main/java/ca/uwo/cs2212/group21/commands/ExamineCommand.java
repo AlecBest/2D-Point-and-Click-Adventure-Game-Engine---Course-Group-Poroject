@@ -8,6 +8,11 @@ import ca.uwo.cs2212.group21.model.Room;
 
 public class ExamineCommand {
 
+    /** 
+     * @param state
+     * @param itemName
+     * @return String
+     */
     //examine itemName 
     public String execute(GameState state, String itemName) {
 

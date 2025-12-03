@@ -64,6 +64,9 @@ public class SoundManager {
         }
     }
 
+    /** 
+     * @param filename
+     */
     // Allows for background music to be played until stopped
     public void playBackgroundMusic(String filename) {
         try {
@@ -82,6 +85,9 @@ public class SoundManager {
         }
     }
 
+    /** 
+     * @param filename
+     */
     // Allows for sound effects to be played
     public void playSoundEffect(String filename) {
         try {
@@ -116,6 +122,10 @@ public class SoundManager {
         }
     }
 
+    /** 
+     * @param filename
+     * @return Media
+     */
     // Loads the media file from the sounds folder
     private Media loadMedia(String filename) {
         if (soundCache.containsKey(filename)) {

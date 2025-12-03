@@ -60,6 +60,9 @@ public class LoadGameController {
     }
 
 
+    /** 
+     * @param filename
+     */
     private void showSaveDetails(String filename) {
         if (detailsPanel == null) return;
 
@@ -84,6 +87,9 @@ public class LoadGameController {
     }
 
 
+    /** 
+     * @param event
+     */
     public void onLoadGameClicked(ActionEvent event) {
         String filename = saveFilesList.getSelectionModel().getSelectedItem();
         if (filename == null) return;
@@ -108,6 +114,10 @@ public class LoadGameController {
         }
     }
 
+    /** 
+     * @param event
+     * @throws IOException
+     */
     public void onBackClicked(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gameView.fxml"));
         Parent root = loader.load();

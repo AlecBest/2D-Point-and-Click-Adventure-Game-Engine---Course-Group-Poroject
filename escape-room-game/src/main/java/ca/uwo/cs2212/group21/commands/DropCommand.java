@@ -6,6 +6,11 @@ import ca.uwo.cs2212.group21.model.Room;
 
 // this command handles dropping an item from player's inventory back into the room
 public class DropCommand {
+    /** 
+     * @param state
+     * @param itemName
+     * @return String
+     */
     public String execute(GameState state, String itemName){
 
         //only drop items that are currently in inventory already. this covers following cases:

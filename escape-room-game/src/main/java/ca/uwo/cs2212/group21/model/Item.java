@@ -41,44 +41,75 @@ public Item(String name, String description, boolean isKey, boolean startHidden,
     this.height = height;
 }
 
+    /** 
+     * @return String
+     */
     //Getters and Setters
 
     public String getName() {
         return name;
     }
 
+    /** 
+     * @param itemName
+     * @return Item
+     */
     public Item getItem(String itemName) {
         return this;
     }
 
+    /** 
+     * @return String
+     */
     public String getDescription() {
         return description;
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isKey() {
         return this.isKey;
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isStartHidden() {
         return this.startHidden;
     }
 
+    /** 
+     * @return String
+     */
     public String getImagePath() {
         return imagePath;
     }
 
+    /** 
+     * @return double
+     */
     public double getX() {
         return x;
     }
 
+    /** 
+     * @return double
+     */
     public double getY() {
         return y;
     }
 
+    /** 
+     * @return double
+     */
     public double getWidth() {
         return width;
     }
 
+    /** 
+     * @return double
+     */
     public double getHeight() {
         return height;
     }

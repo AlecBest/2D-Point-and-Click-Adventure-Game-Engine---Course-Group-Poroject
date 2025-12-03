@@ -206,6 +206,9 @@ public class GameEngine {
         }
     }
 
+    /** 
+     * @param fileName
+     */
     public void saveGame(String fileName) {
         JSONObject saveData = new JSONObject();
         JSONArray inventoryArray = new JSONArray();
@@ -271,22 +274,38 @@ public class GameEngine {
     }
 }
 
+    /** 
+     * @return HashMap<String, Room>
+     */
     public HashMap<String, Room> getRooms() {
     return rooms;
     }
 
+    /** 
+     * @return GameState
+     */
     public GameState getPlayer() {
     return player;
     }
 
+    /** 
+     * @return HashMap<String, Item>
+     */
     public HashMap<String, Item> getItemList() {
         return items;
     }
 
+    /** 
+     * @return JSONObject
+     */
     public  JSONObject getDialogueData() {
         return this.dialogueData;
     }
 
+    /** 
+     * @param itemName
+     * @return String
+     */
     // -- command wrapper methods --
 
     // PickUpCommand wrapper method
@@ -300,6 +319,10 @@ public class GameEngine {
         return result;
     }
 
+    /** 
+     * @param itemName
+     * @return String
+     */
     // DropCommand wrapper method
     public String dropItem(String itemName) {
         DropCommand cmd = new DropCommand();
@@ -309,6 +332,11 @@ public class GameEngine {
         return result;
     }
 
+    /** 
+     * @param itemName
+     * @param secondItemName
+     * @return String
+     */
     // UseCommand wrapper method
     public String useItem(Item itemName, Item secondItemName) {
         UseCommand cmd = new UseCommand();
@@ -318,6 +346,10 @@ public class GameEngine {
         return result;
     }
 
+    /** 
+     * @param direction
+     * @return boolean
+     */
     // GoCommand wrapper method
     public boolean go(String direction) {
         GoCommand cmd = new GoCommand();
@@ -328,6 +360,9 @@ public class GameEngine {
         return success;
     }
 
+    /** 
+     * @return String
+     */
     // TalkCommand wrapper method
     public String talkToNpc() {
         TalkCommand cmd = new TalkCommand();
@@ -337,6 +372,10 @@ public class GameEngine {
         return result;
     }
 
+    /** 
+     * @param itemName
+     * @return String
+     */
     // GiveCommand wrapper method
     public String giveItemToCurrentNpc(String itemName) {
         GiveCommand cmd = new GiveCommand();
@@ -358,6 +397,10 @@ public class GameEngine {
         return result;
     }
 
+    /** 
+     * @param newX
+     * @param newY
+     */
     public void playerMove(double newX, double newY) {
         player.setPosition(newX, newY);
     }

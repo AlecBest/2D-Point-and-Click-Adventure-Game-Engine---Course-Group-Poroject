@@ -7,6 +7,11 @@ import ca.uwo.cs2212.group21.model.Room;
 //take an item name -> checks if item is in the current room -> if in current room -> move item into player's inventory
 public class PickUpCommand {
 
+    /** 
+     * @param state
+     * @param itemName
+     * @return String
+     */
     //pick up itemName
     public String execute(GameState state, String itemName) {
 

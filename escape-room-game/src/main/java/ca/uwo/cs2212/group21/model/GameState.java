@@ -58,50 +58,85 @@ public class GameState {
         return null; //item not found
     }
 
+    /** 
+     * @param itemName
+     * @return Item
+     */
     // helper so commands can call this directly for inventory lookup
     public Item findItemInventory(String itemName) {
         return getItemFromInventory(itemName);
     }
 
+    /** 
+     * @return Room
+     */
     public Room getCurrentRoom() {
         return currentRoom;
     }
 
+    /** 
+     * @param currentRoom
+     */
     // getters and setters
     
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
 
+    /** 
+     * @param x
+     * @param y
+     */
     public void setPosition(double x, double y) {
         this.playerX = x;
         this.playerY = y;
     }
 
+    /** 
+     * @return double
+     */
     public double getPlayerX() {
         return playerX;
     }
 
+    /** 
+     * @return double
+     */
     public double getPlayerY() {
         return playerY;
     }
 
+    /** 
+     * @param score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /** 
+     * @return int
+     */
     public int getScore() {
         return score;
     }
 
+    /** 
+     * @return List<Recipe>
+     */
     public List<Recipe> getRecipes() {
         return recipes;
     }
 
+    /** 
+     * @param recipes
+     */
     public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 
+    /** 
+     * @param movesCount
+     */
     public void setMovesCount(int movesCount) {
         this.movesCount = movesCount;
     }
@@ -110,38 +145,65 @@ public class GameState {
         this.movesCount++;
     }
 
+    /** 
+     * @return int
+     */
     public int getMovesCount() {
         return movesCount;
     }
 
+    /** 
+     * @param imagePath
+     */
     public void setPlayerImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
+    /** 
+     * @return String
+     */
     public String getImagePath() {
         return this.imagePath;
     }
 
+    /** 
+     * @return List<Item>
+     */
     public List<Item> getInventory() {
         return inventory;
     }
 
+    /** 
+     * @param item
+     */
     public void addItemToInventory(Item item) {
         inventory.add(item);
     }
 
+    /** 
+     * @param item
+     */
     public void removeItemFromInventory(Item item) {
         inventory.remove(item);
     }
 
+    /** 
+     * @return int
+     */
     public int getTimeRemaining() {
         return timeRemaining;
     }
 
+    /** 
+     * @param timeRemaining
+     */
     public void setTimeRemaining(int timeRemaining) {
         this.timeRemaining = timeRemaining;
     }
 
+    /** 
+     * @param amount
+     */
     // this method dcreases the time the player has by a certain amount
     //if the time reaches zero or below, then the game will end
     public void decreaseTime(int amount){
@@ -152,10 +214,16 @@ public class GameState {
         }
     }
 
+    /** 
+     * @param isGameOver
+     */
     public void setGameOver(boolean isGameOver) {
         this.isGameOver = isGameOver;
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isGameOver() {
         return isGameOver;
     }

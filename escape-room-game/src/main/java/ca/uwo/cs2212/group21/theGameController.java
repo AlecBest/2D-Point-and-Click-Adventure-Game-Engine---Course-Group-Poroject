@@ -127,6 +127,10 @@ public class theGameController {
     private Room pendingTargetRoom;
     private String pendingExitDirection;
 
+    /** 
+     * @param totalSeconds
+     * @return String
+     */
     private String formatTime(int totalSeconds) {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
@@ -191,6 +195,10 @@ public class theGameController {
 
     }
 
+    /** 
+     * @param event
+     * @throws IOException
+     */
     /*
      * Starts a new game when the "Start Game" button is clicked.
      * * @param event
@@ -403,35 +411,53 @@ public class theGameController {
         }
     }
 
+    /** 
+     * @param event
+     */
     public void onResumeClick(Event event) {
         soundManager.playEscButtonSound();
         togglePauseMenu();
     }  
 
+    /** 
+     * @param event
+     */
     public void onSaveGameClick(Event event) {
         soundManager.playEscButtonSound();
         pauseScreen.setVisible(false);
         saveGameSlots.setVisible(true);
     }
 
+    /** 
+     * @param event
+     */
     public void saveSlot1Click(Event event) {
         gameEngine.saveGame("saveSlot1.json");
         saveGameSlots.setVisible(false);
         gameTimer.play();
     }
 
+    /** 
+     * @param event
+     */
     public void saveSlot2Click(Event event) {
         gameEngine.saveGame("saveSlot2.json");
         saveGameSlots.setVisible(false);
         gameTimer.play();
     }
 
+    /** 
+     * @param event
+     */
     public void saveSlot3Click(Event event) {
         gameEngine.saveGame("saveSlot3.json");
         saveGameSlots.setVisible(false);
         gameTimer.play();
     }
 
+    /** 
+     * @param engine
+     */
     public void setGameEngine(GameEngine engine) {
         this.gameEngine = engine;
     }
@@ -578,6 +604,9 @@ public class theGameController {
 
     }
 
+    /** 
+     * @param npc
+     */
     private void handleNPCClick(NPC npc) {
 
         Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
@@ -605,6 +634,10 @@ public class theGameController {
         }
     }
 
+    /** 
+     * @param npcDialogue
+     * @param nodeId
+     */
     private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
         if (!npcDialogue.has(nodeId)) return;
 
@@ -712,6 +745,9 @@ public class theGameController {
         }
     }
 
+    /** 
+     * @param npc
+     */
     private void enterGiveMode(NPC npc) {
         isGiveMode = true;
         selected = null;
@@ -753,6 +789,9 @@ public class theGameController {
         });
     }
 
+    /** 
+     * @param npc
+     */
     private void askForConfirmation(NPC npc) {
 
         optionsBox.getChildren().clear(); 
@@ -779,6 +818,9 @@ public class theGameController {
         optionsBox.getChildren().add(cancelButton);
     }
 
+    /** 
+     * @param npc
+     */
     private void handleGiveAttempt(NPC npc) {
         if (selected == null) { 
             dialogueBox.setText("No item selected. Please select an item from your inventory to give to " + npc.getName() + ".");
@@ -846,6 +888,10 @@ public class theGameController {
         }
     }
 
+    /** 
+     * @param resultItemName
+     * @return Recipe
+     */
     private Recipe findRecipeForResult(String resultItemName) {
         if (gameEngine.getPlayer().getRecipes() == null) {
             return null;
@@ -860,6 +906,9 @@ public class theGameController {
     }
 
 
+    /** 
+     * @param message
+     */
     private void showPickupPopup(String message) {
         Label newPopup = new Label(message);
 
@@ -1008,6 +1057,9 @@ public class theGameController {
     }
 
 
+    /** 
+     * @param event
+     */
     public void dropItemFromInventory(Event event) {
         soundManager.playDropButtonSound();
         gameEngine.dropItem(selected.getName());
@@ -1016,6 +1068,9 @@ public class theGameController {
         System.out.println("Inventory after dropping: " + gameEngine.getPlayer().getInventory());
     }
 
+    /** 
+     * @param event
+     */
     public void onCombineModeClick(Event event) {
         if (isCombineMode) { // if already in combine mode then exit it
             exitCombineMode();
@@ -1033,6 +1088,9 @@ public class theGameController {
 
     }
 
+    /** 
+     * @param (combineItems.contains(item)
+     */
     private void exitCombineMode() { // this is to exit and reset combine mode stuff
         isCombineMode = false;
         combinePanel.setVisible(false);
@@ -1041,6 +1099,9 @@ public class theGameController {
         updateInventoryUI();
     }
 
+    /** 
+     * @param (combineItems.contains(item)
+     */
     public void handleCombineSelecting(Item item) { // if the item is already in the combine list then remove it otherwise would add if there is space
         if (combineItems.contains(item)) {
             combineItems.remove(item);
@@ -1081,6 +1142,9 @@ public class theGameController {
         mergeButton.setDisable(combineItems.size() < 2); // only can merge if there are 2 items
     }
 
+    /** 
+     * @param event
+     */
     public void onMergeButtonClick(Event event) {
         if (combineItems.size() == 2) {
             String result = gameEngine.useItem(combineItems.get(0), combineItems.get(1));
@@ -1093,6 +1157,9 @@ public class theGameController {
         }
     }
 
+    /** 
+     * @param event
+     */
     public void onClearButtonClick(Event event) {
         if (combineItems.isEmpty()) {
             return; // nothing to clear
@@ -1125,6 +1192,10 @@ public class theGameController {
         updateInventoryUI();
     }
 
+    /** 
+     * @param x
+     * @param y
+     */
     public void movePlayerVisuals(double x, double y) {
 
         double targetX = x;
@@ -1196,6 +1267,9 @@ public class theGameController {
     }
 
 
+    /** 
+     * @param event
+     */
     public void onExamineClick(Event event) {
         examineSlot.getChildren().clear();
 
@@ -1234,11 +1308,18 @@ public class theGameController {
         }
     }
 
+    /** 
+     * @param event
+     */
     public void onCloseExamineClick(Event event) {
         soundManager.playEscButtonSound();
         exitExamineMode();
     }
 
+    /** 
+     * @param event
+     * @throws IOException
+     */
     public void switchToMainScene(Event event) throws IOException {
         soundManager.stopBackgroundMusic();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/gameView.fxml"));
@@ -1248,11 +1329,19 @@ public class theGameController {
         stage.show();
     }
 
+    /** 
+     * @param event
+     * @throws IOException
+     */
     public void switchToStartScene(Event event) throws IOException {
         mainScreen.setVisible(false);
         gameScreen.setVisible(true);
     }
 
+    /** 
+     * @param event
+     * @throws IOException
+     */
     public void switchToLoadGameScene(Event event) throws IOException {
         soundManager.stopBackgroundMusic();
         soundManager.playLoadGameSound();
@@ -1263,6 +1352,9 @@ public class theGameController {
         stage.show();
     }
 
+    /** 
+     * @param event
+     */
     public void quitGame(Event event) {
         soundManager.playQuitButtonSound();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -1468,6 +1560,10 @@ public class theGameController {
         gameScreen.getChildren().add(keypadOverlay);
     }
 
+    /** 
+     * @param targetRoom
+     * @param direction
+     */
     private void showKeypad(Room targetRoom, String direction) {
         if (keypadOverlay == null) {
             createKeypad();
@@ -1479,6 +1575,9 @@ public class theGameController {
         keypadOverlay.setVisible(true);
     }
 
+    /** 
+     * @param digit
+     */
     private void handleKeypadInput(String digit) {
         if (currentInputCode.length() < 3) {
             currentInputCode += digit;

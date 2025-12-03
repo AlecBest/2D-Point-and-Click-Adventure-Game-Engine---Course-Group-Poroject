@@ -13,6 +13,11 @@ public class Recipe {
         this.message = message;
     }
 
+    /** 
+     * @param item1
+     * @param getResultName(
+     * @return boolean
+     */
     public boolean matches(String item1, String item2) { //making these all in strings for the recipes, instead of items
         String i1 = item1.toLowerCase();
         String i2 = item2.toLowerCase();
@@ -20,14 +25,23 @@ public class Recipe {
         return ingredients.contains(i1) && ingredients.contains(i2) && !i1.equals(i2);
     }
 
+    /** 
+     * @return String
+     */
     public String getResultName() {
         return resultName;
     }
     
+    /** 
+     * @return List<String>
+     */
     public List<String> getInputs() {
         return this.ingredients;
     }
 
+    /** 
+     * @return String
+     */
     public String getMessage() {
         return message;
     }
