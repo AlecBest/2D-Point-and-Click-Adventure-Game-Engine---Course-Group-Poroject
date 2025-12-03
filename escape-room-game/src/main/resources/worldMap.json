@@ -300,7 +300,7 @@
           "startHidden": false,
           "itemImagePath": "/images/g2_paper.png",
           "xPosition": 300.0,
-          "yPosition": 300.0,
+          "yPosition": 500.0,
           "width": 50.0,
           "height": 50.0
         }
@@ -379,7 +379,7 @@
           "startHidden": false,
           "itemImagePath": "/images/g2_paper.png",
           "xPosition": 300.0,
-          "yPosition": 300.0,
+          "yPosition": 500.0,
           "width": 50.0,
           "height": 50.0
         }
@@ -424,7 +424,7 @@
           "startHidden": false,
           "itemImagePath": "/images/g2_book.png",
           "xPosition": 300.0,
-          "yPosition": 300.0,
+          "yPosition": 100.0,
           "width": 50.0,
           "height": 50.0
         }
@@ -446,12 +446,57 @@
           "height": 100.0
         },
         {
-          "exit": "Assembly Room",
+          "exit": "Ward Room",
           "exitDirection": "NORTH",
           "xPosition": 850.0,
           "yPosition": 500.0,
           "width": 100.0,
           "height": 100.0
+        }
+      ]
+    },
+
+    {
+      "name": "Ward Room",
+      "description": "A mystical chamber with protective wards etched into the walls. Ancient symbols glow faintly in the darkness.",
+      "isLocked": false,
+      "roomImagePath": "/images/wardroom.png",
+      "items": [
+        {
+          "item": "Note",
+          "itemDescription": "I wonder how the last guy got out of here...",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/g2_paper.png",
+          "xPosition": 300.0,
+          "yPosition": 500.0,
+          "width": 50.0,
+          "height": 50.0
+        }
+      ],
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "The wards here protect what lies beyond. Only those worthy may pass.",
+        "isNPCTradeable": false,
+        "xPosition": 600.0,
+        "yPosition": 300.0
+      },
+      "exits": [
+        {
+          "exit": "Secret Room",
+          "exitDirection": "SOUTH",
+          "xPosition": 480.0,
+          "yPosition": 500.0,
+          "width": 100.0,
+          "height": 100.0
+        },
+        {
+          "exit": "Assembly Room",
+          "exitDirection": "NORTH",
+          "xPosition": 855.0,
+          "yPosition": 125.0,
+          "width": 140.0,
+          "height": 180.0
         }
       ]
     },
