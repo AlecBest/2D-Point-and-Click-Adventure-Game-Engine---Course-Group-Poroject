@@ -42,7 +42,7 @@ import javafx.util.Duration;
 import javafx.geometry.Pos;
 import javafx.scene.text.Font;
 
-public class GameController {
+public class theGameController {
 
     private Stage stage;
     private Scene scene;
@@ -119,8 +119,6 @@ public class GameController {
     private List<Item> combineItems = new ArrayList<>();
     private SoundManager soundManager = new SoundManager();
     private double lastPlayerX = 400; // Track last X position to determine direction
-<<<<<<< HEAD
-=======
 
     // Keypad fields
     private AnchorPane keypadOverlay;
@@ -128,7 +126,6 @@ public class GameController {
     private String currentInputCode = "";
     private Room pendingTargetRoom;
     private String pendingExitDirection;
->>>>>>> 3225d8f1ad4b9cd58ec24f54cd8144114edfeb7d
 
     private String formatTime(int totalSeconds) {
         int minutes = totalSeconds / 60;
