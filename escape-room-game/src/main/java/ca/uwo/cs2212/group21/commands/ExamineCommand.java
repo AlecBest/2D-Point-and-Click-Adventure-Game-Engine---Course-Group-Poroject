@@ -4,8 +4,8 @@ import ca.uwo.cs2212.group21.model.GameState;
 import ca.uwo.cs2212.group21.model.Item;
 import ca.uwo.cs2212.group21.model.Room;
 
-//this command class handles the Examine command behaviour
-//player can either look around the room or examine a specific item
+//this command class handles the Examine command behaviour and player can either look around the room or examine a specific item
+
 public class ExamineCommand {
 
     //examine itemName 

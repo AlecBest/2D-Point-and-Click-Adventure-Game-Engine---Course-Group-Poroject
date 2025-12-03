@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group21.model;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ public class GameEngine {
     private List<Item> inventory;
     private int movesCount;
     private int score;
+    private org.json.JSONObject dialogueData; 
 
     /**
      * Initializes a new GameEngine instance.
@@ -47,7 +49,9 @@ public class GameEngine {
         this.items = new HashMap<>();
         this.inventory = new ArrayList<>();
         this.roomPuzzleItems = new HashMap<>();
+        
         loadWorldData(jsonPath);
+        loadDialogueData();
     }
 
     public void startNewGame() {
@@ -62,7 +66,7 @@ public class GameEngine {
     */
     public void loadGame (String saveJSONpath) {
         try (InputStream inputStream = new FileInputStream(saveJSONpath)) { //path to the file we can probably put in resources folder
-            
+
         JSONTokener tokener = new JSONTokener(inputStream); //this is the tokenizer to read the jsonfile
         JSONObject saveData = new JSONObject(tokener); //this is to create a json object from the tokenizer
         JSONArray inventoryArray = saveData.getJSONArray("inventory"); //this is to get the array of items in the inventory from the json file
@@ -112,11 +116,9 @@ public class GameEngine {
     * @param jsonPath
     */
     public void loadWorldData (String jsonPath) {
-        InputStream inputStream = getClass().getResourceAsStream(jsonPath); //path to the file we can probably put in resources folder 
-
-        if (inputStream == null) {
-            throw new NullPointerException("Couldn't find resource file " + jsonPath);
-        }
+        
+        try (InputStream inputStream = getClass().getResourceAsStream(jsonPath)) {
+            if (inputStream == null) throw new FileNotFoundException("Couldn't find resource file " + jsonPath);
 
         JSONTokener tokener = new JSONTokener(inputStream); //this is the tokenizer to read the jsonfile 
         JSONObject worldData = new JSONObject(tokener); //this is to create a json object from the tokenizer
@@ -138,7 +140,8 @@ public class GameEngine {
             for (int j = 0; j < itemArray.length(); j++) {
                 JSONObject itemObj = itemArray.getJSONObject(j);
                 String itemName = itemObj.getString("item");
-                boolean isPuzzleItem = itemObj.getBoolean("isPuzzleItem");
+                boolean isKey = itemObj.getBoolean("isKey");
+                boolean startHidden = itemObj.getBoolean("startHidden");
                 String itemImagePath = itemObj.getString("itemImagePath");
                 String itemDescription = itemObj.getString("itemDescription");
                 double xPos = itemObj.getDouble("xPosition");
@@ -148,12 +151,11 @@ public class GameEngine {
 
 
                 if (itemName != null) {
-                    Item item = new Item(itemName, itemDescription, isPuzzleItem, itemImagePath, xPos, yPos, width, height);
+                    Item item = new Item(itemName, itemDescription, isKey, startHidden, itemImagePath, xPos, yPos, width, height);
                 
-                    // ALWAYS add the item to the room so it appears on screen
-                    room.addItem(item);
-                
-                    // Also store it in the global items map
+                    if (!startHidden){
+                        room.addItem(item);
+                    }
                     items.put(itemName, item);
                 }
                 
@@ -199,6 +201,9 @@ public class GameEngine {
                 }
             }
         }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveGame(String fileName) {
@@ -222,6 +227,49 @@ public class GameEngine {
             e.printStackTrace();
         }
     }
+    
+    private void loadDialogueData() {
+        try (InputStream inputStream = getClass().getResourceAsStream("/dialogues.json")) {
+            if (inputStream == null) throw new FileNotFoundException("dialogues.json not found");
+
+            JSONTokener tokener = new JSONTokener(inputStream);
+            this.dialogueData = new JSONObject(tokener);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.dialogueData = new JSONObject();
+        }
+    }
+
+    public void loadRecipes() {
+    try (InputStream inputStream = getClass().getResourceAsStream("/recipes.json")) {
+        if (inputStream == null) throw new FileNotFoundException("recipes.json not found");
+        
+        JSONTokener tokener = new JSONTokener(inputStream);
+        JSONArray jsonRecipes = new JSONArray(tokener);
+        
+        List<Recipe> recipeList = new ArrayList<>();
+        
+        for (int i = 0; i < jsonRecipes.length(); i++) {
+            JSONObject obj = jsonRecipes.getJSONObject(i);
+            
+            JSONArray inputsArray = obj.getJSONArray("inputs");
+            List<String> inputs = new ArrayList<>();
+            for(int j=0; j<inputsArray.length(); j++) {
+                inputs.add(inputsArray.getString(j).toLowerCase());
+            }
+            
+            String result = obj.getString("result");
+            String msg = obj.getString("successMessage");
+            
+            recipeList.add(new Recipe(inputs, result, msg));
+        }
+        
+        player.setRecipes(recipeList);
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
     public HashMap<String, Room> getRooms() {
     return rooms;
@@ -231,60 +279,86 @@ public class GameEngine {
     return player;
     }
 
+    public HashMap<String, Item> getItemList() {
+        return items;
+    }
+
+    public  JSONObject getDialogueData() {
+        return this.dialogueData;
+    }
+
     // -- command wrapper methods --
-    // runs PickUpCommand on current game state
-    public String pickUpItem(String itemName){
+
+    // PickUpCommand wrapper method
+    public String pickUpItem(String itemName) {
         PickUpCommand cmd = new PickUpCommand();
-        return cmd.execute(player, itemName);
+        String result = cmd.execute(player, itemName);
+
+        // one successful player action = one turn
+        player.incrementMovesCount();
+
+        return result;
     }
 
     // DropCommand wrapper method
     public String dropItem(String itemName) {
         DropCommand cmd = new DropCommand();
-        return cmd.execute(player, itemName);
+        String result = cmd.execute(player, itemName);
+
+        player.incrementMovesCount();
+        return result;
     }
 
     // UseCommand wrapper method
     public String useItem(Item itemName, Item secondItemName) {
         UseCommand cmd = new UseCommand();
-        return cmd.execute(player, itemName, secondItemName, this.items);
+        String result = cmd.execute(player, itemName, secondItemName, this.items);
+
+        player.incrementMovesCount();
+        return result;
     }
 
     // GoCommand wrapper method
     public boolean go(String direction) {
         GoCommand cmd = new GoCommand();
-        return cmd.execute(player, direction);
-    }
-    
-        // TalkCommand wrapper method
-    public String talkToNpc() {
-        TalkCommand cmd = new TalkCommand();
-        return cmd.execute(player);
+        boolean success = cmd.execute(player, direction);
+
+        // treat every Go as a turn, even if it fails
+        player.incrementMovesCount();
+        return success;
     }
 
-        // GiveCommand wrapper method
+    // TalkCommand wrapper method
+    public String talkToNpc() {
+        TalkCommand cmd = new TalkCommand();
+        String result = cmd.execute(player);
+
+        player.incrementMovesCount();
+        return result;
+    }
+
+    // GiveCommand wrapper method
     public String giveItemToCurrentNpc(String itemName) {
         GiveCommand cmd = new GiveCommand();
 
-        // Figure out which NPC is in the current room
         Room room = player.getCurrentRoom();
         if (room == null || !room.hasNPC()) {
+            player.incrementMovesCount();
             return "There is no one here to give items to.";
         }
 
         NPC npc = room.getNPC();
         if (npc == null) {
+            player.incrementMovesCount();
             return "There is no one here to give items to.";
         }
 
-        // Call your existing GiveCommand
-        return cmd.execute(player, npc.getName(), itemName);
+        String result = cmd.execute(player, npc.getName(), itemName);
+        player.incrementMovesCount();
+        return result;
     }
 
     public void playerMove(double newX, double newY) {
         player.setPosition(newX, newY);
     }
-
-    
-
 }

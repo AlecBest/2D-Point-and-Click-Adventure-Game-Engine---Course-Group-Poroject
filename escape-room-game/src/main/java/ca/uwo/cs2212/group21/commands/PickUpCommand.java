@@ -27,7 +27,7 @@ public class PickUpCommand {
         room.removeItem(item);
         state.addItemToInventory(item);
 
-        state.incrementMovesCount(); // increment moves count when picking up item we can just leave it like moves and items for now 
+        //state.incrementMovesCount(); // increment moves count when picking up item we can just leave it like moves and items for now 
 
 
         return item.getName() + " picked up.";

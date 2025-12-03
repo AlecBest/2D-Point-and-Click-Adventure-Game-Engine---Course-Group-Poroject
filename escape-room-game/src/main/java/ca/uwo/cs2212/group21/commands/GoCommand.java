@@ -48,7 +48,7 @@ public class GoCommand {
 
         // everything is okay, so move the player to the next room
         player.setCurrentRoom(nextRoom);
-        player.incrementMovesCount();
+       // player.incrementMovesCount();
 
         // simple message for now, you can change text later for story flavour
         return true;

@@ -5,9 +5,7 @@
       "description": "A dark, cold room with a flickering light.",
       "isLocked": false,
       "roomImagePath": "/images/page_1_background_of_NPC_talking.png",
-
       "items": [],
-
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "Welcome, lost soul... You have crossed into the Mansion Beyond, a place built from shadows and forgotten memories.This house feeds on fear, and only those who endure its trials may escape.|The Master Key to your freedom was shattered into three fragments, each sealed within a different room.|To claim them, you must solve the puzzles before you—search the rooms, gather items, and study your surroundings closely.|Your inventory will hold what you collect, and some items may combine... but only the correct pairs will guide you forward, while a wrong attempt will cost you 30 seconds of your precious 10 minute journey.|Restore all three fragments and reclaim the Master Key, or be consumed by the mansion itself.|Now go, your first trial awaits in the Living Room of Shadows.",
@@ -15,7 +13,6 @@
         "xPosition": 780.0,
         "yPosition": 330.0
       },
-
       "exits": [
         {
           "exit": "Living Room",
@@ -27,18 +24,17 @@
         }
       ]
     },
-
     {
       "name": "Living Room",
       "description": "A suffocatingly dark living room where shadows cling to every corner.",
       "isLocked": false,
       "roomImagePath": "/images/g1_background.png",
-
       "items": [
         {
           "item": "Candle",
           "itemDescription": "An old wax candle with an unburned wick.",
-          "isPuzzleItem": true,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g1_candle.png",
           "xPosition": 120.0,
           "yPosition": 257.0,
@@ -48,7 +44,8 @@
         {
           "item": "Matchbox",
           "itemDescription": "A small worn matchbox. A few matches remain.",
-          "isPuzzleItem": true,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g1_matchbox.png",
           "xPosition": 245.0,
           "yPosition": 420.0,
@@ -58,23 +55,56 @@
         {
           "item": "Cloth",
           "itemDescription": "A ragged cloth, slightly singed at the edges.",
-          "isPuzzleItem": true,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g1_cloth.png",
           "xPosition": 930.0,
           "yPosition": 430.0,
           "width": 70.0,
           "height": 40.0
+        },
+        {
+          "item": "Purified Candle",
+          "itemDescription": "A candle burning with holy white flame.",
+          "isKey": true,
+          "startHidden": true,
+          "itemImagePath": "/images/g1_right_answer.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Smothered Candle",
+          "itemDescription": "The flame is choked out by the cloth. It feels… wrong.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g1_wrong_answer1.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Burning Cloth",
+          "itemDescription": "The cloth catches fire and burns away. Definitely not holy.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g1_wrong_answer2.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
         }
-      ],
 
+      ],
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "Welcome to the Living Room of Shadows, the heart of this mansion's darkness. To break the first seal, you must forge a light strong enough to cut through the gloom. Search carefully... only the right spark will reveal the truth.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 650.0,
         "yPosition": 320.0
       },
-
       "exits": [
         {
           "exit": "Library of Echoes",
@@ -86,18 +116,17 @@
         }
       ]
     },
-
     {
       "name": "Library of Echoes",
       "description": "A library filled with torn books and missing pages.",
       "isLocked": false,
       "roomImagePath": "/images/g2_background.png",
-
       "items": [
         {
           "item": "Torn Book",
           "itemDescription": "A heavy old tome with several pages ripped out.",
-          "isPuzzleItem": true,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g2_book.png",
           "xPosition": 90.0,
           "yPosition": 175.0,
@@ -107,7 +136,8 @@
         {
           "item": "Missing Page",
           "itemDescription": "A single loose page, its edges frayed and worn.",
-          "isPuzzleItem": true,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g2_paper.png",
           "xPosition": 240.0,
           "yPosition": 395.0,
@@ -117,23 +147,58 @@
         {
           "item": "Pen",
           "itemDescription": "An old ink pen, its tip still faintly stained.",
-          "isPuzzleItem": false,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g2_pen.png",
           "xPosition": 785.0,
           "yPosition": 400.0,
           "width": 50.0,
           "height": 40.0
+        },
+        {
+          "item": "Restored Book",
+          "itemDescription": "An old book with all its pages back in place.",
+          "isKey": true,
+          "startHidden": true,
+          "itemImagePath": "/images/g2_right_answer.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Scribbled Page",
+          "itemDescription": "A page covered in messy ink scribbles. This definitely doesn’t look right.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g2_wrong_answer2.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Defaced Book",
+          "itemDescription": "A book ruined by ink and scratches. Whatever knowledge it held is lost.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g2_wrong_answer1.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
         }
-      ],
 
+
+        
+      ],
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "Welcome to the Library of Echoes, where forgotten pages whisper in the dark. The knowledge here is fractured, seek what's missing, piece together the truth, and only then will this room let you pass.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 560.0,
         "yPosition": 279.0
       },
-
       "exits": [
         {
           "exit": "Living Room",
@@ -153,18 +218,17 @@
         }
       ]
     },
-
     {
       "name": "Broken Kitchen",
       "description": "A ruined kitchen where failed meals and rotten offerings linger.",
       "isLocked": false,
       "roomImagePath": "/images/g3_background.png",
-
       "items": [
         {
           "item": "Bread",
           "itemDescription": "A simple slice of bread. Plain, but fresh.",
-          "isPuzzleItem": true,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g3_bread.png",
           "xPosition": 125.0,
           "yPosition": 474.0,
@@ -174,7 +238,8 @@
         {
           "item": "Cheese",
           "itemDescription": "A slice of cheese with small holes through it.",
-          "isPuzzleItem": true,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g3_cheese.png",
           "xPosition": 125.0,
           "yPosition": 110.0,
@@ -184,23 +249,33 @@
         {
           "item": "Rotten Meat",
           "itemDescription": "A foul piece of spoiled meat. The smell is unbearable.",
-          "isPuzzleItem": false,
+          "isKey": false,
+          "startHidden": false,
           "itemImagePath": "/images/g3_meat.png",
           "xPosition": 760.0,
           "yPosition": 410.0,
           "width": 70.0,
           "height": 50.0
+        },
+        {
+          "item": "Mystic Meal",
+          "itemDescription": "A meal charged with energy.",
+          "isKey": true,
+          "startHidden": true,
+          "itemImagePath": "/images/g3_right_answer.png",
+          "xPosition": 0.0,
+          "yPosition": 0.0,
+          "width": 0.0,
+          "height": 0.0
         }
       ],
-
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "You have come far. This kitchen feeds on mistakes. To earn the next fragment, craft an offering worthy of me. Choose wisely, or pay the price.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 610.0,
         "yPosition": 295.0
       },
-
       "exits": [
         {
           "exit": "Laundry Room",
@@ -212,7 +287,6 @@
         }
       ]
     },
-
     {
       "name": "Laundry Room",
       "description": "A damp room filled with piles of old, moldy clothes.",
@@ -351,17 +425,70 @@
       "description": "A silent chamber where ancient magic lingers. The air hums with the power of the shattered key fragments.",
       "isLocked": false,
       "roomImagePath": "/images/g4_key.png",
-
-      "items": [],
-
+      "items": [
+        {
+          "item": "Key Fragment A",
+          "itemDescription": "A jagged piece of a golden key.",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/key_p1.png",
+          "xPosition": 200.0,
+          "yPosition": 400.0,
+          "width": 40.0,
+          "height": 40.0
+        },
+        {
+          "item": "Key Fragment B",
+          "itemDescription": "A jagged piece of a golden key.",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/key_p2.png",
+          "xPosition": 400.0,
+          "yPosition": 400.0,
+          "width": 40.0,
+          "height": 40.0
+        },
+        {
+          "item": "Key Fragment C",
+          "itemDescription": "A jagged piece of a golden key.",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/key_p3.png",
+          "xPosition": 600.0,
+          "yPosition": 400.0,
+          "width": 40.0,
+          "height": 40.0
+        },
+        {
+          "item": "Partial Key",
+          "itemDescription": "Two fragments joined together.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/partial_key.png",
+          "xPosition": 0.0,
+          "yPosition": 0.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Liberation Key",
+          "itemDescription": "The final key that unlocks your escape.",
+          "isKey": true,
+          "startHidden": true,
+          "itemImagePath": "/images/key_final.png",
+          "xPosition": 0.0,
+          "yPosition": 0.0,
+          "width": 0.0,
+          "height": 0.0
+        }
+      ],
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "Ahha I was not expecting to see you here this far. This is the chamber of binding. Combine the three fragments here to restore the Master Key and win your way to freedom",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 820.0,
         "yPosition": 260.0
       },
-
       "exits": [
         {
           "exit": "Game Completed",
@@ -373,23 +500,19 @@
         }
       ]
     },
-
     {
       "name": "Game Completed",
       "description": "You have restored the Master Key and escaped the Mansion Beyond.",
       "isLocked": false,
       "roomImagePath": "/images/end.png",
-
       "items": [],
-
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "You are free now. Your courage has shattered the curse.",
-        "isNPCTradeable": false,
+        "isNPCTradeable": true,
         "xPosition": 820.0,
         "yPosition": 260.0
       },
-
       "exits": []
     }
   ]
