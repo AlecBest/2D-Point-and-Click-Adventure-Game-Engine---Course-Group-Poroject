@@ -284,59 +284,77 @@ public class GameEngine {
     }
 
     // -- command wrapper methods --
-    // runs PickUpCommand on current game state
-    public String pickUpItem(String itemName){
+
+    // PickUpCommand wrapper method
+    public String pickUpItem(String itemName) {
         PickUpCommand cmd = new PickUpCommand();
-        return cmd.execute(player, itemName);
+        String result = cmd.execute(player, itemName);
+
+        // one successful player action = one turn
+        player.incrementMovesCount();
+
+        return result;
     }
 
     // DropCommand wrapper method
     public String dropItem(String itemName) {
         DropCommand cmd = new DropCommand();
-        return cmd.execute(player, itemName);
+        String result = cmd.execute(player, itemName);
+
+        player.incrementMovesCount();
+        return result;
     }
 
     // UseCommand wrapper method
     public String useItem(Item itemName, Item secondItemName) {
         UseCommand cmd = new UseCommand();
-        return cmd.execute(player, itemName, secondItemName, this.items);
+        String result = cmd.execute(player, itemName, secondItemName, this.items);
+
+        player.incrementMovesCount();
+        return result;
     }
 
     // GoCommand wrapper method
     public boolean go(String direction) {
         GoCommand cmd = new GoCommand();
-        return cmd.execute(player, direction);
-    }
-    
-        // TalkCommand wrapper method
-    public String talkToNpc() {
-        TalkCommand cmd = new TalkCommand();
-        return cmd.execute(player);
+        boolean success = cmd.execute(player, direction);
+
+        // treat every Go as a turn, even if it fails
+        player.incrementMovesCount();
+        return success;
     }
 
-        // GiveCommand wrapper method
+    // TalkCommand wrapper method
+    public String talkToNpc() {
+        TalkCommand cmd = new TalkCommand();
+        String result = cmd.execute(player);
+
+        player.incrementMovesCount();
+        return result;
+    }
+
+    // GiveCommand wrapper method
     public String giveItemToCurrentNpc(String itemName) {
         GiveCommand cmd = new GiveCommand();
 
-        // Figure out which NPC is in the current room
         Room room = player.getCurrentRoom();
         if (room == null || !room.hasNPC()) {
+            player.incrementMovesCount();
             return "There is no one here to give items to.";
         }
 
         NPC npc = room.getNPC();
         if (npc == null) {
+            player.incrementMovesCount();
             return "There is no one here to give items to.";
         }
 
-        // Call your existing GiveCommand
-        return cmd.execute(player, npc.getName(), itemName);
+        String result = cmd.execute(player, npc.getName(), itemName);
+        player.incrementMovesCount();
+        return result;
     }
 
     public void playerMove(double newX, double newY) {
         player.setPosition(newX, newY);
     }
-
-    
-
 }
