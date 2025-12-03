@@ -84,15 +84,7 @@
 
     "Storage Room": {
       "root": {
-        "text": "Numbers linger here with purpose. They remember things that people forget.",
-        "next": "storage_mid"
-      },
-      "storage_mid": {
-        "text": "Behind that vault lies a truth sealed long ago. Only the correct sequence will stir it awake.",
-        "next": "storage_riddle"
-      },
-      "storage_riddle": {
-        "text": "Study the fallen cubes. Patterns hide in silence. Find the correct code and bring it to me.",
+        "text": "Study the fallen cubes. Patterns hide in silence. When you are ready, use the keypad on the vault door to enter the code.",
         "options": {}
       }
     },
