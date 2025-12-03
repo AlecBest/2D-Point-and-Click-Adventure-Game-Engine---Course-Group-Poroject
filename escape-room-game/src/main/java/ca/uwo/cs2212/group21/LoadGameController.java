@@ -95,7 +95,7 @@ public class LoadGameController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gameView.fxml"));
             Parent root = loader.load();
 
-            GameController gameController = loader.getController();
+            theGameController gameController = loader.getController();
             gameController.setGameEngine(engine);
             gameController.startGameFromLoad(); 
 

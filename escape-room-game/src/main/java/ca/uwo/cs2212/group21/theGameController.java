@@ -42,7 +42,7 @@ import javafx.util.Duration;
 import javafx.geometry.Pos;
 import javafx.scene.text.Font;
 
-public class GameController {
+public class theGameController {
 
     private Stage stage;
     private Scene scene;
