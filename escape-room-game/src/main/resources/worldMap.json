@@ -123,7 +123,7 @@
       "roomImagePath": "/images/g2_background.png",
       "items": [
         {
-          "item": "Torn Book",
+          "item": "torn book",
           "itemDescription": "A heavy old tome with several pages ripped out.",
           "isKey": false,
           "startHidden": false,
@@ -134,7 +134,7 @@
           "height": 60.0
         },
         {
-          "item": "Missing Page",
+          "item": "missing page",
           "itemDescription": "A single loose page, its edges frayed and worn.",
           "isKey": false,
           "startHidden": false,
@@ -145,7 +145,7 @@
           "height": 50.0
         },
         {
-          "item": "Pen",
+          "item": "pen",
           "itemDescription": "An old ink pen, its tip still faintly stained.",
           "isKey": false,
           "startHidden": false,
@@ -156,7 +156,7 @@
           "height": 40.0
         },
         {
-          "item": "Restored Book",
+          "item": "restored book  ",
           "itemDescription": "An old book with all its pages back in place.",
           "isKey": true,
           "startHidden": true,
@@ -167,7 +167,7 @@
           "height": 0.0
         },
         {
-          "item": "Scribbled Page",
+          "item": "scribbled page",
           "itemDescription": "A page covered in messy ink scribbles. This definitely doesn’t look right.",
           "isKey": false,
           "startHidden": true,
@@ -178,7 +178,7 @@
           "height": 0.0
         },
         {
-          "item": "Defaced Book",
+          "item": "defaced book",
           "itemDescription": "A book ruined by ink and scratches. Whatever knowledge it held is lost.",
           "isKey": false,
           "startHidden": true,
@@ -225,7 +225,7 @@
       "roomImagePath": "/images/g3_background.png",
       "items": [
         {
-          "item": "Bread",
+          "item": "bread",
           "itemDescription": "A simple slice of bread. Plain, but fresh.",
           "isKey": false,
           "startHidden": false,
@@ -236,7 +236,7 @@
           "height": 40.0
         },
         {
-          "item": "Cheese",
+          "item": "cheese",
           "itemDescription": "A slice of cheese with small holes through it.",
           "isKey": false,
           "startHidden": false,
@@ -247,7 +247,7 @@
           "height": 40.0
         },
         {
-          "item": "Rotten Meat",
+          "item": "rotten meat",
           "itemDescription": "A foul piece of spoiled meat. The smell is unbearable.",
           "isKey": false,
           "startHidden": false,
@@ -258,7 +258,7 @@
           "height": 50.0
         },
         {
-          "item": "Mystic Meal",
+          "item": "mystic meal",
           "itemDescription": "A meal charged with energy.",
           "isKey": true,
           "startHidden": true,
@@ -294,7 +294,7 @@
       "roomImagePath": "/images/laundryroom.png",
       "items": [
         {
-          "item": "Note",
+          "item": "note",
           "itemDescription": "I wonder where they keep the soap?",
           "isKey": false,
           "startHidden": false,
@@ -373,7 +373,7 @@
       "roomImagePath": "/images/boilerroom.png",
       "items": [
         {
-          "item": "Note",
+          "item": "note",
           "itemDescription": "It only gets hotter",
           "isKey": false,
           "startHidden": false,
@@ -463,7 +463,7 @@
       "roomImagePath": "/images/wardroom.png",
       "items": [
         {
-          "item": "Note",
+          "item": "note",
           "itemDescription": "I wonder how the last guy got out of here...",
           "isKey": false,
           "startHidden": false,
@@ -508,7 +508,7 @@
       "roomImagePath": "/images/g4_key.png",
       "items": [
         {
-          "item": "Key Fragment A",
+          "item": "key fragment a",
           "itemDescription": "A jagged piece of a golden key.",
           "isKey": false,
           "startHidden": false,
@@ -519,7 +519,7 @@
           "height": 40.0
         },
         {
-          "item": "Key Fragment B",
+          "item": "key fragment b",
           "itemDescription": "A jagged piece of a golden key.",
           "isKey": false,
           "startHidden": false,
@@ -530,7 +530,7 @@
           "height": 40.0
         },
         {
-          "item": "Key Fragment C",
+          "item": "key fragment c",
           "itemDescription": "A jagged piece of a golden key.",
           "isKey": false,
           "startHidden": false,
@@ -541,7 +541,7 @@
           "height": 40.0
         },
         {
-          "item": "Partial Key",
+          "item": "partial key",
           "itemDescription": "Two fragments joined together.",
           "isKey": false,
           "startHidden": true,

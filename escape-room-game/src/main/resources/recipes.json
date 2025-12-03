@@ -15,33 +15,33 @@
       "successMessage": "You light the cloth on fire. It flares briefly, then crumbles to ash. Whatever this is, it’s not a blessed flame."
     },
     {
-        "inputs": ["Torn Book", "Missing Page"],
+        "inputs": ["torn book", "missing page"],
         "result": "restored book",
         "successMessage": "As you slide the missing page back into the torn book, the text glows faintly. The knowledge feels whole again."
     },
     {
-        "inputs": ["Missing Page", "Pen"],
+        "inputs": ["missing page", "pen"],
         "result": "scribbled page",
         "successMessage": "You scribble all over the page in panic. The words twist into nonsense... this won’t impress the Guide."
     },
     {
-        "inputs": ["Torn Book", "Pen"],
+        "inputs": ["torn book", "pen"],
         "result": "defaced book",
         "successMessage": "You scrawl ink across the already damaged book. Whatever wisdom it held is now completely ruined."
     },
 
     {
-        "inputs": ["Bread", "Cheese"],
+        "inputs": ["bread", "cheese"],
         "result": "mystic meal",
         "successMessage": "You carefully assemble the bread and cheese into a strange, glowing meal. The air hums with quiet energy."
     },
     {
-        "inputs": ["Bread", "Rotten Meat"],
+        "inputs": ["bread", "rotten meat"],
         "result": "rotten sandwich",
         "successMessage": "You force the rotten meat between the bread. The sandwich oozes and reeks—this cannot be the offering the Guide wants."
     },
     {
-        "inputs": ["Cheese", "Rotten Meat"],
+        "inputs": ["cheese", "rotten meat"],
         "result": "spoiled cheese plate",
         "successMessage": "You pair the cheese with rotting meat. The plate looks cursed, not blessed."
     }
