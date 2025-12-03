@@ -69,11 +69,34 @@
           "isKey": true,
           "startHidden": true,
           "itemImagePath": "/images/g1_right_answer.png",
-          "xPosition": 0.0,
-          "yPosition": 0.0,
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Smothered Candle",
+          "itemDescription": "The flame is choked out by the cloth. It feels… wrong.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g1_wrong_answer1.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Burning Cloth",
+          "itemDescription": "The cloth catches fire and burns away. Definitely not holy.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g1_wrong_answer2.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
           "width": 0.0,
           "height": 0.0
         }
+
       ],
       "npc": {
         "npc": "The Guide",
@@ -138,11 +161,36 @@
           "isKey": true,
           "startHidden": true,
           "itemImagePath": "/images/g2_right_answer.png",
-          "xPosition": 0.0,
-          "yPosition": 0.0,
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Scribbled Page",
+          "itemDescription": "A page covered in messy ink scribbles. This definitely doesn’t look right.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g2_wrong_answer2.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Defaced Book",
+          "itemDescription": "A book ruined by ink and scratches. Whatever knowledge it held is lost.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g2_wrong_answer1.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
           "width": 0.0,
           "height": 0.0
         }
+
+
+        
       ],
       "npc": {
         "npc": "The Guide",
@@ -230,7 +278,7 @@
       },
       "exits": [
         {
-          "exit": "Assembly Room",
+          "exit": "Laundry Room",
           "exitDirection": "NORTH",
           "xPosition": 480.0,
           "yPosition": 270.0,
@@ -239,6 +287,175 @@
         }
       ]
     },
+    {
+      "name": "Laundry Room",
+      "description": "A damp room filled with piles of old, moldy clothes.",
+      "isLocked": false,
+      "roomImagePath": "/images/laundryroom.png",
+      "items": [
+        {
+          "item": "Note",
+          "itemDescription": "I wonder where they keep the soap?",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/g2_paper.png",
+          "xPosition": 300.0,
+          "yPosition": 300.0,
+          "width": 50.0,
+          "height": 50.0
+        }
+      ],
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "The stains on these clothes tell stories of the past. Wash away the sins, or be drowned by them.",
+        "isNPCTradeable": false,
+        "xPosition": 600.0,
+        "yPosition": 300.0
+      },
+      "exits": [
+        {
+          "exit": "Broken Kitchen",
+          "exitDirection": "SOUTH",
+          "xPosition": 480.0,
+          "yPosition": 500.0,
+          "width": 100.0,
+          "height": 100.0
+        },
+        {
+          "exit": "Storage Room",
+          "exitDirection": "NORTH",
+          "xPosition": 725.0,
+          "yPosition": 125.0,
+          "width": 140.0,
+          "height": 180.0
+        }
+      ]
+    },
+
+    {
+      "name": "Storage Room",
+      "description": "Dusty shelves line the walls, holding forgotten artifacts.",
+      "isLocked": false,
+      "roomImagePath": "/images/storageroom.png",
+      "items": [],
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "Memories are stored here, collecting dust. Some are best left forgotten.",
+        "isNPCTradeable": false,
+        "xPosition": 600.0,
+        "yPosition": 350.0
+      },
+      "exits": [
+        {
+          "exit": "Laundry Room",
+          "exitDirection": "SOUTH",
+          "xPosition": 480.0,
+          "yPosition": 650.0,
+          "width": 100.0,
+          "height": 100.0
+        },
+        {
+          "exit": "Boiler Room",
+          "exitDirection": "NORTH",
+          "xPosition": 500.0,
+          "yPosition": 305.0,
+          "width": 140.0,
+          "height": 200.0
+        }
+      ]
+    },
+
+    {
+      "name": "Boiler Room",
+      "description": "The heat is oppressive here. The pipes hiss with escaping steam.",
+      "isLocked": true,
+      "lockCode": 297,
+      "roomImagePath": "/images/boilerroom.png",
+      "items": [
+        {
+          "item": "Note",
+          "itemDescription": "It only gets hotter",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/g2_paper.png",
+          "xPosition": 300.0,
+          "yPosition": 300.0,
+          "width": 50.0,
+          "height": 50.0
+        }
+      ],
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "The heart of the mansion beats here. Can you stand the heat?",
+        "isNPCTradeable": false,
+        "xPosition": 600.0,
+        "yPosition": 300.0
+      },
+      "exits": [
+        {
+          "exit": "Storage Room",
+          "exitDirection": "SOUTH",
+          "xPosition": 480.0,
+          "yPosition": 500.0,
+          "width": 100.0,
+          "height": 100.0
+        },
+        {
+          "exit": "Secret Room",
+          "exitDirection": "NORTH",
+          "xPosition": 560.0,
+          "yPosition": 450.0,
+          "width": 100.0,
+          "height": 100.0
+        }
+      ]
+    },
+
+    {
+      "name": "Secret Room",
+      "description": "A hidden chamber, untouched by time. Shadows dance on the walls.",
+      "isLocked": false,
+      "roomImagePath": "/images/secretroom.png",
+      "items": [
+        {
+          "item": "Book",
+          "itemDescription": "The hobbit",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/g2_book.png",
+          "xPosition": 300.0,
+          "yPosition": 300.0,
+          "width": 50.0,
+          "height": 50.0
+        }
+      ],
+      "npc": {
+        "npc": "The Guide",
+        "npcDialogue": "You found the secret... but can you keep it? The final trial lies ahead.",
+        "isNPCTradeable": false,
+        "xPosition": 600.0,
+        "yPosition": 300.0
+      },
+      "exits": [
+        {
+          "exit": "Boiler Room",
+          "exitDirection": "SOUTH",
+          "xPosition": 480.0,
+          "yPosition": 500.0,
+          "width": 100.0,
+          "height": 100.0
+        },
+        {
+          "exit": "Assembly Room",
+          "exitDirection": "NORTH",
+          "xPosition": 850.0,
+          "yPosition": 500.0,
+          "width": 100.0,
+          "height": 100.0
+        }
+      ]
+    },
+
     {
       "name": "Assembly Room",
       "description": "A silent chamber where ancient magic lingers. The air hums with the power of the shattered key fragments.",

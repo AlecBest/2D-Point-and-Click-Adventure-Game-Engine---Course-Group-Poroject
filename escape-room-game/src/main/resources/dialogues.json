@@ -1,42 +1,146 @@
 {
-    "The Guide": {
-        "Main Room": {
-            "root": {
-                "text": "Welcome. I am Lysander. I will guide you through this mansion, but I cannot open the doors for you. You must prove your worth.",
-                "options": {
-                    "How do I prove it?": "explain_mechanic"
-                }
-            },
-            "explain_mechanic": {
-                "text": "In each room, a barrier will block your path. I will give you a riddle. You must find the items in the room, combine them if necessary, and present the solution to me.",
-                "next": "end_tutorial"
-            },
-            "end_tutorial": {
-                "text": "Go now. Enter the Living Room and face your first trial.",
-                "options": {}
-            }
-        },
-        "Living Room": {
-            "root": {
-                "text": "The air here is heavy... This door requires a light that is pure. A normal flame will not suffice.",
-                "options": {
-                    "Where do I find it?": "riddle_hint"
-                }
-            },
-            "riddle_hint": {
-                "text": "Seek the wax that has never burned, and anoint it with the oil of the ancients. Combine them, and bring me the result.",
-                "options": {} 
-            }
-        },
-        "Library of Echoes": {
-            "root": {
-                "text": "Knowledge is power, but this history is torn apart. I cannot let you pass until the story is whole.",
-                "next": "library_riddle"
-            },
-            "library_riddle": {
-                "text": "Find the scattered pages and the broken tome. Restore the book, and the way forward will open.",
-                "options": {}
-            }
+  "The Guide": {
+    "Main Room": {
+      "root": {
+        "text": "Welcome. I am Lysander. I will guide you through this mansion, but I cannot open the doors for you. You must prove your worth.",
+        "options": {
+          "How do I prove it?": "explain_mechanic"
         }
+      },
+      "explain_mechanic": {
+        "text": "In each room, a barrier will block your path. I will give you a riddle. You must find the items in the room, combine them if necessary, and present the solution to me.",
+        "next": "end_tutorial"
+      },
+      "end_tutorial": {
+        "text": "Go now. Enter the Living Room and face your first trial.",
+        "options": {}
+      }
+    },
+
+    "Living Room": {
+      "root": {
+        "text": "The air here is heavy... This door requires a light that is pure. A normal flame will not suffice.",
+        "options": {
+          "Where do I find it?": "riddle_hint"
+        }
+      },
+      "riddle_hint": {
+        "text": "Seek the wax that has never burned, and anoint it with the oil of the ancients. Combine them, and bring me the result.",
+        "options": {}
+      }
+    },
+
+    "Library of Echoes": {
+      "root": {
+        "text": "Knowledge is power, but this history is torn apart. I cannot let you pass until the story is whole.",
+        "next": "library_riddle"
+      },
+      "library_riddle": {
+        "text": "Find the scattered pages and the broken tome. Restore the book, and the way forward will open.",
+        "options": {}
+      }
+    },
+
+    "Broken Kitchen": {
+      "root": {
+        "text": "You have reached the Broken Kitchen, where this house once fed the living and now feeds on mistakes.I cannot let you move on until a worthy offering is prepared.",
+        "next": "kitchen_mid"
+      },
+      "kitchen_mid": {
+        "text": "A restless chef haunts this place, waiting for an offering that is simple but worthy. Three ingredients lie scattered around you.",
+        "next": "kitchen_riddle"
+      },
+      "kitchen_riddle": {
+        "text": "Find the pieces that truly belong together, combine them into a humble meal, and present it to me. Only then will the way forward open.",
+        "options": {}
+      }
+    },
+
+    "Assembly Room": {
+      "root": {
+        "text": "This is the Assembly Room, a silent chamber where ancient magic lingers. You will not pass beyond this point until the key is made whole.",
+        "next": "assembly_mid"
+      },
+      "assembly_mid": {
+        "text": "The air hums with the power of the shattered key fragments you carry. You now hold all three fragments of the Liberation Key. Alone they are powerless.",
+        "next": "assembly_hint"
+      },
+      "assembly_hint": {
+        "text": "Combine the fragments into the restored Master Key, then return to me so we can test whether the final door will accept your freedom.",
+        "options": {}
+      }
+    },
+
+    "Laundry Room": {
+      "root": {
+        "text": "The walls breathe in this place. Even the pipes seem to whisper your name as you enter. I will not allow you to leave until you uncover what they are hiding.",
+        "next": "laundry_mid"
+      },
+      "laundry_mid": {
+        "text": "Something important was washed away here. Hidden where grime clings deepest.",
+        "next": "laundry_riddle"
+      },
+      "laundry_riddle": {
+        "text": "Seek what is trapped between the drums. It will reveal the path forward.",
+        "options": {}
+      }
+    },
+
+    "Storage Room": {
+      "root": {
+        "text": "Numbers linger here with purpose. They remember things that people forget.",
+        "next": "storage_mid"
+      },
+      "storage_mid": {
+        "text": "Behind that vault lies a truth sealed long ago. Only the correct sequence will stir it awake.",
+        "next": "storage_riddle"
+      },
+      "storage_riddle": {
+        "text": "Study the fallen cubes. Patterns hide in silence. Find the correct code and bring it to me.",
+        "options": {}
+      }
+    },
+
+    "Boiler Room": {
+      "root": {
+        "text": "Heat reveals what cold conceals. The pipes here are never fully still.",
+        "next": "boiler_mid"
+      },
+      "boiler_mid": {
+        "text": "This room is alive. The floor remembers pain. Be mindful where you step.",
+        "next": "boiler_riddle"
+      },
+      "boiler_riddle": {
+        "text": "A message is etched in metal. Trace the valves to uncover what must be pressed.",
+        "options": {}
+      }
+    },
+
+    "Secret Room": {
+      "root": {
+        "text": "Secrets rest easier in the dark. Only those with steady hearts should disturb them.",
+        "next": "secret_mid"
+      },
+      "secret_mid": {
+        "text": "Someone reached this place before you. They left something unfinished.",
+        "next": "secret_riddle"
+      },
+      "secret_riddle": {
+        "text": "Listen for the hollow space behind the rotted panels. What you reveal there will decide your fate.",
+        "options": {}
+      }
+    },
+
+    "Game Completed": {
+      "root": {
+        "text": "This is the moment. The Master Key vibrates with power, glowing gold. Go, carry your freedom with pride. Few who enter this place ever walk out again.",
+        "next": "game_completed_final"
+      },
+      "game_completed_final": {
+        "text": "You have escaped the Mansion Beyond. Your courage restored the Master Key and shattered the ancient curse. You are free.",
+        "options": {}
+      }
     }
+  }
 }
+

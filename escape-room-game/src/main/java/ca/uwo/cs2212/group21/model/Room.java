@@ -22,6 +22,7 @@ public class Room {
     private double exitWidth;
     private double exitHeight;
     private Item puzzleItem; //item required to unlock the room
+    private int lockCode = -1; // -1 means no lock code
 
     /**
      * Initializes a new room with the given parameters.
@@ -161,5 +162,13 @@ public class Room {
 
     public String getImagePath() {
         return imagePath;
+    }
+
+    public int getLockCode() {
+        return lockCode;
+    }
+
+    public void setLockCode(int lockCode) {
+        this.lockCode = lockCode;
     }
 }
