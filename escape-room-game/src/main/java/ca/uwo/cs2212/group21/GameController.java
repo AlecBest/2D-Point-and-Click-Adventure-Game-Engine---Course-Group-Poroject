@@ -93,7 +93,6 @@ public class GameController {
     @FXML private Button saveSlot3;
 
     @FXML private Label pickupPopup;
-    private Label endScreenTimeLabel;
 
     private TranslateTransition currentAnimation;
     private GameEngine gameEngine;
