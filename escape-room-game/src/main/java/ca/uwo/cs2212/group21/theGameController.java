@@ -616,6 +616,20 @@ public class theGameController {
             boolean isLockedDoorPresent = false;
             Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
 
+
+    if (currentRoom != null && "Storage Room".equals(currentRoom.getName())) {
+        // No trade buttons, no ready buttons, only a close button (i tried for the storage room)
+        nextButton.setText("Continue");
+        nextButton.setOnAction(e -> {
+            soundManager.playDialogueCloseSound();
+            if (activeNpc != null) activeNpc.setHasInteracted(true);
+            dialogueOverlay.setVisible(false);
+            dialogueBox.clear();
+        });
+        return; //  stop the rest of the logic
+    }
+
+
             if (currentRoom.getExits() != null) { //if no dialogue then probably would be for giving an item so would check if any locked doors in room
                 for (Room room : currentRoom.getExits().values()) {
                     if (room.isLocked()) {
