@@ -1,0 +1,10 @@
+{
+    "currentRoom": "Living Room",
+    "score": 3,
+    "timeRemaining": 595,
+    "inventory": [
+        "Cloth",
+        "Candle"
+    ],
+    "movesCount": 3
+}

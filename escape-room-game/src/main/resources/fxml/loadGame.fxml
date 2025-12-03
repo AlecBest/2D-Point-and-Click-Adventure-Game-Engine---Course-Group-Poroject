@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: black;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.uwo.cs2212.group21.LoadGameController">
+   <children>
+      <Label id="saveDataLabel" fx:id="saveDataLabel" layoutX="466.0" layoutY="89.0" styleClass="header-label" text="Saved Data">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <ListView fx:id="saveFilesList" layoutX="405.0" layoutY="165.0" prefHeight="354.0" prefWidth="270.0" />
+      <Button layoutX="283.0" layoutY="603.0" mnemonicParsing="false" onAction="#onBackClicked" text="Back" />
+      <Button fx:id="loadSaveButton" layoutX="763.0" layoutY="603.0" mnemonicParsing="false" onAction="#onLoadGameClicked" text="Load Save" />
+      <VBox fx:id="detailsPanel" layoutX="736.0" layoutY="242.0" prefHeight="200.0" prefWidth="250.0">
+         <children>
+            <Label alignment="CENTER" text="Selected Save" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="previewTimeLabel" text="Time Remaining: " textFill="WHITE" />
+            <Label fx:id="previewScoreLabel" text="Score: " textFill="WHITE" />
+            <Label fx:id="previewRoomLabel" text="Room: " textFill="WHITE" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
