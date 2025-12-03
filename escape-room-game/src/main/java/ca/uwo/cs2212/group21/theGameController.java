@@ -697,10 +697,25 @@ public class theGameController {
             toggleInventory();
         }
 
+
         dialogueOverlay.toFront();
         dialogueBox.setText("Please select an item from your inventory to give to " + npc.getName() + ".");
 
-        Button giveButton = new Button("Give item"); //this is the whole not ready yet buttong in case the player clicks the npc but say they need to get another item first or was accidentally clicked
+        optionsBox.getChildren().clear();
+
+
+        Button backButton = new Button("Go back"); //this is the to go back incase change their mind about giving an item
+        backButton.getStyleClass().add("button"); //same options button styling
+        backButton.setMaxWidth(Double.MAX_VALUE);
+        backButton.setOnAction(e -> {
+            soundManager.playDialogueCloseSound();
+            isGiveMode = false;
+            inventory.setVisible(false);
+            dialogueOverlay.setVisible(false);
+        });
+        optionsBox.getChildren().add(backButton);
+
+        Button giveButton = new Button("Give item"); 
         giveButton.getStyleClass().add("button"); //same options button styling
         giveButton.setMaxWidth(Double.MAX_VALUE);
         giveButton.setOnAction(e -> askForConfirmation(npc));
@@ -716,7 +731,8 @@ public class theGameController {
     }
 
     private void askForConfirmation(NPC npc) {
-        optionsBox.getChildren().clear(); //so it just has confrim to flow better, was too many buttons
+
+        optionsBox.getChildren().clear(); 
 
         dialogueBox.setText("Are you sure you want to give " + selected.getName() + " to " + npc.getName() + "?");
 
@@ -736,8 +752,7 @@ public class theGameController {
             dialogueBox.clear();
             isGiveMode = false;
             inventory.setVisible(false);
-        }
-        );
+        });
         optionsBox.getChildren().add(cancelButton);
     }
 
@@ -774,6 +789,7 @@ public class theGameController {
 
             gameEngine.getPlayer().decreaseTime(30);
             triggerJumpScare(); //this is to trigger the npc going to the angry version then back 
+            soundManager.playSoundEffect("angrynpc.mp3");
             dialogueBox.setText("This is not what I wanted! You lose 30 seconds. Please give me the correct item.");
 
             optionsBox.getChildren().clear(); //so it just has confrim to flow better, was too many buttons
