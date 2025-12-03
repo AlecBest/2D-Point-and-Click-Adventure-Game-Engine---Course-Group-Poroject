@@ -292,7 +292,19 @@
       "description": "A damp room filled with piles of old, moldy clothes.",
       "isLocked": false,
       "roomImagePath": "/images/laundryroom.png",
-      "items": [],
+      "items": [
+        {
+          "item": "Note",
+          "itemDescription": "I wonder where they keep the soap?",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/g2_paper.png",
+          "xPosition": 300.0,
+          "yPosition": 300.0,
+          "width": 50.0,
+          "height": 50.0
+        }
+      ],
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "The stains on these clothes tell stories of the past. Wash away the sins, or be drowned by them.",
@@ -312,10 +324,10 @@
         {
           "exit": "Storage Room",
           "exitDirection": "NORTH",
-          "xPosition": 480.0,
-          "yPosition": 200.0,
-          "width": 100.0,
-          "height": 200.0
+          "xPosition": 725.0,
+          "yPosition": 125.0,
+          "width": 140.0,
+          "height": 180.0
         }
       ]
     },
@@ -330,24 +342,24 @@
         "npc": "The Guide",
         "npcDialogue": "Memories are stored here, collecting dust. Some are best left forgotten.",
         "isNPCTradeable": false,
-        "xPosition": 500.0,
-        "yPosition": 300.0
+        "xPosition": 600.0,
+        "yPosition": 350.0
       },
       "exits": [
         {
           "exit": "Laundry Room",
           "exitDirection": "SOUTH",
           "xPosition": 480.0,
-          "yPosition": 500.0,
+          "yPosition": 650.0,
           "width": 100.0,
           "height": 100.0
         },
         {
           "exit": "Boiler Room",
           "exitDirection": "NORTH",
-          "xPosition": 480.0,
-          "yPosition": 200.0,
-          "width": 100.0,
+          "xPosition": 500.0,
+          "yPosition": 305.0,
+          "width": 140.0,
           "height": 200.0
         }
       ]
@@ -359,7 +371,19 @@
       "isLocked": true,
       "lockCode": 297,
       "roomImagePath": "/images/boilerroom.png",
-      "items": [],
+      "items": [
+        {
+          "item": "Note",
+          "itemDescription": "It only gets hotter",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/g2_paper.png",
+          "xPosition": 300.0,
+          "yPosition": 300.0,
+          "width": 50.0,
+          "height": 50.0
+        }
+      ],
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "The heart of the mansion beats here. Can you stand the heat?",
@@ -379,8 +403,8 @@
         {
           "exit": "Secret Room",
           "exitDirection": "NORTH",
-          "xPosition": 480.0,
-          "yPosition": 150.0,
+          "xPosition": 560.0,
+          "yPosition": 450.0,
           "width": 100.0,
           "height": 100.0
         }
@@ -392,7 +416,19 @@
       "description": "A hidden chamber, untouched by time. Shadows dance on the walls.",
       "isLocked": false,
       "roomImagePath": "/images/secretroom.png",
-      "items": [],
+      "items": [
+        {
+          "item": "Book",
+          "itemDescription": "The hobbit",
+          "isKey": false,
+          "startHidden": false,
+          "itemImagePath": "/images/g2_book.png",
+          "xPosition": 300.0,
+          "yPosition": 300.0,
+          "width": 50.0,
+          "height": 50.0
+        }
+      ],
       "npc": {
         "npc": "The Guide",
         "npcDialogue": "You found the secret... but can you keep it? The final trial lies ahead.",
@@ -412,10 +448,10 @@
         {
           "exit": "Assembly Room",
           "exitDirection": "NORTH",
-          "xPosition": 480.0,
-          "yPosition": 200.0,
+          "xPosition": 850.0,
+          "yPosition": 500.0,
           "width": 100.0,
-          "height": 200.0
+          "height": 100.0
         }
       ]
     },

@@ -440,8 +440,8 @@ public class GameController {
             Rectangle exitHitBox = new Rectangle(currentRoom.getExitX(exitDirection),currentRoom.getExitY(exitDirection), currentRoom.getExitWidth(exitDirection),
             currentRoom.getExitHeight(exitDirection));
             
-            exitHitBox.setFill(Color.RED.deriveColor(0, 1, 1, 0.3)); // Visible for debugging
-            exitHitBox.setStroke(Color.RED); // Visible stroke for debugging
+            exitHitBox.setFill(Color.TRANSPARENT); // this is to make the rectangle invisible so it doesnt cover up the background image that way its just a hitbox
+            exitHitBox.setStroke(null); // this is just for testing purposes we would remove after we see that the hitbox works fine
 
             exitHitBox.setOnMouseClicked(e -> {
                 Room nextRoom = currentRoom.getExit(exitDirection);
@@ -1018,6 +1018,7 @@ public class GameController {
     }
 
     public void switchToLoadGameScene(Event event) throws IOException {
+        soundManager.stopBackgroundMusic();
         soundManager.playLoadGameSound();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/loadGame.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
