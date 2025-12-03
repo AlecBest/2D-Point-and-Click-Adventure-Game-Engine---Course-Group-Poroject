@@ -43,7 +43,7 @@
 
     "Broken Kitchen": {
       "root": {
-        "text": "You have reached the Broken Kitchen, where this house once fed the living and now feeds on mistakes.",
+        "text": "You have reached the Broken Kitchen, where this house once fed the living and now feeds on mistakes.I cannot let you move on until a worthy offering is prepared.",
         "next": "kitchen_mid"
       },
       "kitchen_mid": {
@@ -51,14 +51,14 @@
         "next": "kitchen_riddle"
       },
       "kitchen_riddle": {
-        "text": "Find the pieces that truly belong together, combine them into a humble meal, and present it to me.",
+        "text": "Find the pieces that truly belong together, combine them into a humble meal, and present it to me. Only then will the way forward open.",
         "options": {}
       }
     },
 
     "Assembly Room": {
       "root": {
-        "text": "This is the Assembly Room, a silent chamber where ancient magic lingers.",
+        "text": "This is the Assembly Room, a silent chamber where ancient magic lingers. You will not pass beyond this point until the key is made whole.",
         "next": "assembly_mid"
       },
       "assembly_mid": {
@@ -73,7 +73,7 @@
 
     "Laundry Room": {
       "root": {
-        "text": "The walls breathe in this place. Even the pipes seem to whisper your name as you enter.",
+        "text": "The walls breathe in this place. Even the pipes seem to whisper your name as you enter. I will not allow you to leave until you uncover what they are hiding.",
         "next": "laundry_mid"
       },
       "laundry_mid": {
