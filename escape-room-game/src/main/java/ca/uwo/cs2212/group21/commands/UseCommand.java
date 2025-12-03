@@ -50,7 +50,7 @@ public class UseCommand {
                     state.removeItemFromInventory(first); //if the match itself is in the recipes then would remove both items from inventory
                     state.removeItemFromInventory(second);
 
-                    Item resultItem = masterList.get(recipe.getResultName().toLowerCase()); //would find the item in the list since all items would be in the master list, just some we have is not shown in the room
+                    Item resultItem = masterList.get(recipe.getResultName()); //would find the item in the list since all items would be in the master list, just some we have is not shown in the room
 
                     if (resultItem != null) {
                         state.addItemToInventory(resultItem); //if it finds it then would just add it 

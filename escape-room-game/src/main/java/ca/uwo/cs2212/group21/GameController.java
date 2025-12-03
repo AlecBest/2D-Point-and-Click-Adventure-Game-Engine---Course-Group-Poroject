@@ -194,8 +194,9 @@ public class GameController {
 
             // Initialize game engine
             gameEngine = new GameEngine("/worldMap.json");
-            gameEngine.loadRecipes();
-            gameEngine.startNewGame();
+            gameEngine.startNewGame();   // create player first
+            gameEngine.loadRecipes();    // now player is NOT null, recipes can be attached
+
             
             // Set time limit AFTER game engine is initialized
             gameEngine.getPlayer().setTimeRemaining(TIME_LIMIT);
@@ -365,9 +366,17 @@ public class GameController {
             itemView.setX(item.getX());
             itemView.setY(item.getY());
 
-            itemView.setFitWidth(item.getWidth()); // this is to set the width and height of the item so we could get it to be a specific size wherever we want it
-            itemView.setFitHeight(item.getHeight());
-            itemView.setPreserveRatio(true); // this is to make sure the image doesnt get like warped kinda
+            double w = item.getWidth();
+            double h = item.getHeight();
+            
+            // Fallback sizes so dropped items don’t become huge
+            if (w <= 0) w = 60;
+            if (h <= 0) h = 60;
+            
+            itemView.setFitWidth(w);
+            itemView.setFitHeight(h);
+            itemView.setPreserveRatio(true);
+             // this is to make sure the image doesnt get like warped kinda
 
             itemView.setOnMouseClicked(e -> {
                 e.consume(); // this is to stop the event from propagating to the layer below so the player doesnt move when clicking an item

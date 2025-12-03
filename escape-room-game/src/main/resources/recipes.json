@@ -1,0 +1,39 @@
+
+
+[
+    {
+      "inputs": ["candle", "matchbox"],
+      "result": "Purified Candle",
+      "successMessage": "You strike a match and light the candle. A pure white flame cuts through the shadows, this must be the right light."
+    },
+    {
+      "inputs": ["candle", "cloth"],
+      "result": "Smothered Candle",
+      "successMessage": "You wrap the cloth around the candle. The light dies, leaving only a smothered stump. This doesn’t feel right..."
+    },
+    {
+      "inputs": ["matchbox", "cloth"],
+      "result": "Burning Cloth",
+      "successMessage": "You light the cloth on fire. It flares briefly, then crumbles to ash. Whatever this is, it’s not a blessed flame."
+    },
+    {
+        "inputs": ["Torn Book", "Missing Page"],
+        "result": "Restored Book",
+        "successMessage": "As you slide the missing page back into the torn book, the text glows faintly. The knowledge feels whole again."
+    },
+    {
+        "inputs": ["Missing Page", "Pen"],
+        "result": "Scribbled Page",
+        "successMessage": "You scribble all over the page in panic. The words twist into nonsense... this won’t impress the Guide."
+      },
+      {
+        "inputs": ["Torn Book", "Pen"],
+        "result": "Defaced Book",
+        "successMessage": "You scrawl ink across the already damaged book. Whatever wisdom it held is now completely ruined."
+      }
+  
+  ]
+
+  
+  
+  

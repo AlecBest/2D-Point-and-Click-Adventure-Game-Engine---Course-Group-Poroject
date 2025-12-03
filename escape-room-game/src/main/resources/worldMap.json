@@ -69,11 +69,34 @@
           "isKey": true,
           "startHidden": true,
           "itemImagePath": "/images/g1_right_answer.png",
-          "xPosition": 0.0,
-          "yPosition": 0.0,
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Smothered Candle",
+          "itemDescription": "The flame is choked out by the cloth. It feels… wrong.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g1_wrong_answer1.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Burning Cloth",
+          "itemDescription": "The cloth catches fire and burns away. Definitely not holy.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g1_wrong_answer2.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
           "width": 0.0,
           "height": 0.0
         }
+
       ],
       "npc": {
         "npc": "The Guide",
@@ -138,11 +161,36 @@
           "isKey": true,
           "startHidden": true,
           "itemImagePath": "/images/g2_right_answer.png",
-          "xPosition": 0.0,
-          "yPosition": 0.0,
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Scribbled Page",
+          "itemDescription": "A page covered in messy ink scribbles. This definitely doesn’t look right.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g2_wrong_answer2.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
+          "width": 0.0,
+          "height": 0.0
+        },
+        {
+          "item": "Defaced Book",
+          "itemDescription": "A book ruined by ink and scratches. Whatever knowledge it held is lost.",
+          "isKey": false,
+          "startHidden": true,
+          "itemImagePath": "/images/g2_wrong_answer1.png",
+          "xPosition": 500.0,
+          "yPosition": 300.0,
           "width": 0.0,
           "height": 0.0
         }
+
+
+        
       ],
       "npc": {
         "npc": "The Guide",
