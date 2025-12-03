@@ -119,8 +119,6 @@ public class GameController {
     private List<Item> combineItems = new ArrayList<>();
     private SoundManager soundManager = new SoundManager();
     private double lastPlayerX = 400; // Track last X position to determine direction
-<<<<<<< HEAD
-=======
 
     // Keypad fields
     private AnchorPane keypadOverlay;
@@ -128,7 +126,6 @@ public class GameController {
     private String currentInputCode = "";
     private Room pendingTargetRoom;
     private String pendingExitDirection;
->>>>>>> 3225d8f1ad4b9cd58ec24f54cd8144114edfeb7d
 
     private String formatTime(int totalSeconds) {
         int minutes = totalSeconds / 60;
@@ -563,6 +560,7 @@ public class GameController {
             nextButton.setVisible(true);
             optionsBox.setVisible(false);
             nextButton.setOnAction(e -> {
+                soundManager.playDialogueCloseSound();
                 dialogueOverlay.setVisible(false);
                 dialogueBox.clear();
             });
@@ -594,7 +592,10 @@ public class GameController {
                 Button optionButton = new Button(key);
                 optionButton.getStyleClass().add("button");
                 optionButton.setMaxWidth(Double.MAX_VALUE);
-                optionButton.setOnAction(e -> showDialogueNode(npcDialogue, targetNode));
+                optionButton.setOnAction(e -> {
+                    soundManager.playNextButtonSound();
+                    showDialogueNode(npcDialogue, targetNode);
+                });
                 optionsBox.getChildren().add(optionButton);
             }
         }   
@@ -602,7 +603,10 @@ public class GameController {
             optionsBox.setVisible(false);
             nextButton.setVisible(true);
             nextButton.setText("Next");
-            nextButton.setOnAction(e -> showDialogueNode(npcDialogue, nextNodeID));
+            nextButton.setOnAction(e -> {
+                soundManager.playNextButtonSound();
+                showDialogueNode(npcDialogue, nextNodeID);
+            });
         }
         else { //this is the case where its the end of the dialogue so no more options or next
             optionsBox.setVisible(false);
@@ -622,7 +626,10 @@ public class GameController {
 
             if (isLockedDoorPresent) { //if it finds a locked door then you could select im ready to give the item
                 nextButton.setText("I'm ready");
-                nextButton.setOnAction(e -> enterGiveMode(currentRoom.getNPC())); 
+                nextButton.setOnAction(e -> {
+                    soundManager.playNextButtonSound();
+                    enterGiveMode(currentRoom.getNPC());
+                }); 
 
                 
                 optionsBox.getChildren().clear();
@@ -632,6 +639,7 @@ public class GameController {
                 notReadyButton.getStyleClass().add("button"); //same options button styling
                 notReadyButton.setMaxWidth(Double.MAX_VALUE);
                 notReadyButton.setOnAction(e -> {
+                    soundManager.playDialogueCloseSound();
                     isGiveMode = false;
                     inventory.setVisible(false);
                     dialogueOverlay.setVisible(false);
@@ -641,6 +649,7 @@ public class GameController {
             } else {
                 nextButton.setText("Close"); //if no locked door then would just end dialogue normally
                 nextButton.setOnAction(e -> {
+                    soundManager.playDialogueCloseSound();
                     if (activeNpc != null) {
                         activeNpc.setHasInteracted(true);
                 }
