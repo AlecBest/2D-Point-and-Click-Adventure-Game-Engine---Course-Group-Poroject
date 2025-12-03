@@ -180,14 +180,10 @@ public class GameController {
         fadeOut.setFromValue(1.0);
         fadeOut.setToValue(0.0);
         fadeOut.setOnFinished(e -> {
-<<<<<<< HEAD
-        mainScreen.setVisible(false);
-=======
             // Start game music immediately to ensure it plays
             soundManager.playBackgroundMusic("spooky_bgm.mp3");
 
             mainScreen.setVisible(false);
->>>>>>> e7834b5591e8975b4d7f5813267dc5c61b7817f1
 
             // Initialize game engine
             gameEngine = new GameEngine("/worldMap.json");
@@ -439,24 +435,13 @@ public class GameController {
     }
 
     private void handleNPCClick(NPC npc) {
-<<<<<<< HEAD
 
         Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
         String roomName = currentRoom.getName();
 
-        // Always show overlay and NPC name
         dialogueOverlay.setVisible(true);
         dialogueNameLabel.setText(npc.getName());
-
-        // Use the dialogue string stored on the NPC (comes from JSON per room)
-        String dialogueText = npc.getDialogue();
-        dialogueBox.setText(dialogueText);
         dialogueBox.setWrapText(true);
-
-        // Default: no giving; Next just closes the dialogue
-        isGiveMode = false;
-        nextButton.setVisible(true);
-        optionsBox.setVisible(false);
 
         org.json.JSONObject allDialogues = gameEngine.getDialogueData();
 
@@ -481,165 +466,79 @@ public class GameController {
         org.json.JSONObject node = npcDialogue.getJSONObject(nodeId);
         String text = node.getString("text");
         org.json.JSONObject options = node.optJSONObject("options");
-        String nextNodeID = node.optString("next", null); //to see if the node is a give node which would be the point where the npc wants an item 
+        String nextNodeID = node.optString("next", null); 
 
         dialogueOverlay.setVisible(true);
         dialogueNameLabel.setText(npcDialogue.has("name") ? npcDialogue.getString("name") : "The Guide");
-=======
+        dialogueBox.setText(text);
 
-    // remember who we are talking to
-    activeNpc = npc;
+        optionsBox.getChildren().clear();
+        nextButton.setOnAction(null); 
 
-    Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
-
-    // show overlay and set name
-    dialogueOverlay.setVisible(true);
-    dialogueNameLabel.setText(npc.getName());
-
-    // 1: First time talking to this NPC and we have a dialogue tree in dialogues.json:
-    //    use the dialogue tree with options.
-    if (!npc.hasInteracted() && dialogueData != null && dialogueData.has(npc.getName())) {
-
-        org.json.JSONObject npcDialogue = dialogueData.getJSONObject(npc.getName());
-        showDialogueNode(npcDialogue, "root");
-        return;
-    }
-
-    // 2: After the first time: use the per room line from worldMap.json
-    String dialogueText = npc.getDialogue();
-    dialogueBox.setText(dialogueText);
-    dialogueBox.setWrapText(true);
-
-    optionsBox.setVisible(false);
-    nextButton.setVisible(true);
-    isGiveMode = false;
-
-    // If this NPC can trade in this room, Next should open inventory for giving.
-    // Otherwise Next just closes the dialogue.
-    if (npc.isTradeable()) {
-
-        nextButton.setOnAction(e -> {
-            isGiveMode = true;
-
-            if (!inventory.isVisible()) {
-                updateInventoryUI();
-                inventory.setVisible(true);
-                inventory.requestFocus();
-            }
-
-            dialogueBox.setText("Select an item from your inventory to give to " + npc.getName() + ".");
-            dialogueBox.setWrapText(true);
-        });
-
-    } else {
-
-        nextButton.setOnAction(e -> {
-            dialogueOverlay.setVisible(false);
-            dialogueBox.clear();
-        });
-    }
-}
-
-
-
-private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
-    if (!npcDialogue.has(nodeId)) {
-        return;
-    }
-
-    // get node from dialogues.json
-    org.json.JSONObject node = npcDialogue.getJSONObject(nodeId);
-
-    // set dialogue text
-    String text = node.getString("text");
-    dialogueBox.setText(text);
-    dialogueBox.setWrapText(true);
-
-    // get options
-    org.json.JSONObject options = node.getJSONObject("options");
->>>>>>> e7834b5591e8975b4d7f5813267dc5c61b7817f1
-
-    // clear old buttons
-    optionsBox.getChildren().clear();
-
-    // if there are no options: this is the last node in the tree
-    if (options.isEmpty()) {
-
-        optionsBox.setVisible(false);
-        nextButton.setVisible(true);
-
-        // after this final line, mark NPC as interacted and close on Next
-        nextButton.setOnAction(e -> {
-            if (activeNpc != null) {
-                activeNpc.setHasInteracted(true);
-            }
-            dialogueOverlay.setVisible(false);
-            dialogueBox.clear();
-        });
-
-    } else {
-        // there are options: hide Next and show buttons
-        optionsBox.setVisible(true);
-        nextButton.setVisible(false);
-
-<<<<<<< HEAD
-        //separating the cases here because I wanted it to have the options show up differently if its a give node or not or if the npc is just yapping or if you have options to choose from
-
-        if (options != null && !options.isEmpty()) { //this is for the case where the npc has options to choose from 
+        //separated them into cases for each scenario
+        if (options != null && !options.isEmpty()) { //this is the case where there are multiple options to choose from
             optionsBox.setVisible(true);
-            nextButton.setVisible(false); //since they have options we could hide the next button 
+            nextButton.setVisible(false);
+
             for (String key : options.keySet()) {
                 String targetNode = options.getString(key);
-
                 Button optionButton = new Button(key);
-                optionButton.getStyleClass().add("button"); 
-                optionButton.setMaxWidth(Double.MAX_VALUE); // this is to make the button fill the width of the vbox
-
+                optionButton.getStyleClass().add("button");
+                optionButton.setMaxWidth(Double.MAX_VALUE);
                 optionButton.setOnAction(e -> showDialogueNode(npcDialogue, targetNode));
                 optionsBox.getChildren().add(optionButton);
             }
-=======
-        for (String optionText : options.keySet()) {
-            String nextNodeId = options.getString(optionText);
-
-            Button optionButton = new Button(optionText);
-            optionButton.setOnAction(e -> {
-                showDialogueNode(npcDialogue, nextNodeId);
-            });
-
-            optionsBox.getChildren().add(optionButton);
->>>>>>> e7834b5591e8975b4d7f5813267dc5c61b7817f1
-        }
-        else if (nextNodeID != null && !nextNodeID.isEmpty()) { //this is for the case where there are no options but it has a next node to go to 
+        }   
+        else if (nextNodeID != null && !nextNodeID.isEmpty()) { //this is the case where there is just a next node to go to
             optionsBox.setVisible(false);
             nextButton.setVisible(true);
             nextButton.setText("Next");
-
             nextButton.setOnAction(e -> showDialogueNode(npcDialogue, nextNodeID));
         }
-        else { //this is for if the end of the conversation
+        else { //this is the case where its the end of the dialogue so no more options or next
             optionsBox.setVisible(false);
             nextButton.setVisible(true);
 
             boolean isLockedDoorPresent = false;
             Room currentRoom = gameEngine.getPlayer().getCurrentRoom();
 
-            for (Room room : currentRoom.getExits().values()) {
-                if (room.isLocked()) {
-                    isLockedDoorPresent = true;
-                    break; //if it finds the door would just break 
+            if (currentRoom.getExits() != null) { //if no dialogue then probably would be for giving an item so would check if any locked doors in room
+                for (Room room : currentRoom.getExits().values()) {
+                    if (room.isLocked()) {
+                        isLockedDoorPresent = true;
+                        break;
+                    }
                 }
             }
-            if (isLockedDoorPresent) { //if the next room is locked then means npc still need item so if you click on them would have the option for give Mode, if not then would have an option for not ready yet
+
+            if (isLockedDoorPresent) { //if it finds a locked door then you could select im ready to give the item
                 nextButton.setText("I'm ready");
-                nextButton.setOnAction(e -> enterGiveMode(gameEngine.getPlayer().getCurrentRoom().getNPC()));
-            } else {
-                nextButton.setText("Close");
-                nextButton.setOnAction(e -> {
-                dialogueOverlay.setVisible(false);
-                dialogueBox.clear();
+                nextButton.setOnAction(e -> enterGiveMode(currentRoom.getNPC())); 
+
+                
+                optionsBox.getChildren().clear();
+                optionsBox.setVisible(true);
+
+                Button notReadyButton = new Button("Not ready yet"); //this is the whole not ready yet buttong in case the player clicks the npc but say they need to get another item first or was accidentally clicked
+                notReadyButton.getStyleClass().add("button"); //same options button styling
+                notReadyButton.setMaxWidth(Double.MAX_VALUE);
+                notReadyButton.setOnAction(e -> {
+                    isGiveMode = false;
+                    inventory.setVisible(false);
+                    dialogueOverlay.setVisible(false);
                 });
-            }    
+
+                optionsBox.getChildren().add(notReadyButton);
+            } else {
+                nextButton.setText("Close"); //if no locked door then would just end dialogue normally
+                nextButton.setOnAction(e -> {
+                    if (activeNpc != null) {
+                        activeNpc.setHasInteracted(true);
+                }
+                    dialogueOverlay.setVisible(false);
+                    dialogueBox.clear();
+                });
+            }
         }
     }
 
@@ -655,20 +554,6 @@ private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
         nextButton.setVisible(true);
         nextButton.setText("Give Item"); //this is the set up for the give button when in give mode
         nextButton.setOnAction(e -> handleGiveAttempt(npc));
-
-        optionsBox.getChildren().clear();
-        optionsBox.setVisible(true);
-
-        Button notReadyButton = new Button("Not ready yet"); //this is the whole not ready yet buttong in case the player clicks the npc but say they need to get another item first or was accidentally clicked
-        notReadyButton.getStyleClass().add("button"); //same options button styling
-        notReadyButton.setMaxWidth(Double.MAX_VALUE);
-        notReadyButton.setOnAction(e -> {
-            isGiveMode = false;
-            inventory.setVisible(false);
-            dialogueOverlay.setVisible(false);
-        });
-
-        optionsBox.getChildren().add(notReadyButton);
     }
 
     private void handleGiveAttempt(NPC npc) {
@@ -736,7 +621,6 @@ private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
         }
         return null;
     }
-}
 
 
     private void showPickupPopup(String message) {
@@ -831,32 +715,32 @@ private void showDialogueNode(org.json.JSONObject npcDialogue, String nodeId) {
         }
     }
 
-public void toggleInventory() {
-    System.out.println("toggleInventory called. Before: " + inventory.isVisible());
+    public void toggleInventory() {
+        System.out.println("toggleInventory called. Before: " + inventory.isVisible());
 
-    if (inventory.isVisible()) {
-        // Closing inventory
-        inventory.setVisible(false);
-        gameScreen.requestFocus();
+        if (inventory.isVisible()) {
+            // Closing inventory
+            inventory.setVisible(false);
+            gameScreen.requestFocus();
 
-        // If we were in give mode and player closed inventory with I,
-        // exit give mode and make Next close the dialogue instead of reopening inventory.
+            // If we were in give mode and player closed inventory with I,
+            // exit give mode and make Next close the dialogue instead of reopening inventory.
         if (isGiveMode) {
             isGiveMode = false;
-            nextButton.setOnAction(ev -> {
+            nextButton.setOnAction(e -> {
                 dialogueOverlay.setVisible(false);
                 dialogueBox.clear();
             });
         }
-    } else {
-        // Opening inventory (normal gameplay)
-        updateInventoryUI();
-        inventory.setVisible(true);
-        inventory.requestFocus();
-    }
+        } else {
+            // Opening inventory (normal gameplay)
+            updateInventoryUI();
+            inventory.setVisible(true);
+            inventory.requestFocus();
+        }
 
-    System.out.println("After: " + inventory.isVisible());
-}
+        System.out.println("After: " + inventory.isVisible());
+    }
 
 
     public void dropItemFromInventory(Event event) {
