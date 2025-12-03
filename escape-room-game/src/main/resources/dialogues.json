@@ -1,42 +1,71 @@
 {
-    "The Guide": {
-        "Main Room": {
-            "root": {
-                "text": "Welcome. I am Lysander. I will guide you through this mansion, but I cannot open the doors for you. You must prove your worth.",
-                "options": {
-                    "How do I prove it?": "explain_mechanic"
-                }
-            },
-            "explain_mechanic": {
-                "text": "In each room, a barrier will block your path. I will give you a riddle. You must find the items in the room, combine them if necessary, and present the solution to me.",
-                "next": "end_tutorial"
-            },
-            "end_tutorial": {
-                "text": "Go now. Enter the Living Room and face your first trial.",
-                "options": {}
-            }
-        },
-        "Living Room": {
-            "root": {
-                "text": "The air here is heavy... This door requires a light that is pure. A normal flame will not suffice.",
-                "options": {
-                    "Where do I find it?": "riddle_hint"
-                }
-            },
-            "riddle_hint": {
-                "text": "Seek the wax that has never burned, and anoint it with the oil of the ancients. Combine them, and bring me the result.",
-                "options": {} 
-            }
-        },
-        "Library of Echoes": {
-            "root": {
-                "text": "Knowledge is power, but this history is torn apart. I cannot let you pass until the story is whole.",
-                "next": "library_riddle"
-            },
-            "library_riddle": {
-                "text": "Find the scattered pages and the broken tome. Restore the book, and the way forward will open.",
-                "options": {}
-            }
+  "The Guide": {
+    "Main Room": {
+      "root": {
+        "text": "Welcome. I am Lysander. I will guide you through this mansion, but I cannot open the doors for you. You must prove your worth.",
+        "options": {
+          "How do I prove it?": "explain_mechanic"
         }
+      },
+      "explain_mechanic": {
+        "text": "In each room, a barrier will block your path. I will give you a riddle. You must find the items in the room, combine them if necessary, and present the solution to me.",
+        "next": "end_tutorial"
+      },
+      "end_tutorial": {
+        "text": "Go now. Enter the Living Room and face your first trial.",
+        "options": {}
+      }
+    },
+    "Living Room": {
+      "root": {
+        "text": "The air here is heavy... This door requires a light that is pure. A normal flame will not suffice.",
+        "options": {
+          "Where do I find it?": "riddle_hint"
+        }
+      },
+      "riddle_hint": {
+        "text": "Seek the wax that has never burned, and anoint it with the oil of the ancients. Combine them, and bring me the result.",
+        "options": {}
+      }
+    },
+    "Library of Echoes": {
+      "root": {
+        "text": "Knowledge is power, but this history is torn apart. I cannot let you pass until the story is whole.",
+        "next": "library_riddle"
+      },
+      "library_riddle": {
+        "text": "Find the scattered pages and the broken tome. Restore the book, and the way forward will open.",
+        "options": {}
+      }
+    },
+
+    "Broken Kitchen": {
+      "root": {
+        "text": "You have reached the Broken Kitchen, where this house once fed the living and now feeds on mistakes.",
+        "next": "kitchen_riddle"
+      },
+      "kitchen_riddle": {
+        "text": "A restless chef haunts this place, waiting for an offering that is simple but worthy. Three ingredients lie scattered around you. Find the pieces that truly belong together, combine them into a humble meal, and present it to me.",
+        "options": {}
+      }
+    },
+
+    "Assembly Room": {
+      "root": {
+        "text": "This is the Assembly Room, a silent chamber where ancient magic lingers. The air hums with the power of the shattered key fragments you carry.",
+        "next": "assembly_hint"
+      },
+      "assembly_hint": {
+        "text": "You now hold all three fragments of the Liberation Key. Alone they are powerless. Combine the fragments into the restored Master Key, then return to me so we can test whether the final door will accept your freedom.",
+        "options": {}
+      }
+    },
+
+    "Game Completed": {
+      "root": {
+        "text": "You have done it. The Master Key shines once more, and the mansion's curse has been broken. Step through the open door and carry your freedom with pride, mortal.",
+        "options": {}
+      }
     }
+  }
 }
