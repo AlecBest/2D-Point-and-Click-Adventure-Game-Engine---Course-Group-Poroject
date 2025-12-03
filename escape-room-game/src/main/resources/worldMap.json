@@ -540,7 +540,7 @@
       "name": "Game Completed",
       "description": "You have restored the Master Key and escaped the Mansion Beyond.",
       "isLocked": false,
-      "roomImagePath": "/images/end.png",
+      "roomImagePath": "/images/victoryScreen.png",
       "items": [],
       "npc": {
         "npc": "The Guide",
