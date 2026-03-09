@@ -45,11 +45,27 @@ This project was developed as a group project for a software engineering course.
 - A Java IDE such as VS Code, IntelliJ, or Eclipse
 
 ### Running the Game
-1. Clone this repository
-2. Open the project in your preferred IDE
-3. Navigate to the `src` folder
-4. Locate the main application file (`App.java`)
-5. Run the application
+
+## Running the Project in VS Code
+
+1. Clone the repository.
+
+2. Open VS Code.
+
+3. Select File > Open Folder.
+
+4. Open the escape-room-game folder (the folder that contains pom.xml).
+
+5. Wait for VS Code to finish loading the Java/Maven project.
+
+6. In the Explorer, go to:  src/main/java/ca/uwo/cs2212/group21/App.java
+
+7. Run the project from App.java, or use the terminal command:  mvn clean javafx:run
+
+## Important
+
+Do not open or run App.java by itself outside the full project folder.
+The project must be opened from the escape-room-game root directory so that Maven dependencies and the Java classpath load correctly.
 
 ## Gameplay Summary
 
@@ -64,3 +80,4 @@ This project was developed as a group project for a software engineering course.
 
 - This repository is based on a course group project
 - Assets included in the project are for academic/demo purposes
+
