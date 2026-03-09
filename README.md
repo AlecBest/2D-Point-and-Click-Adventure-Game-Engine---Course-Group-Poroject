@@ -44,8 +44,6 @@ This project was developed as a group project for a software engineering course.
 - Java Development Kit (JDK)
 - A Java IDE such as VS Code, IntelliJ, or Eclipse
 
-### Running the Game
-
 ## Running the Project in VS Code
 
 1. Clone the repository.
@@ -80,4 +78,5 @@ The project must be opened from the escape-room-game root directory so that Mave
 
 - This repository is based on a course group project
 - Assets included in the project are for academic/demo purposes
+
 
